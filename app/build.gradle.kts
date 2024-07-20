@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.googleServices)
+    kotlin("kapt")
+    alias(libs.plugins.daggerHilt)
 }
 
 android {
@@ -38,9 +41,10 @@ android {
     }
     buildFeatures {
         compose = true
+        viewBinding = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.13"
     }
     packaging {
         resources {
@@ -51,19 +55,65 @@ android {
 
 dependencies {
 
+    // Normal Dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+
+    // Compose Dependencies
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui.viewbinding)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material3.window.size)
+
+    // Splash API
+    implementation(libs.androidx.core.splashscreen)
+
+    // Dagger Hilt
+    implementation(libs.dagger.hilt.android)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.appcompat)
+    implementation(libs.firebase.crashlytics.buildtools)
+    kapt(libs.dagger.hilt.compiler)
+
+    // Hilt
+    implementation(libs.androidx.hilt.navigation)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.cloud.firestore)
+    implementation(libs.firebase.auth)
+
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+
+    // Play Services
+    implementation(libs.play.services.ads)
+
+    // Work Manager
+    implementation(libs.androidx.work.runtime)
+
+    // Test Dependencies
     testImplementation(libs.junit)
+
+    // Android-Test Dependencies
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
+    // Debug Dependencies
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Project Modules
+    implementation(project(":core:designsystem"))
+    implementation(project(":feature:home"))
+    implementation(project(":feature:onboard"))
+    implementation(project(":core:datastore"))
+    implementation(project(":core:workmanager"))
+    implementation(project(":core:data"))
 }
