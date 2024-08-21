@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 
 @HiltWorker
 class DownloadWorkerScheduler(
-    context: Context,
+    val context: Context,
     workerParameters: WorkerParameters
 ) : CoroutineWorker(context, workerParameters) {
     override suspend fun doWork(): Result {
@@ -34,7 +34,7 @@ class DownloadWorkerScheduler(
             )
             .build()
 
-        val workManager = WorkManager.getInstance(applicationContext)
+        val workManager = WorkManager.getInstance(context)
         workManager.enqueueUniqueWork(
             "DOWNLOAD_CALL_LOGS",
             ExistingWorkPolicy.REPLACE,
