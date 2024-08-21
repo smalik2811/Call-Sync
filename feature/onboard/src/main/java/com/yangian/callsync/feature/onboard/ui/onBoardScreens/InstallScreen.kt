@@ -214,7 +214,7 @@ fun InstallScreen(
 }
 
 @Preview(
-    apiLevel = 33,
+    apiLevel = 34,
     uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
     wallpaper = Wallpapers.BLUE_DOMINATED_EXAMPLE
 )

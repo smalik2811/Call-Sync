@@ -1,12 +1,14 @@
 package com.yangian.callsync.feature.onboard
 
 import android.content.Context
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.callsync.core.workmanager.DownloadWorkerScheduler
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.yangian.callsync.core.datastore.UserPreferences
@@ -62,24 +64,42 @@ class OnBoardViewModel @Inject constructor(
         }
     }
 
-    fun updateOnBoardingCompleted(newOnboardingState: Boolean) {
+    fun updateOnBoardingCompleted(
+        newOnboardingState: Boolean,
+        firebaseAnalytics: FirebaseAnalytics?
+    ) {
         viewModelScope.launch {
             userPreferences.setOnboardingDone(newOnboardingState)
+            firebaseAnalytics?.logEvent("Onboarding_Completed", Bundle().apply {
+                putString("user_id", firebaseAuth.currentUser?.uid)
+            })
         }
     }
 
-    fun registerLogsDownloadWorkRequest(context: Context) {
+    fun registerLogsDownloadWorkRequest(
+        context: Context,
+        firebaseAnalytics: FirebaseAnalytics?
+    ) {
 
-        val workRequest = PeriodicWorkRequestBuilder<DownloadWorkerScheduler>(
-            repeatInterval = 1,
-            repeatIntervalTimeUnit = TimeUnit.DAYS,
-        ).build()
+        viewModelScope.launch {
 
-        val workManager = WorkManager.getInstance(context)
-        workManager.enqueueUniquePeriodicWork(
-            "DOWNLOAD_CALL_LOGS_SCHEDULER",
-            ExistingPeriodicWorkPolicy.UPDATE,
-            workRequest
-        )
+            val workRequest = PeriodicWorkRequestBuilder<DownloadWorkerScheduler>(
+                repeatInterval = 6,
+                repeatIntervalTimeUnit = TimeUnit.HOURS,
+                flexTimeInterval = 3,
+                flexTimeIntervalUnit = TimeUnit.HOURS
+            ).build()
+
+            val workManager = WorkManager.getInstance(context)
+            workManager.enqueueUniquePeriodicWork(
+                "DOWNLOAD_CALL_LOGS_Scheduler",
+                ExistingPeriodicWorkPolicy.UPDATE,
+                workRequest
+            )
+
+            firebaseAnalytics?.logEvent("download_call_logs_scheduler_registered", Bundle().apply {
+                putString("user_id", firebaseAuth.currentUser?.uid)
+            })
+        }
     }
 }

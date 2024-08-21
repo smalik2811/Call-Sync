@@ -6,4 +6,5 @@ plugins {
     alias(libs.plugins.googleServices) apply false // Firebase Connection
     alias(libs.plugins.daggerHilt) apply false
     alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.dependency.analysis) apply true
 }

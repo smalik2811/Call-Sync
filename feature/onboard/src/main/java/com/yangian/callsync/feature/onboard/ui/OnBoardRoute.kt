@@ -12,10 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
 import com.yangian.callsync.core.designsystem.icon.ArrowBackIcon
 import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
@@ -47,12 +48,13 @@ fun OnBoardRoute(
     modifier: Modifier = Modifier,
     onBoardViewModel: OnBoardViewModel = hiltViewModel(),
     navigateToHome: () -> Unit = {},
+    firebaseAnalytics: FirebaseAnalytics?
 ) {
     val currentScreen by onBoardViewModel.currentScreen.collectAsState()
 
     Scaffold(
         topBar = {
-            LargeTopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
                     Text(
                         text = stringResource(
@@ -92,6 +94,7 @@ fun OnBoardRoute(
             OnBoardingScreen(
                 onBoardViewModel = onBoardViewModel,
                 navigateToHome = navigateToHome,
+                firebaseAnalytics = firebaseAnalytics,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
@@ -128,6 +131,7 @@ fun OnBoardRoute(
 fun OnBoardingScreen(
     onBoardViewModel: OnBoardViewModel,
     navigateToHome: () -> Unit,
+    firebaseAnalytics: FirebaseAnalytics?,
     modifier: Modifier = Modifier
 ) {
     val currentScreen by onBoardViewModel.currentScreen.collectAsState()
@@ -138,7 +142,7 @@ fun OnBoardingScreen(
         OnBoardingScreens.Install -> InstallScreen(modifier)
         OnBoardingScreens.Unlock -> UnlockScreen(modifier)
         OnBoardingScreens.Connection1 -> ConnectionScreen1(onBoardViewModel, modifier)
-        OnBoardingScreens.Connection2 -> ConnectionScreen2(onBoardViewModel, modifier, navigateToHome)
+        OnBoardingScreens.Connection2 -> ConnectionScreen2(onBoardViewModel, modifier, navigateToHome, firebaseAnalytics)
     }
 }
 
@@ -148,7 +152,8 @@ private fun OnBoardPreview() {
     CallSyncAppTheme {
         CallSyncAppBackground {
             OnBoardRoute(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                firebaseAnalytics = null
             )
         }
     }

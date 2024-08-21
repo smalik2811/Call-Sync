@@ -6,22 +6,29 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.google.android.gms.ads.MobileAds
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.logEvent
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
 import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
 import com.yangian.callsync.ui.CallSyncApp
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var firebaseAnalytics: FirebaseAnalytics
+
     @Inject
     lateinit var mainViewModel: MainViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MobileAds.initialize(this)
-        val backgroundScope = CoroutineScope(Dispatchers.IO)
+
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN) {
+            param(FirebaseAnalytics.Param.CONTENT_TYPE, "app_open")
+        }
 
         installSplashScreen().setKeepOnScreenCondition {
             !mainViewModel.isSplashVisible.value
@@ -33,7 +40,8 @@ class MainActivity : ComponentActivity() {
                 CallSyncAppBackground {
                     CallSyncApp(
                         startDestination = startDestination,
-                        activity = this
+                        activity = this,
+                        firebaseAnalytics = firebaseAnalytics
                     )
                 }
             }

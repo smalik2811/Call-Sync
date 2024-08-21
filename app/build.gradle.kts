@@ -21,6 +21,12 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
     }
 
     buildTypes {
@@ -75,7 +81,7 @@ dependencies {
     // Dagger Hilt
     implementation(libs.dagger.hilt.android)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.appcompat)
+    implementation(libs.androidx.appcompat)
     implementation(libs.firebase.crashlytics.buildtools)
     kapt(libs.dagger.hilt.compiler)
 
@@ -86,6 +92,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.cloud.firestore)
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.analytics)
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
@@ -116,4 +123,5 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:workmanager"))
     implementation(project(":core:data"))
+    implementation(project(":core:analytics"))
 }

@@ -57,6 +57,14 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material.icons)
 
+    // Google Play Services
+    implementation(libs.mlkit.barcode.scanning)
+
+    // Camera Preview
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+
     // Play Services
     implementation(libs.play.services.ads)
 

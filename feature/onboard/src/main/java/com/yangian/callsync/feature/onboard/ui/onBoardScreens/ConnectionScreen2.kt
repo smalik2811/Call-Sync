@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
 import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
 import com.yangian.callsync.feature.onboard.OnBoardViewModel
@@ -33,6 +34,7 @@ fun ConnectionScreen2(
     onBoardViewModel: OnBoardViewModel,
     modifier: Modifier = Modifier,
     navigateToHome: () -> Unit = {},
+    firebaseAnalytics: FirebaseAnalytics?
 ) {
 
     val firebaseAuth = onBoardViewModel.firebaseAuth
@@ -63,11 +65,11 @@ fun ConnectionScreen2(
             // generate and display the qr code
             val uidQRCode = QRCode
                 .ofSquares()
-                .withBackgroundColor(MaterialTheme.colorScheme.secondaryContainer.toArgb())
-                .withColor(MaterialTheme.colorScheme.onSecondaryContainer.toArgb())
+                .withBackgroundColor(MaterialTheme.colorScheme.surface.toArgb())
+                .withColor(MaterialTheme.colorScheme.onSurface.toArgb())
                 .build(uid)
 
-            ElevatedCard {
+            OutlinedCard {
                 Image(
                     bitmap = (uidQRCode.render().nativeImage() as Bitmap).asImageBitmap(),
                     contentDescription = null,
@@ -81,9 +83,9 @@ fun ConnectionScreen2(
 
             Button(
                 onClick = {
-                    onBoardViewModel.updateOnBoardingCompleted(true)
+                    onBoardViewModel.updateOnBoardingCompleted(true, firebaseAnalytics)
                     navigateToHome()
-                    onBoardViewModel.registerLogsDownloadWorkRequest(context)
+                    onBoardViewModel.registerLogsDownloadWorkRequest(context, firebaseAnalytics)
                 },
                 modifier = Modifier.padding(16.dp)
             ) {
@@ -99,7 +101,7 @@ fun ConnectionScreen2(
 private fun ConnectionScreen2Preview() {
     CallSyncAppTheme {
         CallSyncAppBackground {
-            ConnectionScreen2(onBoardViewModel = hiltViewModel())
+            ConnectionScreen2(onBoardViewModel = hiltViewModel(), firebaseAnalytics = null)
         }
     }
 }

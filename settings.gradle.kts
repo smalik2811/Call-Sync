@@ -16,7 +16,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
+
 }
 
 rootProject.name = "Call Sync"
@@ -32,3 +34,4 @@ include(":core:data")
 include(":feature:home")
 include(":feature:onboard")
 include(":core:workmanager")
+include(":core:analytics")

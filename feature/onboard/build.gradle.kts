@@ -74,13 +74,13 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.cloud.firestore)
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.analytics)
 
     // QRGenerator
     implementation(libs.qrcode.kotlin)
 
     // Google Play Services
-    implementation(libs.play.services.code.scaner)
-    implementation(libs.play.services.base)
+    implementation(libs.mlkit.barcode.scanning)
 
     // Work Manager
     implementation(libs.androidx.work.runtime)

@@ -14,40 +14,54 @@ data class CallResource(
     fun getDateString(): String {
         val calendarInstance = Calendar.getInstance()
         val currentYear = calendarInstance.get(Calendar.YEAR)
+        val currentMonth = calendarInstance.get(Calendar.MONTH)
+        val currentDay = calendarInstance.get(Calendar.DAY_OF_MONTH)
+
         calendarInstance.timeInMillis = timestamp
 
-        val monthName = when (calendarInstance.get(Calendar.MONTH)) {
-            0 -> "Jan"
-            1 -> "Feb"
-            2 -> "Mar"
-            3 -> "Apr"
-            4 -> "May"
-            5 -> "Jun"
-            6 -> "Jul"
-            7 -> "Aug"
-            8 -> "Sep"
-            9 -> "Oct"
-            10 -> "Nov"
-            11 -> "Dec"
-            else -> ""
+        var result = ""
+        if (currentDay == calendarInstance.get(Calendar.DAY_OF_MONTH) && currentMonth == calendarInstance.get(
+                Calendar.MONTH
+            ) && currentYear == calendarInstance.get(Calendar.YEAR)
+        ) {
+
+            val meridian = when (calendarInstance.get(Calendar.AM_PM)) {
+                0 -> "AM"
+                1 -> "PM"
+                else -> ""
+            }
+            val hour = when (calendarInstance.get(Calendar.HOUR)) {
+                0 -> "12"
+                else -> calendarInstance.get(Calendar.HOUR).toString().padStart(2, '0')
+            }
+            val minute = calendarInstance.get(Calendar.MINUTE).toString().padStart(2, '0')
+
+            result = "$hour:$minute $meridian"
+        } else {
+            val monthName = when (calendarInstance.get(Calendar.MONTH)) {
+                0 -> "Jan"
+                1 -> "Feb"
+                2 -> "Mar"
+                3 -> "Apr"
+                4 -> "May"
+                5 -> "Jun"
+                6 -> "Jul"
+                7 -> "Aug"
+                8 -> "Sep"
+                9 -> "Oct"
+                10 -> "Nov"
+                11 -> "Dec"
+                else -> ""
+            }
+
+            result = "$monthName ${calendarInstance.get(Calendar.DAY_OF_MONTH)}"
+
+            if (calendarInstance.get(Calendar.YEAR) != currentYear) {
+                result += ", ${calendarInstance.get(Calendar.YEAR)}"
+            }
         }
-        //    val meridian = when(calendarInstance.get(Calendar.AM_PM)) {
-//        0 -> "AM"
-//        1 -> "PM"
-//        else -> ""
-//    }
 
-//    val hour = when(calendarInstance.get(Calendar.HOUR)) {
-//        0 -> "12"
-//        else -> calendarInstance.get(Calendar.HOUR).toString().padStart(2, '0')
-//    }
-
-        return "$monthName " +
-                "${calendarInstance.get(Calendar.DAY_OF_MONTH)}" +
-                if (calendarInstance.get(Calendar.YEAR) != currentYear) ", " + calendarInstance.get(Calendar.YEAR) else ""
-//            "$hour:" +
-//            "${calendarInstance.get(Calendar.MINUTE).toString().padStart(2, '0')} " +
-//            meridian
+        return result
     }
 
     fun getDurationString(): String {

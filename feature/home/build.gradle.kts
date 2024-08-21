@@ -71,6 +71,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.cloud.firestore)
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.analytics)
 
     // Lifecycle
     implementation(libs.androidx.lifecycle.viewmodel.compose)

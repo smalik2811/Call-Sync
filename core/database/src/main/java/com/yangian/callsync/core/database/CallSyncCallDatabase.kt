@@ -10,7 +10,8 @@ import com.yangian.callsync.core.database.model.CallSyncCallEntity
         CallSyncCallEntity::class,
     ],
     version = 1,
-    autoMigrations = [],
+    autoMigrations = [
+    ],
     exportSchema = true,
 )
 internal abstract class CallSyncCallDatabase : RoomDatabase() {

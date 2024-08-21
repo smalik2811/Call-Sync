@@ -4,17 +4,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.yangian.callsync.feature.onboard.ui.OnBoardRoute
 
 const val ONBOARD_ROUTE = "onboard"
 
 fun NavGraphBuilder.onBoardScreen(
-    navigateToHome: () -> Unit
+    navigateToHome: () -> Unit,
+    firebaseAnalytics: FirebaseAnalytics
 ) {
     composable(route = ONBOARD_ROUTE) {
         OnBoardRoute(
             navigateToHome = navigateToHome,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            firebaseAnalytics = firebaseAnalytics
         )
     }
 }

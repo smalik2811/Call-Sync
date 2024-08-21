@@ -58,10 +58,6 @@ fun triggerCallIntent(callResourceNumber: String, activity: Activity) {
     }
 }
 
-fun navigateToCallHistory(callResourceId: Long) {
-
-}
-
 fun LazyListScope.callFeed(
     feedState: CallFeedUiState,
     modifier: Modifier = Modifier,
@@ -134,9 +130,6 @@ fun LazyListScope.callFeed(
                         onCallClick = {
                             triggerCallIntent(callResource.number, activity)
                         },
-                        onCallHistoryClick = {
-                            navigateToCallHistory(callResource.id)
-                        }
                     )
                 }
             }
@@ -165,7 +158,7 @@ private fun LoadingCallFeedPreview() {
             callFeed(
                 feedState = CallFeedUiState.Loading,
                 modifier = Modifier.fillMaxWidth(),
-                focussedCallResourceId = -1L,
+                focussedCallResourceId = -1,
                 activity = activity
             )
         }
