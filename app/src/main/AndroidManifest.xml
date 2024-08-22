@@ -22,13 +22,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CallSync"
+        android:theme="@style/Theme.Splash"
         tools:targetApi="34">
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.CallSync">
+            android:theme="@style/Theme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,7 +44,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="TODO: Add id" />
+            android:value="TODO" />
 
         <meta-data
             android:name="google_analytics_automatic_screen_reporting_enabled"
