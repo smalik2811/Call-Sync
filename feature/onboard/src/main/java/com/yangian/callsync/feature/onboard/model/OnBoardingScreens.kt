@@ -13,4 +13,5 @@ enum class OnBoardingScreens(
     Unlock(R.string.unlock_title),
     Connection1(R.string.connection_title),
     Connection2(R.string.connection_title),
+    DkmaScreen(R.string.dkma_title)
 }

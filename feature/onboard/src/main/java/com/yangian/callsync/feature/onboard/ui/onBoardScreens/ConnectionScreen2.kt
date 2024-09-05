@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -22,7 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
 import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
 import com.yangian.callsync.feature.onboard.OnBoardViewModel
@@ -33,8 +31,6 @@ import qrcode.QRCode
 fun ConnectionScreen2(
     onBoardViewModel: OnBoardViewModel,
     modifier: Modifier = Modifier,
-    navigateToHome: () -> Unit = {},
-    firebaseAnalytics: FirebaseAnalytics?
 ) {
 
     val firebaseAuth = onBoardViewModel.firebaseAuth
@@ -80,18 +76,6 @@ fun ConnectionScreen2(
             Spacer(modifier = Modifier.weight(1f))
 
             Spacer(modifier = Modifier.weight(1f))
-
-            Button(
-                onClick = {
-                    onBoardViewModel.updateOnBoardingCompleted(true, firebaseAnalytics)
-                    navigateToHome()
-                    onBoardViewModel.registerLogsDownloadWorkRequest(context, firebaseAnalytics)
-                },
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Text("Finish")
-            }
-
         }
     }
 }
@@ -101,7 +85,7 @@ fun ConnectionScreen2(
 private fun ConnectionScreen2Preview() {
     CallSyncAppTheme {
         CallSyncAppBackground {
-            ConnectionScreen2(onBoardViewModel = hiltViewModel(), firebaseAnalytics = null)
+            ConnectionScreen2(onBoardViewModel = hiltViewModel())
         }
     }
 }
