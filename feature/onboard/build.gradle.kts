@@ -97,4 +97,5 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:firebase"))
     implementation(project(":core:workmanager"))
+    implementation(project(":core:network"))
 }

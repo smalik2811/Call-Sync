@@ -37,6 +37,7 @@ import com.yangian.callsync.feature.onboard.R
 import com.yangian.callsync.feature.onboard.model.OnBoardingScreens
 import com.yangian.callsync.feature.onboard.ui.onBoardScreens.ConnectionScreen1
 import com.yangian.callsync.feature.onboard.ui.onBoardScreens.ConnectionScreen2
+import com.yangian.callsync.feature.onboard.ui.onBoardScreens.DkmaScreen
 import com.yangian.callsync.feature.onboard.ui.onBoardScreens.InstallScreen
 import com.yangian.callsync.feature.onboard.ui.onBoardScreens.TermsOfServiceScreen
 import com.yangian.callsync.feature.onboard.ui.onBoardScreens.UnlockScreen
@@ -100,7 +101,7 @@ fun OnBoardRoute(
                     .weight(1f)
             )
 
-            if (currentScreen != OnBoardingScreens.Connection1 && currentScreen != OnBoardingScreens.Connection2) {
+            if (currentScreen != OnBoardingScreens.Connection1) {
                 Spacer(
                     modifier = Modifier.height(8.dp)
                 )
@@ -142,7 +143,23 @@ fun OnBoardingScreen(
         OnBoardingScreens.Install -> InstallScreen(modifier)
         OnBoardingScreens.Unlock -> UnlockScreen(modifier)
         OnBoardingScreens.Connection1 -> ConnectionScreen1(onBoardViewModel, modifier)
-        OnBoardingScreens.Connection2 -> ConnectionScreen2(onBoardViewModel, modifier, navigateToHome, firebaseAnalytics)
+        OnBoardingScreens.Connection2 -> ConnectionScreen2(
+            onBoardViewModel,
+            modifier,
+        )
+
+        OnBoardingScreens.DkmaScreen -> DkmaScreen(
+            onBoardViewModel.dkmaUiState,
+            onBoardViewModel.isIssueVisible,
+            onBoardViewModel.isSolutionVisible,
+            onBoardViewModel::alterIssueVisibility,
+            onBoardViewModel::alterSolutionVisibility,
+            onBoardViewModel::updateOnBoardingCompleted,
+            navigateToHome,
+            onBoardViewModel::registerLogsDownloadWorkRequest,
+            firebaseAnalytics,
+            modifier
+        )
     }
 }
 

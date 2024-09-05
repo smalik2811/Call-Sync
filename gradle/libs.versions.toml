@@ -1,20 +1,23 @@
 [versions]
-agp = "8.5.2"
+agp = "8.6.0"
 kotlin = "1.9.23"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+kotlinxSerializationJson = "1.6.2"
 lifecycleRuntimeKtx = "2.8.4"
 activityCompose = "1.9.1"
-composeBom = "2024.06.00"
+composeBom = "2024.08.00"
 appcompat = "1.7.0"
 material = "1.12.0"
-dagger-hilt = "2.51"
-firebaseBom = "33.1.2"
+dagger-hilt = "2.51.1"
+firebaseBom = "33.2.0"
 datastorePreferences = "1.1.1"
-ksp = "1.9.22-1.0.18"
+ksp = "2.0.0-1.0.21"
 google-services = "4.4.2"
+okhttp = "4.12.0"
+retrofit2KotlinxSerializationConverter = "1.0.0"
 roomRuntime = "2.6.1"
 navigation = "2.7.7"
 androidxLifecycle = "2.8.4"
@@ -22,14 +25,15 @@ hilt = "1.2.0"
 coil = "2.6.0"
 qr-code-kotlin = "4.1.1"
 splashscreen = "1.0.1"
-play-services-ads = "23.2.0"
+play-services-ads = "23.3.0"
 constraintlayout = "2.1.4"
 firebaseCrashlyticsBuildtools = "3.0.2"
 workManager = "2.9.1"
 hiltCommon = "1.2.0"
 cameraCamera2 = "1.3.4"
 barcodeScanningVersion = "17.3.0"
-dependency-analysis = "1.33.0"
+adapterRxjava2 = "2.9.0"
+retrofit = "2.9.0"
 
 [libraries]
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCamera2" }
@@ -78,12 +82,19 @@ material = { group = "com.google.android.material", name = "material", version.r
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil"}
 coil-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil"}
 
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp"}
 qrcode-kotlin = { group = "io.github.g0dkar", name = "qrcode-kotlin", version.ref = "qr-code-kotlin"}
 
 play-services-ads = {group = "com.google.android.gms", name = "play-services-ads-lite", version.ref = "play-services-ads"}
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-work-runtime = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workManager"}
 firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
+
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "adapterRxjava2" }
+retrofit2-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit2KotlinxSerializationConverter" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -92,4 +103,3 @@ ksp = { id = "com.google.devtools.ksp", version.ref =  "ksp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 googleServices = { id = "com.google.gms.google-services", version.ref = "google-services"}
 daggerHilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt" }
-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependency-analysis"}
