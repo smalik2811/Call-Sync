@@ -21,12 +21,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
-        kapt {
-            arguments {
-                arg("room.schemaLocation", "$projectDir/schemas")
-            }
-        }
     }
 
     buildTypes {
@@ -98,7 +92,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     // Play Services
-    implementation(libs.play.services.ads)
+//    implementation(libs.play.services.ads)
 
     // Work Manager
     implementation(libs.androidx.work.runtime)

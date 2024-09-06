@@ -66,7 +66,7 @@ dependencies {
     implementation(libs.androidx.camera.view)
 
     // Play Services
-    implementation(libs.play.services.ads)
+//    implementation(libs.play.services.ads)
 
     // Coil library
     implementation(libs.coil.compose)

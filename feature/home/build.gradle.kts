@@ -57,8 +57,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3.window.size)
 
-    // Native Ad
-    implementation(libs.play.services.ads)
+//     Native Ad
+//    implementation(libs.play.services.ads)
 
     // Hilt
     implementation(libs.androidx.hilt.navigation)
