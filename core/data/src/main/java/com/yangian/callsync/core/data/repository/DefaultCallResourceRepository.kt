@@ -34,4 +34,14 @@ class DefaultCallResourceRepository @Inject constructor(
     override suspend fun deleteCall(call: CallResource) {
         callResourcesDao.deleteCall(call.asEntity())
     }
+
+    override suspend fun getCallsByNumber(number: String): Flow<List<CallResource>> {
+        return callResourcesDao.getCallsByNumber(number)
+            .map { it.map(CallSyncCallEntity::asExternalModel) }
+    }
+
+    override suspend fun searchCalls(query: String): Flow<List<CallResource>> {
+        return callResourcesDao.searchCalls(query)
+            .map { it.map(CallSyncCallEntity::asExternalModel) }
+    }
 }
