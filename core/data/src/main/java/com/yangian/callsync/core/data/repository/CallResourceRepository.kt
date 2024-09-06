@@ -13,4 +13,7 @@ interface CallResourceRepository {
 
     suspend fun deleteCall(call: CallResource)
 
+    suspend fun getCallsByNumber(number: String): Flow<List<CallResource>>
+
+    suspend fun searchCalls(query: String): Flow<List<CallResource>>
 }

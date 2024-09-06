@@ -24,4 +24,13 @@ interface CallResourcesDao {
 
     @Delete
     suspend fun deleteCall(call: CallSyncCallEntity)
+
+    // Fetch records for a particular number
+    @Query("SELECT * FROM $CALL_TABLE_NAME WHERE number = :number ORDER BY rowid DESC")
+    fun getCallsByNumber(number: String): Flow<List<CallSyncCallEntity>>
+
+    // Search records for a particular name or number
+    @Query("SELECT * FROM $CALL_TABLE_NAME WHERE name LIKE :query OR number LIKE :query ORDER BY rowid DESC")
+    fun searchCalls(query: String): Flow<List<CallSyncCallEntity>>
+
 }
