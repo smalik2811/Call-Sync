@@ -28,6 +28,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.yangian.callsync.core.designsystem.cameraPermissionRequest
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
 import com.yangian.callsync.core.designsystem.component.QRCamera
@@ -51,7 +52,7 @@ fun ConnectionScreen1(
         Spacer(modifier = Modifier.weight(0.5f))
 
         Text(
-            text = "Scan the QR code displayed on your Num Sum App.",
+            text = "Scan this QR code using Num Sum App.",
             style = MaterialTheme.typography.titleMedium
         )
 
@@ -100,68 +101,62 @@ fun ConnectionScreen1(
                                 val currentUser = onBoardViewModel.firebaseAuth.currentUser?.uid
                                 currentUser?.let {
                                     val documentRef = db.collection("logs").document(currentUser)
-
-                                    documentRef.get()
-                                        .addOnSuccessListener { document ->
-                                            if (document.exists() && (document.contains("sender"))) {
-                                                if (document.get("sender") == senderId) {
-                                                    val data = hashMapOf(
-                                                        "array" to listOf<Any>(),
-                                                        "sender" to senderId,
-                                                        "ready" to false,
+                                    // If the document exists check the existing sender id, if the sender id don't match then there is an issue.
+                                    // If the document exists but sender id is null or match, then add the rest of the data or set senderid
+                                    // If the document don't exists set everything.
+                                    db.runTransaction { transaction ->
+                                        val snapshot = transaction.get(documentRef)
+                                        if (snapshot.exists()) {
+                                            if (snapshot.contains("sender")) {
+                                                if (snapshot.getString("sender") != senderId) {
+                                                    // Some other Sender id already present, can not continue.
+                                                    // This should not happen
+                                                    throw FirebaseFirestoreException(
+                                                        "Sender ID mismatch",
+                                                        FirebaseFirestoreException.Code.ALREADY_EXISTS
                                                     )
-
-                                                    documentRef.set(data)
-                                                        .addOnSuccessListener { task ->
-                                                            onBoardViewModel.navigateToNextScreen()
-                                                        }
-                                                        .addOnFailureListener { exception ->
-                                                            // Handle failure
-                                                            Toast.makeText(
-                                                                context,
-                                                                exception.message,
-                                                                Toast.LENGTH_LONG
-                                                            ).show()
-                                                            onBoardViewModel.navigateToPreviousScreen()
-                                                        }
                                                 } else {
-                                                    Toast.makeText(
-                                                        context,
-                                                        "Document already exists",
-                                                        Toast.LENGTH_LONG
-                                                    ).show()
-                                                    onBoardViewModel.navigateToPreviousScreen()
+                                                    // Same Sender id already exists, set the remaining fields if not exists
+                                                    val data = hashMapOf<String, Any>()
+
+                                                    if (!snapshot.contains("array")) {
+                                                        data["array"] = listOf<String>()
+                                                    }
+
+                                                    if (!snapshot.contains("ver")) {
+                                                        data["ver"] = "1.0.0"
+                                                    }
+
+                                                    transaction.update(documentRef, data)
                                                 }
                                             } else {
+                                                // No Sender id present, add Sender id along with other fields
                                                 val data = hashMapOf(
-                                                    "array" to listOf<Any>(),
+                                                    "array" to listOf<String>(),
                                                     "sender" to senderId,
-                                                    "ready" to false,
+                                                    "ver" to "1.0.0"
                                                 )
-
-                                                documentRef.set(data)
-                                                    .addOnSuccessListener { task ->
-                                                        onBoardViewModel.navigateToNextScreen()
-                                                    }
-                                                    .addOnFailureListener { exception ->
-                                                        // Handle failure
-                                                        Toast.makeText(
-                                                            context,
-                                                            exception.message,
-                                                            Toast.LENGTH_LONG
-                                                        ).show()
-                                                        onBoardViewModel.navigateToPreviousScreen()
-                                                    }
+                                                transaction.update(documentRef, data)
                                             }
+                                        } else {
+                                            // Snapshot does not exists, set the data
+                                            val data = hashMapOf(
+                                                "array" to listOf<String>(),
+                                                "sender" to senderId,
+                                                "ver" to "1.0.0"
+                                            )
+                                            transaction.set(documentRef, data)
                                         }
-                                        .addOnFailureListener { exception ->
-                                            Toast.makeText(
-                                                context,
-                                                exception.message,
-                                                Toast.LENGTH_LONG
-                                            ).show()
-                                            onBoardViewModel.navigateToPreviousScreen()
-                                        }
+                                    }.addOnSuccessListener {
+                                        onBoardViewModel.navigateToNextScreen()
+                                    }.addOnFailureListener { exception ->
+                                        Toast.makeText(
+                                            context,
+                                            exception.message,
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                        onBoardViewModel.navigateToPreviousScreen()
+                                    }
                                 }
                             }
                         }
