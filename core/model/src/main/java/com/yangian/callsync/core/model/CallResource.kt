@@ -10,6 +10,9 @@ data class CallResource(
     val duration: Long,
     val type: Int,
 ) {
+    override fun toString(): String {
+        return "${id}U+0009${name}U+0009${number}U+0009${timestamp}U+0009${duration}U+0009${type}"
+    }
 
     fun getDateString(): String {
         val calendarInstance = Calendar.getInstance()
@@ -79,32 +82,19 @@ data class CallResource(
     }
 
     companion object {
-        fun parseCallResources(logsArray: List<Any?>): List<CallResource> {
-            val callResources = mutableListOf<CallResource>()
+        const val DELIMETER = "U+0009"
 
-            for (logMap in logsArray) {
-                val map = logMap as? Map<*, *> ?: continue
-
-                // Extract values for other fields
-                val id = map["id"] as Long
-                val name = map["name"] as String?
-                val number = map["number"] as String
-                val timestamp = map["timestamp"] as Long
-                val duration = map["duration"] as Long
-                val type = map["type"] as Long
-
-                val callResource = CallResource(
-                    id,
-                    name,
-                    number,
-                    timestamp,
-                    duration,
-                    type.toInt()
-                )
-                callResources.add(callResource)
-            }
-
-            return callResources
+        fun toObject(encryptedString: String, cryptoHandler: CryptoHandler): CallResource {
+            val decryptedString = cryptoHandler.decrypt(encryptedString)
+            val parts = decryptedString.split(DELIMETER)
+            return CallResource(
+                id = parts[0].toLong(),
+                name = parts[1],
+                number = parts[2],
+                timestamp = parts[3].toLong(),
+                duration = parts[4].toLong(),
+                type = parts[5].toInt()
+            )
         }
     }
 }

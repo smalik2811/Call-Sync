@@ -12,6 +12,8 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.yangian.callsync.core.data.repository.CallResourceRepository
+import com.yangian.callsync.core.datastore.UserPreferences
+import dagger.assisted.Assisted
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -31,6 +33,7 @@ class CallSyncApplication : Application(), Configuration.Provider {
 class MyWorkerFactory @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val firebaseAuth: FirebaseAuth,
+    private val userPreferences: UserPreferences,
     private val firebaseAnalytics: FirebaseAnalytics,
     private val callResourceRepository: CallResourceRepository,
 ) : WorkerFactory() {
@@ -43,6 +46,7 @@ class MyWorkerFactory @Inject constructor(
         firestore,
         firebaseAuth,
         firebaseAnalytics,
+        userPreferences,
         callResourceRepository,
         appContext,
         workerParameters
