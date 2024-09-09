@@ -18,8 +18,8 @@ class CryptoHandler(
     }
 
     fun decrypt(encryptedText: String): String {
-        val decryptString = cipher.doFinal(Base64.getDecoder().decode(encryptedText))
-        return String(decryptString)
+        val decryptedString = cipher.doFinal(Base64.getDecoder().decode(encryptedText))
+        return String(decryptedString)
     }
 
 }
