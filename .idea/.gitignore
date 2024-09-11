@@ -4,4 +4,16 @@
 /dictionaries/
 /inspectionProfiles/
 /modules/
-*.xml
+.name
+appInsightsSettings.xml
+deploymentTargetSelector.xml
+compiler.xml
+gradle.xml
+kotlinc.xml
+material_theme_project_new.xml
+migrations.xml
+misc.xml
+other.xml
+render.experimental.xml
+vcs.xml
+workspace.xml
