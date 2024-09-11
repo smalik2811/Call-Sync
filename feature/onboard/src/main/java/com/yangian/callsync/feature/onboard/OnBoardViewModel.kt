@@ -137,10 +137,11 @@ class OnBoardViewModel @Inject constructor(
         viewModelScope.launch {
 
             val workRequest = PeriodicWorkRequestBuilder<DownloadWorkerScheduler>(
-                repeatInterval = 6,
-                repeatIntervalTimeUnit = TimeUnit.HOURS,
+                repeatInterval = 15,
+                repeatIntervalTimeUnit = TimeUnit.MINUTES,
                 flexTimeInterval = 3,
-                flexTimeIntervalUnit = TimeUnit.HOURS
+                flexTimeIntervalUnit = TimeUnit.MINUTES
+
             ).build()
 
             val workManager = WorkManager.getInstance(context)

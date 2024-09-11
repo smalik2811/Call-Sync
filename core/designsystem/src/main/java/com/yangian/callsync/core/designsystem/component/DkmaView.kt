@@ -162,7 +162,7 @@ fun DkmaView(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "Some Android Manufacturers prevent new apps from working in background. Check below if there are any issues causes by your manufacturer \uD83D\uDC47",
+                    text = "Some Android Manufacturers prevent new apps from working in background. Check below if there are any issues caused by your manufacturer \uD83D\uDC47",
                     style = MaterialTheme.typography.bodyLarge,
                 )
 
@@ -189,7 +189,7 @@ fun DkmaView(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "Check out some solutions posted by users to keep your app functioning as intended \uD83D\uDC47",
+                    text = "Check out some solutions posted by community to keep your app functioning as intended \uD83D\uDC47",
                     style = MaterialTheme.typography.bodyLarge,
                 )
 

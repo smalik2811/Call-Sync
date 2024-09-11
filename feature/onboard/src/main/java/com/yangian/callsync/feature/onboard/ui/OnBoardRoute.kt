@@ -101,7 +101,7 @@ fun OnBoardRoute(
                     .weight(1f)
             )
 
-            if (currentScreen != OnBoardingScreens.Connection1) {
+            if (currentScreen != OnBoardingScreens.DkmaScreen && currentScreen != OnBoardingScreens.Connection1) {
                 Spacer(
                     modifier = Modifier.height(8.dp)
                 )
