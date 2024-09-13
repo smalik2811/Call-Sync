@@ -41,6 +41,7 @@ import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
 import com.yangian.callsync.core.designsystem.theme.extendedDark
 import com.yangian.callsync.core.designsystem.theme.extendedLight
 import com.yangian.callsync.feature.onboard.OnBoardViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 
@@ -109,6 +110,7 @@ fun ConnectionScreen1(
             CircularProgressIndicator()
 
             if (scannedValue != null) {
+                val senderId: String = scannedValue.toString()
                 // UID found in the QR code
                 val db = onBoardViewModel.firebaseFirestore
                 val currentUser = onBoardViewModel.firebaseAuth.currentUser?.uid
@@ -122,7 +124,7 @@ fun ConnectionScreen1(
                         val snapshot = transaction.get(documentRef)
                         if (snapshot.exists()) {
                             if (snapshot.contains("sender")) {
-                                if (snapshot.getString("sender") != scannedValue) {
+                                if (snapshot.getString("sender") != senderId) {
                                     // Some other Sender id already present, can not continue.
                                     // This should not happen
                                     throw FirebaseFirestoreException(
@@ -147,7 +149,7 @@ fun ConnectionScreen1(
                                 // No Sender id present, add Sender id along with other fields
                                 val data = hashMapOf(
                                     "array" to listOf<String>(),
-                                    "sender" to scannedValue,
+                                    "sender" to senderId,
                                     "ver" to "1.0.0"
                                 )
                                 transaction.update(documentRef, data)
@@ -156,13 +158,14 @@ fun ConnectionScreen1(
                             // Snapshot does not exists, set the data
                             val data = hashMapOf(
                                 "array" to listOf<String>(),
-                                "sender" to scannedValue,
+                                "sender" to senderId,
                                 "ver" to "1.0.0"
                             )
                             transaction.set(documentRef, data)
                         }
                     }.addOnSuccessListener {
                         onBoardViewModel.navigateToNextScreen()
+                        onBoardViewModel.updateSenderId(senderId)
                         Log.i(
                             "ONBOARD-CONNECTIONSCREEN-1",
                             "Navigating to Connection Screen 2"

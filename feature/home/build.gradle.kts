@@ -65,6 +65,7 @@ dependencies {
 
     // Dagger-Hilt
     implementation(libs.dagger.hilt.android)
+    implementation(project(":core:datastore"))
     kapt(libs.dagger.hilt.compiler)
 
     // Firebase
@@ -72,6 +73,9 @@ dependencies {
     implementation(libs.firebase.cloud.firestore)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.analytics)
+
+    // Work Manager
+    implementation(libs.androidx.work.runtime)
 
     // Lifecycle
     implementation(libs.androidx.lifecycle.viewmodel.compose)

@@ -9,10 +9,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.callsync.core.workmanager.DownloadWorkerScheduler
+import com.example.callsync.core.workmanager.LogsDownloadWorker
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -80,7 +83,6 @@ class OnBoardViewModel @Inject constructor(
         isIssueVisible = !isIssueVisible
     }
 
-
     fun alterSolutionVisibility() {
         isSolutionVisible = !isSolutionVisible
     }
@@ -89,14 +91,14 @@ class OnBoardViewModel @Inject constructor(
         viewModelScope.launch {
             when (_currentScreen.value) {
                 OnBoardingScreens.TermsOfService -> _currentScreen.value = OnBoardingScreens.Welcome
-                OnBoardingScreens.Welcome -> _currentScreen.value = OnBoardingScreens.Install
+                OnBoardingScreens.Welcome -> _currentScreen.value = OnBoardingScreens.DkmaScreen
+                OnBoardingScreens.DkmaScreen -> _currentScreen.value = OnBoardingScreens.Install
                 OnBoardingScreens.Install -> _currentScreen.value = OnBoardingScreens.Unlock
                 OnBoardingScreens.Unlock -> _currentScreen.value = OnBoardingScreens.Connection1
                 OnBoardingScreens.Connection1 -> _currentScreen.value =
                     OnBoardingScreens.Connection2
 
-                OnBoardingScreens.Connection2 -> _currentScreen.value = OnBoardingScreens.DkmaScreen
-                OnBoardingScreens.DkmaScreen -> {}
+                OnBoardingScreens.Connection2 -> {}
             }
         }
     }
@@ -104,16 +106,24 @@ class OnBoardViewModel @Inject constructor(
     fun navigateToPreviousScreen() {
         viewModelScope.launch {
             when (_currentScreen.value) {
-                OnBoardingScreens.DkmaScreen -> _currentScreen.value = OnBoardingScreens.Connection2
                 OnBoardingScreens.Connection2 -> _currentScreen.value =
                     OnBoardingScreens.Connection1
 
                 OnBoardingScreens.Connection1 -> _currentScreen.value = OnBoardingScreens.Unlock
                 OnBoardingScreens.Unlock -> _currentScreen.value = OnBoardingScreens.Install
-                OnBoardingScreens.Install -> _currentScreen.value = OnBoardingScreens.Welcome
+                OnBoardingScreens.Install -> _currentScreen.value = OnBoardingScreens.DkmaScreen
+                OnBoardingScreens.DkmaScreen -> _currentScreen.value = OnBoardingScreens.Welcome
                 OnBoardingScreens.Welcome -> _currentScreen.value = OnBoardingScreens.TermsOfService
                 OnBoardingScreens.TermsOfService -> {}
             }
+        }
+    }
+
+    fun updateSenderId(
+        senderId: String
+    ) {
+        viewModelScope.launch {
+            userPreferences.updateSenderId(senderId)
         }
     }
 
@@ -133,28 +143,28 @@ class OnBoardViewModel @Inject constructor(
         context: Context,
         firebaseAnalytics: FirebaseAnalytics?
     ) {
+        val workerConstraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
 
-        viewModelScope.launch {
+        val workRequest = PeriodicWorkRequestBuilder<LogsDownloadWorker>(
+            repeatInterval = 6,
+            repeatIntervalTimeUnit = TimeUnit.HOURS,
+            flexTimeInterval = 3,
+            flexTimeIntervalUnit = TimeUnit.HOURS
+        ).setConstraints(workerConstraints)
+            .build()
 
-            val workRequest = PeriodicWorkRequestBuilder<DownloadWorkerScheduler>(
-                repeatInterval = 15,
-                repeatIntervalTimeUnit = TimeUnit.MINUTES,
-                flexTimeInterval = 3,
-                flexTimeIntervalUnit = TimeUnit.MINUTES
+        val workManager = WorkManager.getInstance(context)
+        workManager.enqueueUniquePeriodicWork(
+            "LOGS_DOWNLOAD_WORKER",
+            ExistingPeriodicWorkPolicy.UPDATE,
+            workRequest
+        )
 
-            ).build()
-
-            val workManager = WorkManager.getInstance(context)
-            workManager.enqueueUniquePeriodicWork(
-                "DOWNLOAD_CALL_LOGS_Scheduler",
-                ExistingPeriodicWorkPolicy.UPDATE,
-                workRequest
-            )
-
-            firebaseAnalytics?.logEvent("download_call_logs_scheduler_registered", Bundle().apply {
-                putString("user_id", firebaseAuth.currentUser?.uid)
-            })
-        }
+        firebaseAnalytics?.logEvent("download_call_logs_scheduler_registered", Bundle().apply {
+            putString("user_id", firebaseAuth.currentUser?.uid)
+        })
     }
 
     init {

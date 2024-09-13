@@ -27,6 +27,9 @@ fun CallSyncAppNavHost(
 
         homeScreen(
             activity = activity,
+            navigateToOnboarding = {
+                appState.navigateToDestination(CallSyncDestination.OnBoard)
+            },
             firebaseAnalytics = firebaseAnalytics
         )
 

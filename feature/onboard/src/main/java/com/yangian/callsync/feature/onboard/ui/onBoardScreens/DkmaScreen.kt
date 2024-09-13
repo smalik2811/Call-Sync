@@ -29,10 +29,6 @@ fun DkmaScreen(
     isSolutionVisible: Boolean,
     alterIssueVisibility: () -> Unit,
     alterSolutionVisibility: () -> Unit,
-    updateOnBoardingCompleted: (boolean: Boolean, firebaseAnalytics: FirebaseAnalytics?) -> Unit,
-    navigateToHome: () -> Unit,
-    registerLogsDownloadWorkRequest: (context: Context, firebaseAnalytics: FirebaseAnalytics) -> Unit,
-    firebaseAnalytics: FirebaseAnalytics?,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -56,19 +52,6 @@ fun DkmaScreen(
                     alterSolutionVisibility,
                     modifier.weight(1f)
                 )
-
-                Button(
-                    onClick = {
-                        updateOnBoardingCompleted(true, firebaseAnalytics)
-                        navigateToHome()
-                        if (firebaseAnalytics != null) {
-                            registerLogsDownloadWorkRequest(context, firebaseAnalytics)
-                        }
-                    },
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text("Finish")
-                }
             }
 
             is DkmaUiState.Error -> {
@@ -97,10 +80,6 @@ private fun DkmaPreviewLoading() {
                 isSolutionVisible = false,
                 alterIssueVisibility = {},
                 alterSolutionVisibility = {},
-                updateOnBoardingCompleted = { _, _ -> },
-                navigateToHome = {},
-                registerLogsDownloadWorkRequest = { _, _ -> },
-                firebaseAnalytics = null
             )
         }
     }
@@ -117,10 +96,6 @@ private fun DkmaPreviewError() {
                 isSolutionVisible = false,
                 alterIssueVisibility = {},
                 alterSolutionVisibility = {},
-                firebaseAnalytics = null,
-                updateOnBoardingCompleted = { _, _ -> },
-                navigateToHome = {},
-                registerLogsDownloadWorkRequest = { _, _ -> },
             )
         }
     }
@@ -142,10 +117,6 @@ private fun DkmaPreviewSuccess() {
                 alterIssueVisibility = {},
                 alterSolutionVisibility = {},
                 modifier = Modifier.fillMaxSize(),
-                firebaseAnalytics = null,
-                updateOnBoardingCompleted = { _, _ -> },
-                navigateToHome = {},
-                registerLogsDownloadWorkRequest = { _, _ -> },
             )
         }
     }

@@ -23,6 +23,12 @@ class UserPreferences @Inject constructor(
         val ONBOARDING_DONE_KEY = booleanPreferencesKey(ONBOARDING_DONE)
     }
 
+    suspend fun clear() {
+        dataStore.edit {
+            it.clear()
+        }
+    }
+
     fun getSenderId(): Flow<String> {
         return dataStore.data.map {
             it[SENDER_ID_KEY] ?: ""

@@ -3,6 +3,7 @@ package com.yangian.callsync.core.designsystem.icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Backspace
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.automirrored.outlined.PhoneMissed
 import androidx.compose.material.icons.automirrored.rounded.CallMade
 import androidx.compose.material.icons.automirrored.rounded.CallMissed
@@ -10,6 +11,7 @@ import androidx.compose.material.icons.automirrored.rounded.CallMissedOutgoing
 import androidx.compose.material.icons.automirrored.rounded.CallReceived
 import androidx.compose.material.icons.outlined.Call
 import androidx.compose.material.icons.outlined.Chat
+import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.Search
@@ -33,6 +35,7 @@ val CallReceivedIcon = Icons.AutoMirrored.Rounded.CallReceived
 val ChatIcon = Icons.Outlined.Chat
 val EditIcon = Icons.Rounded.Edit
 val HistoryIcon = Icons.Rounded.History
+val LogoutIcon = Icons.AutoMirrored.Outlined.Logout
 val MoreVertIcon = Icons.Outlined.MoreVert
 val PhoneDisabledIcon = Icons.Rounded.PhoneDisabled
 val PhoneMissedIcon = Icons.AutoMirrored.Outlined.PhoneMissed

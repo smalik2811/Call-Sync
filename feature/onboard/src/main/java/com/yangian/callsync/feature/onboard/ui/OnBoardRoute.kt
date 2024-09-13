@@ -101,7 +101,7 @@ fun OnBoardRoute(
                     .weight(1f)
             )
 
-            if (currentScreen != OnBoardingScreens.DkmaScreen && currentScreen != OnBoardingScreens.Connection1) {
+            if (currentScreen != OnBoardingScreens.Connection2 && currentScreen != OnBoardingScreens.Connection1) {
                 Spacer(
                     modifier = Modifier.height(8.dp)
                 )
@@ -145,6 +145,10 @@ fun OnBoardingScreen(
         OnBoardingScreens.Connection1 -> ConnectionScreen1(onBoardViewModel, modifier)
         OnBoardingScreens.Connection2 -> ConnectionScreen2(
             onBoardViewModel,
+            onBoardViewModel::updateOnBoardingCompleted,
+            navigateToHome,
+            onBoardViewModel::registerLogsDownloadWorkRequest,
+            firebaseAnalytics,
             modifier,
         )
 
@@ -154,10 +158,6 @@ fun OnBoardingScreen(
             onBoardViewModel.isSolutionVisible,
             onBoardViewModel::alterIssueVisibility,
             onBoardViewModel::alterSolutionVisibility,
-            onBoardViewModel::updateOnBoardingCompleted,
-            navigateToHome,
-            onBoardViewModel::registerLogsDownloadWorkRequest,
-            firebaseAnalytics,
             modifier
         )
     }

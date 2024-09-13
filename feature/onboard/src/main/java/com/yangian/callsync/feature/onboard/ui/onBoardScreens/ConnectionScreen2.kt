@@ -1,5 +1,6 @@
 package com.yangian.callsync.feature.onboard.ui.onBoardScreens
 
+import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -21,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
 import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
 import com.yangian.callsync.feature.onboard.OnBoardViewModel
@@ -30,6 +33,10 @@ import qrcode.QRCode
 @Composable
 fun ConnectionScreen2(
     onBoardViewModel: OnBoardViewModel,
+    updateOnBoardingCompleted: (boolean: Boolean, firebaseAnalytics: FirebaseAnalytics?) -> Unit,
+    navigateToHome: () -> Unit,
+    registerLogsDownloadWorkRequest: (context: Context, firebaseAnalytics: FirebaseAnalytics) -> Unit,
+    firebaseAnalytics: FirebaseAnalytics?,
     modifier: Modifier = Modifier,
 ) {
 
@@ -75,6 +82,19 @@ fun ConnectionScreen2(
 
             Spacer(modifier = Modifier.weight(1f))
 
+            Button(
+                onClick = {
+                    updateOnBoardingCompleted(true, firebaseAnalytics)
+                    navigateToHome()
+                    if (firebaseAnalytics != null) {
+                        registerLogsDownloadWorkRequest(context, firebaseAnalytics)
+                    }
+                },
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text("Finish")
+            }
+
             Spacer(modifier = Modifier.weight(1f))
         }
     }
@@ -85,7 +105,13 @@ fun ConnectionScreen2(
 private fun ConnectionScreen2Preview() {
     CallSyncAppTheme {
         CallSyncAppBackground {
-            ConnectionScreen2(onBoardViewModel = hiltViewModel())
+            ConnectionScreen2(
+                onBoardViewModel = hiltViewModel(),
+                updateOnBoardingCompleted = { _, _ -> },
+                navigateToHome = {},
+                registerLogsDownloadWorkRequest = { _, _ -> },
+                firebaseAnalytics = null
+            )
         }
     }
 }

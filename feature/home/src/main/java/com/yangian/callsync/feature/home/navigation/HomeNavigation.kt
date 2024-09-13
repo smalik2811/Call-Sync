@@ -11,12 +11,14 @@ import com.yangian.callsync.feature.home.ui.HomeRoute
 const val HOME_ROUTE = "home"
 fun NavGraphBuilder.homeScreen(
     activity: Activity,
+    navigateToOnboarding: () -> Unit,
     firebaseAnalytics: FirebaseAnalytics
 ) {
     composable(route = HOME_ROUTE) {
         HomeRoute(
             modifier = Modifier.fillMaxSize(),
             activity = activity,
+            navigateToOnboarding = navigateToOnboarding,
             firebaseAnalytics = firebaseAnalytics
         )
     }
