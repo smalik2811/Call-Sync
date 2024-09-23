@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.callsync.core.workmanager"
+    namespace = "com.yangian.callsync.core.workmanager"
     compileSdk = 34
 
     defaultConfig {

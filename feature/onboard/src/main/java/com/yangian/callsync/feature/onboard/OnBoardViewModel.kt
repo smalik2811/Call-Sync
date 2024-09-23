@@ -18,7 +18,6 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.callsync.core.workmanager.LogsDownloadWorker
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -26,6 +25,7 @@ import com.yangian.callsync.core.datastore.UserPreferences
 import com.yangian.callsync.core.firebase.repository.FirestoreRepository
 import com.yangian.callsync.core.network.model.DkmaManufacturer
 import com.yangian.callsync.core.network.retrofit.RetrofitDkmaNetwork
+import com.yangian.callsync.core.workmanager.LogsDownloadWorker
 import com.yangian.callsync.feature.onboard.model.OnBoardingScreens
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

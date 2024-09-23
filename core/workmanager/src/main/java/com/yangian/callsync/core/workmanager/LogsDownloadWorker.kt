@@ -1,7 +1,9 @@
-package com.example.callsync.core.workmanager
+package com.yangian.callsync.core.workmanager
 
+import android.app.NotificationManager
 import android.content.Context
 import android.util.Log
+import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -50,6 +52,20 @@ class LogsDownloadWorker @AssistedInject constructor(
             return Result.retry()
         }
         Log.i(TAG, "Worker Successfully finished.")
+
+        if (result == Result.success()) {
+            // Show Notification
+            val notificationId = 1
+            val notificationBuilder =
+                NotificationCompat.Builder(context, "call_sync_notifications")
+                    .setSmallIcon(R.drawable.call_sync_notification)
+                    .setContentTitle("Sync Complete")
+                    .setContentText("New data available")
+                    .setAutoCancel(true)
+
+            val notificationManager = context.getSystemService(NotificationManager::class.java)
+            notificationManager.notify(notificationId, notificationBuilder.build())
+        }
         return result
     }
 }

@@ -9,12 +9,12 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.callsync.core.workmanager.LogsDownloadWorker
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.yangian.callsync.core.data.repository.CallResourceRepository
 import com.yangian.callsync.core.datastore.UserPreferences
 import com.yangian.callsync.core.ui.CallFeedUiState
+import com.yangian.callsync.core.workmanager.LogsDownloadWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
