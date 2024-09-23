@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.Wallpapers
@@ -47,27 +48,8 @@ fun DkmaScreenWebViewCard(
     alterVisibility: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val prefixHTMLCode: String = "<head>" +
-            "        <meta charset=\"utf-8\">" +
-            "        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.04\">" +
-            "        <link rel=\"stylesheet\" href=\"https://dontkillmyapp.com/assets/main.css\">" +
-            "        <link rel=\"stylesheet\" href=\"https://dontkillmyapp.com/assets/css/style.css\">" +
-            "        <script src=\"https://dontkillmyapp.com/assets/js/findAndReplaceDOMText.js\"></script>" +
-            "        <script src=\"https://dontkillmyapp.com/assets/js/main.js\"></script>" +
-            "        <style>" +
-            "            body {" +
-            "                padding: 8px;" +
-            "            }" +
-            "        </style>" +
-            "    </head>" +
-            "    <body>"
-    val suffixHTMLCode: String = "</body>" +
-            "        <script>" +
-            "            findAndReplaceDOMText(document.body, {" +
-            "                find: \"your app\"," +
-            "                replace: \"${stringResource(R.string.app_name)}\"" +
-            "            });" +
-            "        </script>"
+    val prefixHTMLCode: String = stringResource(R.string.prefix_html_code)
+    val suffixHTMLCode: String = stringResource(R.string.suffix_html_code)
 
     OutlinedCard(
         modifier = modifier
@@ -82,7 +64,12 @@ fun DkmaScreenWebViewCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.primaryContainer)
-                    .padding(top = 4.dp, bottom = 4.dp, start = 12.dp, end = 12.dp)
+                    .padding(
+                        top = dimensionResource(R.dimen.padding_tiny),
+                        bottom = dimensionResource(R.dimen.padding_tiny),
+                        start = dimensionResource(R.dimen.padding_medium),
+                        end = dimensionResource(R.dimen.padding_medium)
+                    )
                     .clickable { alterVisibility() },
             ) {
 
@@ -101,7 +88,10 @@ fun DkmaScreenWebViewCard(
                         false -> Icons.Filled.ExpandMore
                         true -> Icons.Filled.ExpandLess
                     },
-                    contentDescription = "",
+                    contentDescription = when(isVisible) {
+                        true -> stringResource(R.string.hide)
+                        false -> stringResource(R.string.show)
+                    },
                     modifier = Modifier
                         .weight(0.1f),
                 )
@@ -112,8 +102,8 @@ fun DkmaScreenWebViewCard(
                 AndroidView(
                     factory = { context ->
                         WebView(context).apply {
-                                settings.javaScriptEnabled = true
-                                settings.domStorageEnabled = true
+                            settings.javaScriptEnabled = true
+                            settings.domStorageEnabled = true
 
                             loadData(
                                 prefixHTMLCode + webViewHtmlContent + suffixHTMLCode,
@@ -140,18 +130,20 @@ fun DkmaView(
     modifier: Modifier = Modifier
 ) {
     Spacer(
-        modifier = Modifier.height(16.dp)
+        modifier = Modifier.height(dimensionResource(R.dimen.padding_medium))
     )
 
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start,
-        modifier = modifier.padding(8.dp).verticalScroll(rememberScrollState())
+        modifier = modifier
+            .padding(dimensionResource(R.dimen.icon_size_small))
+            .verticalScroll(rememberScrollState())
     ) {
 
         OutlinedCard {
 
-            Column(modifier = Modifier.padding(8.dp)) {
+            Column(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))) {
 
                 Text(
                     text = "Potential Issues",
@@ -159,26 +151,31 @@ fun DkmaView(
                     maxLines = 3,
                 )
 
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_tiny)))
 
                 Text(
                     text = "Some Android Manufacturers prevent new apps from working in background. Check below if there are any issues caused by your manufacturer \uD83D\uDC47",
                     style = MaterialTheme.typography.bodyLarge,
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
 
-                DkmaScreenWebViewCard("Check Issues", dkmaManufacturer.explanation, isIssueVisible, alterIssueVisibility)
+                DkmaScreenWebViewCard(
+                    "Check Issues",
+                    dkmaManufacturer.explanation,
+                    isIssueVisible,
+                    alterIssueVisibility
+                )
             }
         }
 
         Spacer(
-            modifier = Modifier.height(16.dp)
+            modifier = Modifier.height(dimensionResource(R.dimen.padding_medium))
         )
 
         OutlinedCard {
 
-            Column(modifier = Modifier.padding(8.dp)) {
+            Column(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))) {
 
                 Text(
                     text = "Potential Solutions",
@@ -186,16 +183,21 @@ fun DkmaView(
                     maxLines = 3,
                 )
 
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_tiny)))
 
                 Text(
                     text = "Check out some solutions posted by community to keep your app functioning as intended \uD83D\uDC47",
                     style = MaterialTheme.typography.bodyLarge,
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
 
-                DkmaScreenWebViewCard("Check Solutions", dkmaManufacturer.user_solution, isSolutionVisible, alterSolutionVisibility)
+                DkmaScreenWebViewCard(
+                    "Check Solutions",
+                    dkmaManufacturer.user_solution,
+                    isSolutionVisible,
+                    alterSolutionVisibility
+                )
             }
         }
     }

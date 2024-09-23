@@ -17,7 +17,8 @@ class MainViewModel @Inject constructor(
     private val _isSplashVisible: MutableState<Boolean> = mutableStateOf(true)
     val isSplashVisible: MutableState<Boolean> = _isSplashVisible
 
-    private val _startDestination: MutableState<String> = mutableStateOf(CallSyncDestination.OnBoard.route)
+    private val _startDestination: MutableState<String> =
+        mutableStateOf(CallSyncDestination.OnBoard.route)
     val startDestination: State<String> = _startDestination
 
     init {

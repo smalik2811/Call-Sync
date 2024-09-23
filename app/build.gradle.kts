@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.appcompat)
     implementation(libs.firebase.crashlytics.buildtools)
+    implementation(project(":core:firebase"))
     kapt(libs.dagger.hilt.compiler)
 
     // Hilt

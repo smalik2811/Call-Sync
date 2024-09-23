@@ -34,6 +34,7 @@ class MainActivity : ComponentActivity() {
         installSplashScreen().setKeepOnScreenCondition {
             !mainViewModel.isSplashVisible.value
         }
+
         enableEdgeToEdge()
         setContent {
             val startDestination by mainViewModel.startDestination

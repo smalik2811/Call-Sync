@@ -1,13 +1,19 @@
 package com.yangian.callsync.core.firebase.repository
 
+import com.yangian.callsync.core.data.repository.CallResourceRepository
+
 interface FirestoreRepository {
 
-    suspend fun uploadCallLogs(
-        receiverID: String,
-        hashMap: HashMap<String, Any>
+    fun createNewDocument(
+        senderId: String,
+        receiverId: String,
+        onSuccessEvent: () -> Unit,
+        onFailureEvent: () -> Unit
     )
 
-    suspend fun isCallLogsArrayEmpty(): Boolean
-
-    suspend fun getSenderId(): String
+    suspend fun addData(
+        senderId: String,
+        receiverId: String,
+        callResourceRepository: CallResourceRepository,
+    ): FirestoreResult
 }

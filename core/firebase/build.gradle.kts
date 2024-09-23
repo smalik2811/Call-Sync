@@ -43,12 +43,17 @@ dependencies {
 
     // Dagger-Hilt
     implementation(libs.dagger.hilt.android)
+    implementation(project(":core:model"))
+    implementation(project(":core:data"))
     kapt(libs.dagger.hilt.compiler)
 
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.cloud.firestore)
     implementation(libs.firebase.auth)
+
+    // Work Manager
+    implementation(libs.androidx.work.runtime)
 
     // test
     testImplementation(libs.junit)

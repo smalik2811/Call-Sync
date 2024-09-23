@@ -29,11 +29,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
@@ -52,7 +53,7 @@ import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
 import com.yangian.callsync.core.ui.CallFeedUiState
 import com.yangian.callsync.core.ui.callFeed
 import com.yangian.callsync.feature.home.HomeViewModel
-import kotlinx.coroutines.launch
+import com.yangian.callsync.feature.home.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,7 +76,7 @@ fun HomeRoute(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Call Sync",
+                        text = stringResource(R.string.call_sync),
                         color = MaterialTheme.colorScheme.tertiary
                     )
                 },
@@ -85,7 +86,7 @@ fun HomeRoute(
                             menuExpanded = !menuExpanded
                         }
                     ) {
-                        Icon(imageVector = MoreVertIcon, "Menu")
+                        Icon(imageVector = MoreVertIcon, stringResource(R.string.menu))
                     }
 
                     DropdownMenu(
@@ -95,7 +96,7 @@ fun HomeRoute(
                         modifier = Modifier
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Sign out") },
+                            text = { Text(stringResource(R.string.sign_out)) },
                             onClick = { isSignoutDialogVisible = true },
                         )
                     }
@@ -106,17 +107,14 @@ fun HomeRoute(
             SnackbarHost(hostState = homeViewModel.snackBarHostState)
         },
         floatingActionButton = {
-            val coroutineScope = rememberCoroutineScope()
             FloatingActionButton(
                 onClick = {
-                    coroutineScope.launch {
-                        homeViewModel.downloadLogs()
-                    }
+                    homeViewModel.downloadLogs(context)
                 }
             ) {
                 Icon(
                     imageVector = RefreshIcon,
-                    contentDescription = "Refresh Logs"
+                    contentDescription = stringResource(R.string.refresh_logs)
                 )
             }
         },
@@ -124,7 +122,8 @@ fun HomeRoute(
             AdMobBanner(
                 modifier = Modifier.fillMaxWidth()
             )
-        }
+        },
+        modifier = modifier
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -159,7 +158,7 @@ fun HomeRoute(
                 modifier = Modifier
                     .fillMaxHeight()
                     .windowInsetsPadding(WindowInsets.systemBars)
-                    .padding(horizontal = 2.dp)
+                    .padding(horizontal = dimensionResource(R.dimen.padding_tiny))
                     .align(Alignment.CenterEnd),
                 state = scrollbarState,
                 orientation = Orientation.Vertical,
@@ -175,15 +174,21 @@ fun HomeRoute(
             onDismissRequest = {
                 isSignoutDialogVisible = false
             },
-            onConfirmation = {
+            onNegativeButtonClick = {
+                isSignoutDialogVisible = false
+            },
+            onPositiveButtonClick = {
                 homeViewModel.signout(
                     context = context,
                     navigateToOnboarding = navigateToOnboarding
                 )
             },
-            dialogTitle = "Are you sure you want to sign out?",
-            dialogText = "Once signed out, you will no longer receive latest call logs and the existing logs will be deleted.",
-            icon = LogoutIcon
+            dialogTitle = stringResource(R.string.sign_out_dialog_title),
+            dialogText = stringResource(R.string.sign_out_dialog_description),
+            icon = LogoutIcon,
+            positiveButtonText = stringResource(R.string.yes),
+            negativeButtonText = stringResource(R.string.cancel),
+            iconContentDescriptionText = stringResource(R.string.logout)
         )
     }
 }

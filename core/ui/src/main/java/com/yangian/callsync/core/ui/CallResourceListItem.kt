@@ -16,13 +16,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -35,9 +33,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.Wallpapers
-import androidx.compose.ui.unit.dp
 import com.yangian.callsync.core.designsystem.component.CallResourceFlatItem
 import com.yangian.callsync.core.designsystem.icon.CallIcon
 import com.yangian.callsync.core.designsystem.icon.ChatIcon
@@ -49,15 +48,15 @@ fun CallResourceListItem(
     callResource: CallResource,
     focussedCallResourceId: Long,
     onCallResourceItemClick: (Long) -> Unit,
+    modifier: Modifier = Modifier,
     onSMSClick: () -> Unit = {},
     onCallClick: () -> Unit = {},
-    modifier: Modifier = Modifier,
 ) {
     val cardElevation by animateDpAsState(
         targetValue = if (focussedCallResourceId == callResource.id) {
-            1.dp
+            dimensionResource(R.dimen.elevation_level_1)
         } else {
-            0.dp
+            dimensionResource(R.dimen.elevation_level_0)
         },
         animationSpec = tween(
             durationMillis = 300,
@@ -72,10 +71,21 @@ fun CallResourceListItem(
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = cardElevation),
-        shape = RoundedCornerShape(20),
-        modifier = Modifier
-            .padding(start = 2.dp, end = 2.dp)
-            .wrapContentHeight()
+        shape = RoundedCornerShape(
+            dimensionResource(
+                com.yangian.callsync.core.designsystem.R.dimen.corner_radius_medium
+            )
+        ),
+        modifier = modifier
+            .padding(
+                start = dimensionResource(
+                    com.yangian.callsync.core.designsystem.R.dimen.padding_tiny
+                ),
+                end = dimensionResource(
+                    com.yangian.callsync.core.designsystem.R.dimen.padding_tiny
+                )
+            )
+//            .wrapContentHeight()
             .clickable {
                 onCallResourceItemClick(callResource.id)
             }
@@ -117,20 +127,27 @@ fun CallResourceListItem(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.SpaceEvenly,
                         modifier = Modifier
-                            .fillMaxHeight()
-                            .padding(top = 16.dp, bottom = 16.dp)
-                            .clickable(onClickLabel = "Make Call") {
-                            onCallClick()
-                        }
+//                            .fillMaxHeight()
+                            .padding(
+                                top = dimensionResource(R.dimen.padding_medium),
+                                bottom = dimensionResource(R.dimen.padding_medium)
+                            )
+                            .clickable(onClickLabel = stringResource(R.string.make_call)) {
+                                onCallClick()
+                            }
                     ) {
 
                         Icon(
                             imageVector = CallIcon,
-                            contentDescription = "Call",
+                            contentDescription = stringResource(R.string.call),
                         )
-                        Spacer(modifier = Modifier.height(2.dp).width(48.dp))
+                        Spacer(
+                            modifier = Modifier
+                                .height(dimensionResource(R.dimen.padding_tiny))
+                                .width(dimensionResource(R.dimen.padding_extra_large))
+                        )
                         Text(
-                            text = "Call",
+                            text = stringResource(R.string.call),
                             style = MaterialTheme.typography.bodySmall,
                         )
                     }
@@ -139,19 +156,27 @@ fun CallResourceListItem(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.SpaceEvenly,
                         modifier = Modifier
-                            .fillMaxHeight()
-                            .padding(top = 16.dp, bottom = 16.dp).clickable {
-                            onSMSClick()
-                        }
+//                            .fillMaxHeight()
+                            .padding(
+                                top = dimensionResource(R.dimen.padding_medium),
+                                bottom = dimensionResource(R.dimen.padding_medium)
+                            )
+                            .clickable {
+                                onSMSClick()
+                            }
                     ) {
 
                         Icon(
                             imageVector = ChatIcon,
-                            contentDescription = "Message",
+                            contentDescription = stringResource(R.string.message),
                         )
-                        Spacer(modifier = Modifier.height(2.dp).width(48.dp))
+                        Spacer(
+                            modifier = Modifier
+                                .height(dimensionResource(R.dimen.padding_tiny))
+                                .width(dimensionResource(R.dimen.padding_extra_large))
+                        )
                         Text(
-                            text = "Message",
+                            text = stringResource(R.string.message),
                             style = MaterialTheme.typography.bodySmall,
                         )
                     }
@@ -175,9 +200,11 @@ private fun CallResourceListItemPreview() {
             color = MaterialTheme.colorScheme.background,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(4.dp)
+                .padding(dimensionResource(R.dimen.padding_tiny))
         ) {
-            Column {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(com.yangian.callsync.core.designsystem.R.dimen.padding_tiny))
+            ) {
                 for (i in 1..5) {
                     CallResourceListItem(
                         callResource = CallResource(

@@ -1,28 +1,34 @@
 package com.yangian.callsync.core.designsystem.component
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
+import com.yangian.callsync.core.designsystem.icon.ErrorIcon
 import com.yangian.callsync.core.designsystem.icon.LogoutIcon
 import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
 
 @Composable
 fun CustomAlertDialog(
+    onPositiveButtonClick: () -> Unit,
+    onNegativeButtonClick: () -> Unit,
     onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit,
     dialogTitle: String,
     dialogText: String,
-    icon: ImageVector,
+    positiveButtonText: String,
+    negativeButtonText: String,
+    iconContentDescriptionText: String?,
+    modifier: Modifier = Modifier,
+    icon: ImageVector = ErrorIcon,
 ) {
     AlertDialog(
         icon = {
-            Icon(icon, contentDescription = "Sign out")
+            Icon(icon, contentDescription = iconContentDescriptionText)
         },
         title = {
             Text(text = dialogTitle)
@@ -30,27 +36,64 @@ fun CustomAlertDialog(
         text = {
             Text(text = dialogText)
         },
-        onDismissRequest = {
-            onDismissRequest()
-        },
+        onDismissRequest = onDismissRequest,
         confirmButton = {
             TextButton(
-                onClick = {
-                    onConfirmation()
-                }
+                onClick = onPositiveButtonClick
             ) {
-                Text("Sign out")
+                Text(text = positiveButtonText)
             }
         },
         dismissButton = {
             TextButton(
-                onClick = {
-                    onDismissRequest()
-                }
+                onClick = onNegativeButtonClick
             ) {
-                Text("Cancel")
+                Text(text = negativeButtonText)
             }
-        }
+        },
+        modifier = modifier
+    )
+}
+
+@Composable
+fun CustomAlertDialog(
+    onPositiveButtonClick: () -> Unit,
+    onNegativeButtonClick: () -> Unit,
+    onDismissRequest: () -> Unit,
+    dialogTitle: String,
+    dialogText: AnnotatedString,
+    positiveButtonText: String,
+    negativeButtonText: String,
+    iconContentDescriptionText: String?,
+    modifier: Modifier = Modifier,
+    icon: ImageVector = ErrorIcon,
+) {
+    AlertDialog(
+        icon = {
+            Icon(icon, contentDescription = iconContentDescriptionText)
+        },
+        title = {
+            Text(text = dialogTitle)
+        },
+        text = {
+            Text(text = dialogText)
+        },
+        onDismissRequest = onDismissRequest,
+        confirmButton = {
+            TextButton(
+                onClick = onPositiveButtonClick
+            ) {
+                Text(text = positiveButtonText)
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onNegativeButtonClick
+            ) {
+                Text(text = negativeButtonText)
+            }
+        },
+        modifier = modifier
     )
 }
 
@@ -61,10 +104,14 @@ private fun CustomAlertDialogPreview() {
         CallSyncAppBackground {
             CustomAlertDialog(
                 onDismissRequest = { },
-                onConfirmation = { },
+                onPositiveButtonClick = { },
+                onNegativeButtonClick = { },
                 dialogTitle = "Are you sure you want to sign out?",
                 dialogText = "Once signed out, you will no longer receive latest call logs and the existing logs will be deleted.",
-                icon = LogoutIcon
+                icon = LogoutIcon,
+                positiveButtonText = "Sign out",
+                negativeButtonText = "Cancel",
+                iconContentDescriptionText = "Logout Icon",
             )
         }
     }

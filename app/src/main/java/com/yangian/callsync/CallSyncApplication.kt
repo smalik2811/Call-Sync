@@ -10,10 +10,9 @@ import androidx.work.WorkerParameters
 import com.example.callsync.core.workmanager.LogsDownloadWorker
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.yangian.callsync.core.data.repository.CallResourceRepository
 import com.yangian.callsync.core.datastore.UserPreferences
-import dagger.assisted.Assisted
+import com.yangian.callsync.core.firebase.repository.FirestoreRepository
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -25,16 +24,15 @@ class CallSyncApplication : Application(), Configuration.Provider {
 
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
-            .setMinimumLoggingLevel(Log.DEBUG)
+            .setMinimumLoggingLevel(Log.INFO)
             .setWorkerFactory(workFactory)
             .build()
 }
 
 class MyWorkerFactory @Inject constructor(
-    private val firestore: FirebaseFirestore,
+    private val firestoreRepository: FirestoreRepository,
     private val firebaseAuth: FirebaseAuth,
     private val userPreferences: UserPreferences,
-    private val firebaseAnalytics: FirebaseAnalytics,
     private val callResourceRepository: CallResourceRepository,
 ) : WorkerFactory() {
 
@@ -43,12 +41,11 @@ class MyWorkerFactory @Inject constructor(
         workerClassName: String,
         workerParameters: WorkerParameters
     ): ListenableWorker = LogsDownloadWorker(
-        firestore,
+        appContext,
+        workerParameters,
+        firestoreRepository,
         firebaseAuth,
-        firebaseAnalytics,
         userPreferences,
         callResourceRepository,
-        appContext,
-        workerParameters
     )
 }

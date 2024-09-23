@@ -98,4 +98,5 @@ dependencies {
     implementation(project(":core:firebase"))
     implementation(project(":core:workmanager"))
     implementation(project(":core:network"))
+    implementation(project(":core:firebase"))
 }

@@ -19,10 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.yangian.callsync.core.designsystem.R
 import com.yangian.callsync.core.designsystem.icon.AccountCircleIcon
 import com.yangian.callsync.core.designsystem.icon.CallMadeIcon
@@ -43,6 +43,7 @@ import java.util.Locale
 @Composable
 fun CallResourceFlatItem(
     callResource: CallResource,
+    modifier: Modifier = Modifier,
     listItemColors: ListItemColors = ListItemDefaults.colors(),
     onCallResourceItemClick: (Long) -> Unit = {},
 ) {
@@ -77,76 +78,76 @@ fun CallResourceFlatItem(
         },
         supportingContent = {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_tiny)),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 when (callResource.type) {
                     1 -> Icon(
                         imageVector = CallReceivedIcon,
-                        contentDescription = "Call received",
+                        contentDescription = stringResource(R.string.call_received),
                         tint = when (isSystemInDarkTheme()) {
                             true -> extendedDark.success.color
                             false -> extendedLight.success.color
                         },
                         modifier = Modifier
-                            .size(18.dp)
+                            .size(dimensionResource(R.dimen.icon_size_small))
                     )
 
                     2 -> Icon(
                         imageVector = CallMadeIcon,
-                        contentDescription = "Call made",
+                        contentDescription = stringResource(R.string.call_made),
                         tint = when (isSystemInDarkTheme()) {
                             true -> extendedDark.success.color
                             false -> extendedLight.success.color
                         },
                         modifier = Modifier
-                            .size(18.dp)
+                            .size(dimensionResource(R.dimen.icon_size_small))
                     )
 
                     3 -> Icon(
                         imageVector = CallMissedIcon,
-                        contentDescription = "Call missed",
+                        contentDescription = stringResource(R.string.call_missed),
                         tint = MaterialTheme.colorScheme.error,
                         modifier = Modifier
-                            .size(18.dp)
+                            .size(dimensionResource(R.dimen.icon_size_small))
                     )
 
                     4 -> Icon(
                         imageVector = VoicemailIcon,
-                        contentDescription = "Voicemail",
+                        contentDescription = stringResource(R.string.voicemail),
                         tint = when (isSystemInDarkTheme()) {
                             true -> extendedDark.success.color
                             false -> extendedLight.success.color
                         },
                         modifier = Modifier
-                            .size(18.dp)
+                            .size(dimensionResource(R.dimen.icon_size_small))
                     )
 
                     5 -> Icon(
                         imageVector = PhoneMissedIcon,
-                        contentDescription = "Call rejected",
+                        contentDescription = stringResource(R.string.call_rejected),
                         tint = MaterialTheme.colorScheme.error,
                         modifier = Modifier
-                            .size(18.dp)
+                            .size(dimensionResource(R.dimen.icon_size_small))
                     )
 
                     6 -> Icon(
                         imageVector = PhoneDisabledIcon,
-                        contentDescription = "Call blocked",
+                        contentDescription = stringResource(R.string.call_blocked),
                         tint = MaterialTheme.colorScheme.error,
                         modifier = Modifier
-                            .size(18.dp)
+                            .size(dimensionResource(R.dimen.icon_size_small))
                     )
 
                     7 -> Icon(
                         imageVector = WifiCallingIcon,
-                        contentDescription = "Answered on another device",
+                        contentDescription = stringResource(R.string.answered_on_another_device),
                         tint = when (isSystemInDarkTheme()) {
                             true -> extendedDark.success.color
                             false -> extendedLight.success.color
                         },
                         modifier = Modifier
-                            .size(18.dp)
+                            .size(dimensionResource(R.dimen.icon_size_small))
                     )
                 }
 
@@ -167,7 +168,7 @@ fun CallResourceFlatItem(
                 contentDescription = stringResource(R.string.contact_avatar),
                 modifier = Modifier
                     .size(
-                        42.dp
+                        dimensionResource(R.dimen.icon_size_large)
                     ),
                 colorFilter = ColorFilter.tint(
                     Color(
@@ -182,7 +183,7 @@ fun CallResourceFlatItem(
                 text = callResource.getDurationString()
             )
         },
-        modifier = Modifier.clickable {
+        modifier = modifier.clickable {
             onCallResourceItemClick(callResource.id)
         }
     )

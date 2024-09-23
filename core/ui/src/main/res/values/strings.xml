@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Call Sync</string>
+    <string name="loading_data">Loading Data</string>
+    <string name="no_call_history_available">No call history available</string>
+    <string name="we_will_automatically_update_the_call_history_in_the_background">We will automatically update the call history in the background.</string>
+    <string name="make_call">Make Call</string>
+    <string name="call">Call</string>
+    <string name="message">Message</string>
 </resources>

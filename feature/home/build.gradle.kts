@@ -66,6 +66,7 @@ dependencies {
     // Dagger-Hilt
     implementation(libs.dagger.hilt.android)
     implementation(project(":core:datastore"))
+    implementation(project(":core:workmanager"))
     kapt(libs.dagger.hilt.compiler)
 
     // Firebase

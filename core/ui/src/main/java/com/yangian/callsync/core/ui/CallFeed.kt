@@ -23,10 +23,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
@@ -78,9 +79,9 @@ fun LazyListScope.callFeed(
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center,
-                        modifier = Modifier
+                        modifier = modifier
                             .fillParentMaxSize()
-                            .padding(20.dp)
+                            .padding(dimensionResource(R.dimen.padding_large))
                     ) {
 
                         if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -88,7 +89,7 @@ fun LazyListScope.callFeed(
 
                             Image(
                                 painter = painterResource(id = R.drawable.observing),
-                                contentDescription = "Loading Data"
+                                contentDescription = stringResource(R.string.loading_data)
                             )
                         } else {
                             Spacer(modifier = Modifier.fillParentMaxHeight(0.2f))
@@ -97,7 +98,7 @@ fun LazyListScope.callFeed(
                         Spacer(modifier = Modifier.fillParentMaxHeight(0.15f))
 
                         Text(
-                            text = "No call history available",
+                            text = stringResource(R.string.no_call_history_available),
                             style = MaterialTheme.typography.titleLarge,
                             textAlign = TextAlign.Center,
                             color = MaterialTheme.colorScheme.primary,
@@ -106,7 +107,7 @@ fun LazyListScope.callFeed(
                         Spacer(modifier = Modifier.fillParentMaxHeight(0.01f))
 
                         Text(
-                            text = "We will automatically update the call history in the background.",
+                            text = stringResource(R.string.we_will_automatically_update_the_call_history_in_the_background),
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center,
                             color = MaterialTheme.colorScheme.onSurface,

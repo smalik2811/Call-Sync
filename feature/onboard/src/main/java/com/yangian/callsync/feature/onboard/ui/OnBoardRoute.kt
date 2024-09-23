@@ -24,14 +24,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
 import com.yangian.callsync.core.designsystem.icon.ArrowBackIcon
-import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
 import com.yangian.callsync.feature.onboard.OnBoardViewModel
 import com.yangian.callsync.feature.onboard.R
 import com.yangian.callsync.feature.onboard.model.OnBoardingScreens
@@ -66,7 +63,9 @@ fun OnBoardRoute(
                 },
                 navigationIcon = {
                     AnimatedVisibility(
-                        visibleState = MutableTransitionState(currentScreen != OnBoardingScreens.TermsOfService),
+                        visibleState = MutableTransitionState(
+                            currentScreen != OnBoardingScreens.TermsOfService
+                        ),
                         enter = slideInHorizontally(),
                         exit = slideOutHorizontally()
                     ) {
@@ -83,6 +82,7 @@ fun OnBoardRoute(
                 modifier = Modifier
             )
         },
+        modifier = modifier
     ) {
         Column(
             verticalArrangement = Arrangement.Top,
@@ -101,9 +101,12 @@ fun OnBoardRoute(
                     .weight(1f)
             )
 
-            if (currentScreen != OnBoardingScreens.Connection2 && currentScreen != OnBoardingScreens.Connection1) {
+            if (
+                currentScreen != OnBoardingScreens.Connection2 &&
+                currentScreen != OnBoardingScreens.Connection1
+            ) {
                 Spacer(
-                    modifier = Modifier.height(8.dp)
+                    modifier = Modifier.height(dimensionResource(R.dimen.padding_small))
                 )
 
                 Button(
@@ -121,7 +124,7 @@ fun OnBoardRoute(
             }
 
             Spacer(
-                modifier = Modifier.height(8.dp)
+                modifier = Modifier.height(dimensionResource(R.dimen.padding_small))
             )
         }
     }
@@ -139,12 +142,24 @@ fun OnBoardingScreen(
 
     when (currentScreen) {
         OnBoardingScreens.TermsOfService -> TermsOfServiceScreen(modifier)
-        OnBoardingScreens.Welcome -> WelcomeScreen(onBoardViewModel, modifier)
+        OnBoardingScreens.Welcome -> WelcomeScreen(
+            onBoardViewModel::createFirebaseAccount,
+            modifier
+        )
+
         OnBoardingScreens.Install -> InstallScreen(modifier)
         OnBoardingScreens.Unlock -> UnlockScreen(modifier)
-        OnBoardingScreens.Connection1 -> ConnectionScreen1(onBoardViewModel, modifier)
+        OnBoardingScreens.Connection1 -> ConnectionScreen1(
+            onBoardViewModel.firestoreRepository,
+            onBoardViewModel.getFirebaseUser(),
+            onBoardViewModel::navigateToNextScreen,
+            onBoardViewModel::navigateToPreviousScreen,
+            onBoardViewModel::updateSenderIdPreference,
+            modifier
+        )
+
         OnBoardingScreens.Connection2 -> ConnectionScreen2(
-            onBoardViewModel,
+            onBoardViewModel::getQrCode,
             onBoardViewModel::updateOnBoardingCompleted,
             navigateToHome,
             onBoardViewModel::registerLogsDownloadWorkRequest,
@@ -158,20 +173,8 @@ fun OnBoardingScreen(
             onBoardViewModel.isSolutionVisible,
             onBoardViewModel::alterIssueVisibility,
             onBoardViewModel::alterSolutionVisibility,
+            onBoardViewModel::loadDkmaManufacturer,
             modifier
         )
-    }
-}
-
-@Preview
-@Composable
-private fun OnBoardPreview() {
-    CallSyncAppTheme {
-        CallSyncAppBackground {
-            OnBoardRoute(
-                modifier = Modifier.fillMaxSize(),
-                firebaseAnalytics = null
-            )
-        }
     }
 }

@@ -11,14 +11,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -80,24 +78,24 @@ fun InstallScreen(
 
                     Box {
                         Image(
-                            painter = painterResource(R.drawable.ic_launcher_background),
+                            painter = painterResource(R.mipmap.call_sync_launcher_background),
                             contentDescription = stringResource(R.string.call_sync_app_logo),
                             modifier = Modifier
-                                .fillMaxWidth(0.2f)
+                                .size(48.dp)
                         )
 
                         Image(
-                            painter = painterResource(R.drawable.ic_launcher_foreground),
+                            painter = painterResource(R.mipmap.call_sync_launcher_foreground),
                             contentDescription = stringResource(R.string.call_sync_app_logo),
                             modifier = Modifier
-                                .fillMaxWidth(0.2f)
+                                .size(48.dp)
                         )
                     }
                 }
 
                 Text(
                     text = stringResource(R.string.install_call_sync_desc),
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Companion.Center,
                     modifier = Modifier.padding(16.dp)
                 )
@@ -118,7 +116,7 @@ fun InstallScreen(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
             ) {
                 Row(
                     horizontalArrangement = Arrangement.Center,
@@ -136,14 +134,14 @@ fun InstallScreen(
 
                     Box {
                         Image(
-                            painter = painterResource(R.drawable.ic_launcher_background),
+                            painter = painterResource(R.mipmap.call_sync_launcher_background),
                             contentDescription = stringResource(R.string.call_sync_app_logo),
                             modifier = Modifier
                                 .fillMaxWidth(0.2f)
                         )
 
                         Image(
-                            painter = painterResource(R.drawable.ic_launcher_foreground),
+                            painter = painterResource(R.mipmap.num_sum_launcher_foreground),
                             contentDescription = stringResource(R.string.call_sync_app_logo),
                             modifier = Modifier
                                 .fillMaxWidth(0.2f)
@@ -153,57 +151,51 @@ fun InstallScreen(
 
                 Text(
                     text = stringResource(R.string.install_num_sum_desc),
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Companion.Center,
                     modifier = Modifier.padding(16.dp)
                 )
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .horizontalScroll(rememberScrollState())
-                ) {
-                    AssistChip(
-                        onClick = { /*TODO*/ },
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.download_num_sum)
-                            )
-                        },
-                        leadingIcon = {
-                            Icon(
-                                CallMadeIcon,
-                                stringResource(id = R.string.download_num_sum)
-                            )
-                        },
-                        colors = AssistChipDefaults.assistChipColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            labelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            leadingIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        )
-                    )
 
-                    AssistChip(
-                        onClick = { /*TODO*/ },
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.share_num_sum_app_link)
-                            )
-                        },
-                        leadingIcon = {
-                            Icon(
-                                ShareIcon,
-                                stringResource(id = R.string.share_num_sum_app_link),
-                            )
-                        },
-                        colors = AssistChipDefaults.assistChipColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            labelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            leadingIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                AssistChip(
+                    onClick = { /*TODO*/ },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.download_num_sum)
                         )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            CallMadeIcon,
+                            stringResource(id = R.string.download_num_sum)
+                        )
+                    },
+                    colors = AssistChipDefaults.assistChipColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        labelColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        leadingIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
-                }
+                )
+
+                AssistChip(
+                    onClick = { /*TODO*/ },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.share_num_sum_app_link)
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            ShareIcon,
+                            stringResource(id = R.string.share_num_sum_app_link),
+                        )
+                    },
+                    colors = AssistChipDefaults.assistChipColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        labelColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        leadingIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                )
             }
         }
 

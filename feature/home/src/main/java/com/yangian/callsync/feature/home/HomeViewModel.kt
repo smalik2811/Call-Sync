@@ -4,29 +4,27 @@ import android.content.Context
 import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.example.callsync.core.workmanager.LogsDownloadWorker
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.SetOptions
 import com.yangian.callsync.core.data.repository.CallResourceRepository
 import com.yangian.callsync.core.datastore.UserPreferences
-import com.yangian.callsync.core.model.CallResource
-import com.yangian.callsync.core.model.CryptoHandler
 import com.yangian.callsync.core.ui.CallFeedUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -58,85 +56,47 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    suspend fun downloadLogs() {
+    fun downloadLogs(context: Context) {
+        val workerConstraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
 
-        val currentUserId: String = firebaseAuth.currentUser?.uid!!
-        val senderId: String = runBlocking {
-            userPreferences.getSenderId().first()
-        }
-        val cryptoHandler = CryptoHandler(senderId)
+        val workRequest = OneTimeWorkRequestBuilder<LogsDownloadWorker>()
+            .setConstraints(workerConstraints)
+//            .setBackoffCriteria(BackoffPolicy.LINEAR, 15, TimeUnit.MINUTES)
+            .build()
 
-        // Get document reference
-        val documentRef = firestore.collection("logs").document(currentUserId)
-        firestore.runTransaction { transaction ->
-            val snapshot = transaction.get(documentRef)
-            if (!snapshot.exists()) {
-                throw FirebaseFirestoreException(
-                    "Document does not exist",
-                    FirebaseFirestoreException.Code.NOT_FOUND
-                )
-            }
-
-            val cloudSender: String = snapshot.getString("sender").toString()
-
-            if (cloudSender != senderId) {
-                // Some other Sender id already present, can not continue.
-                // This should not happen
-                throw FirebaseFirestoreException(
-                    "Sender ID mismatch",
-                    FirebaseFirestoreException.Code.ALREADY_EXISTS
-                )
-            }
-
-            val arrayData: List<String> = snapshot["array"] as List<String>
-
-            if (arrayData.isNotEmpty()) {
-                val callResourceList: List<CallResource> = arrayData.map {
-                    CallResource.toObject(it, cryptoHandler)
-                }
-
-                // Add call resources to local database (sequentially)
-                viewModelScope.launch {
-                    callResourceRepository.addCalls(callResourceList)
-                }
-
-                val data = hashMapOf<String, Any>(
-                    "array" to arrayListOf<String>(),
-                    "download_timestamp" to FieldValue.serverTimestamp()
-                )
-                transaction.set(documentRef, data, SetOptions.merge())
-
-            } else {
-                val data = hashMapOf<String, Any>(
-                    "download_timestamp" to FieldValue.serverTimestamp()
-                )
-                transaction.set(documentRef, data, SetOptions.merge())
-            }
-        }
+        val workManager = WorkManager.getInstance(context)
+        workManager.enqueueUniqueWork(
+            "ONE-TIME-LOGS-DOWNLOAD",
+            ExistingWorkPolicy.REPLACE,
+            workRequest
+        )
     }
 
     fun signout(
         context: Context,
         navigateToOnboarding: () -> Unit
     ) {
-        // 1. Cancel the existing worker
-        WorkManager.getInstance(context).cancelAllWork()
+        viewModelScope.launch(Dispatchers.IO) {
+            launch {
+                // 1. Cancel the existing worker
+                WorkManager.getInstance(context).cancelAllWork()
 
-        // 2. Delete the Firestore document
-        val currentUserId: String = firebaseAuth.currentUser?.uid!!
-        firestore.collection("logs").document(currentUserId).delete()
+                // 2. Delete the Firestore document
+                val currentUserId: String =
+                    async { firebaseAuth.currentUser?.uid }.await().toString()
+                firestore.collection("logs").document(currentUserId).delete()
 
-        // 3. Clear the Local Database
-        viewModelScope.launch {
-            callResourceRepository.deleteCalls()
+                // 3. Clear the Local Database
+                callResourceRepository.deleteCalls()
+
+                // 4. Clear the datastore
+                userPreferences.clear()
+            }.join()
+
+            // 5. Take to the Onboarding Screen
+            navigateToOnboarding()
         }
-
-        // 4. Clear the datastore
-        CoroutineScope(Dispatchers.IO).launch {
-            userPreferences.clear()
-        }
-
-        // 5. Take to the Onboarding Screen
-        navigateToOnboarding()
     }
 }

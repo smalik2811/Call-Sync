@@ -2,4 +2,15 @@
 <resources>
     <string name="contact_avatar">Contact Avatar</string>
     <string name="app_name">Call Sync</string>
+    <string name="call_received">Call received</string>
+    <string name="call_made">Call made</string>
+    <string name="call_missed">Call missed</string>
+    <string name="voicemail">Voicemail</string>
+    <string name="call_rejected">Call rejected</string>
+    <string name="call_blocked">Call blocked</string>
+    <string name="answered_on_another_device">Answered on another device</string>
+    <string name="hide">Hide</string>
+    <string name="show">Show</string>
+    <string name="prefix_html_code"><![CDATA[<head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.04\"> <link rel=\"stylesheet\" href=\"https://dontkillmyapp.com/assets/main.css\"> <link rel=\"stylesheet\" href=\"https://dontkillmyapp.com/assets/css/style.css\"> <script src=\"https://dontkillmyapp.com/assets/js/findAndReplaceDOMText.js\"></script> <script src=\"https://dontkillmyapp.com/assets/js/main.js\"></script> <style> body { padding: 8px; } </style> </head> <body>]]></string>
+    <string name="suffix_html_code"><![CDATA[</body> <script> findAndReplaceDOMText(document.body, { find: \"your app\", replace: \"Call Sync\" }); </script>]]></string>
 </resources>

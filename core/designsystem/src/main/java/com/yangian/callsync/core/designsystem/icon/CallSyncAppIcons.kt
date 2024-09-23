@@ -21,8 +21,10 @@ import androidx.compose.material.icons.outlined.Voicemail
 import androidx.compose.material.icons.outlined.WifiCalling3
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.ErrorOutline
 import androidx.compose.material.icons.rounded.History
 import androidx.compose.material.icons.rounded.PhoneDisabled
+import androidx.compose.material.icons.rounded.QrCodeScanner
 
 val AccountCircleIcon = Icons.Rounded.AccountCircle
 val ArrowBackIcon = Icons.AutoMirrored.Outlined.ArrowBack
@@ -34,11 +36,13 @@ val CallMissedOutgoing = Icons.AutoMirrored.Rounded.CallMissedOutgoing
 val CallReceivedIcon = Icons.AutoMirrored.Rounded.CallReceived
 val ChatIcon = Icons.Outlined.Chat
 val EditIcon = Icons.Rounded.Edit
+val ErrorIcon = Icons.Rounded.ErrorOutline
 val HistoryIcon = Icons.Rounded.History
 val LogoutIcon = Icons.AutoMirrored.Outlined.Logout
 val MoreVertIcon = Icons.Outlined.MoreVert
 val PhoneDisabledIcon = Icons.Rounded.PhoneDisabled
 val PhoneMissedIcon = Icons.AutoMirrored.Outlined.PhoneMissed
+val QrCodeScannerIcon = Icons.Rounded.QrCodeScanner
 val RefreshIcon = Icons.Outlined.Refresh
 val SearchIcon = Icons.Outlined.Search
 val ShareIcon = Icons.Outlined.Share

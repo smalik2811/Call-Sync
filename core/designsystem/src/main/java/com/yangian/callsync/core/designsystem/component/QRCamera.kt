@@ -1,6 +1,7 @@
 package com.yangian.callsync.core.designsystem.component
 
 import android.content.Context
+import android.os.Build.VERSION.SDK_INT
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -14,63 +15,90 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import coil.ComponentRegistry
+import coil.ImageLoader
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
+import coil.request.ImageRequest
+import coil.size.Size
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import com.yangian.callsync.core.designsystem.R
+import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
 import java.util.concurrent.Executors
 
 class QRCamera {
     private var camera: Camera? = null
 
     @Composable
-    fun CameraPreview(
+    fun CameraPreviewView(
+        onBarcodeScanned: (Barcode?) -> Unit,
         modifier: Modifier = Modifier,
-        onBarcodeScanned: (Barcode?) -> Unit
+        isPreviewing: Boolean = false,
     ) {
-        val lifecycleOwner = LocalLifecycleOwner.current
-
-        val imageCapture = remember {
-            ImageCapture
-                .Builder()
-                .build()
-        }
-
-        AndroidView(
-            modifier = modifier,
-            factory = { context ->
-                PreviewView(context).apply {
-                    layoutParams =
-                        LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT
-                        )
-                    scaleType = PreviewView.ScaleType.FILL_CENTER
-
-                    val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
-                    cameraProviderFuture.addListener(
-                        {
-                            startCamera(
-                                context = context,
-                                previewView = this,
-                                imageCapture = imageCapture,
-                                lifecycleOwner = lifecycleOwner,
-                                onBarcodeScanned = onBarcodeScanned
-                            )
-                        },
-                        ContextCompat.getMainExecutor(context)
-                    )
-                }
+        if (isPreviewing) {
+            Image(
+                painter = painterResource(R.drawable.placeholder),
+                contentDescription = "Image from the internet",
+                contentScale = ContentScale.Crop,
+                modifier = modifier.fillMaxSize(),
+            )
+        } else {
+            val lifecycleOwner = LocalLifecycleOwner.current
+            val imageCapture = remember {
+                ImageCapture
+                    .Builder()
+                    .build()
             }
-        )
+
+            AndroidView(
+                modifier = modifier,
+                factory = { context ->
+                    PreviewView(context).apply {
+                        layoutParams =
+                            LinearLayout.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT,
+                                ViewGroup.LayoutParams.MATCH_PARENT
+                            )
+                        scaleType = PreviewView.ScaleType.FILL_CENTER
+
+                        val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
+                        cameraProviderFuture.addListener(
+                            {
+                                startCamera(
+                                    context = context,
+                                    previewView = this,
+                                    imageCapture = imageCapture,
+                                    lifecycleOwner = lifecycleOwner,
+                                    onBarcodeScanned = onBarcodeScanned
+                                )
+                            },
+                            ContextCompat.getMainExecutor(context)
+                        )
+                    }
+                }
+            )
+        }
     }
 
     private fun startCamera(
@@ -82,50 +110,51 @@ class QRCamera {
     ) {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
 
-        cameraProviderFuture.addListener({
-            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+        cameraProviderFuture.addListener(
+            {
+                val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
-            val preview = Preview.Builder()
-                .build()
-                .also {
-                    it.setSurfaceProvider(previewView.surfaceProvider)
+                val preview = Preview.Builder()
+                    .build()
+                    .also {
+                        it.setSurfaceProvider(previewView.surfaceProvider)
 
+                    }
+
+                val executor = Executors.newSingleThreadExecutor()
+
+                val imageAnalysis = ImageAnalysis.Builder()
+                    .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                    .build()
+
+                val options = BarcodeScannerOptions.Builder()
+                    .setBarcodeFormats(
+                        Barcode.FORMAT_QR_CODE,
+                        Barcode.TYPE_TEXT
+                    ).build()
+
+                val scanner = BarcodeScanning.getClient(options)
+
+                imageAnalysis.setAnalyzer(executor) { imageProxy ->
+                    processImageProxy(
+                        barcodeScanner = scanner,
+                        imageProxy = imageProxy,
+                        onSuccess = onBarcodeScanned
+                    )
                 }
 
-            val executor = Executors.newSingleThreadExecutor()
+                val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
-            val imageAnalysis = ImageAnalysis.Builder()
-                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                .build()
+                try {
+                    cameraProvider.unbindAll()
 
-            val options = BarcodeScannerOptions.Builder()
-                .setBarcodeFormats(
-                    Barcode.FORMAT_QR_CODE,
-                    Barcode.TYPE_TEXT
-                ).build()
-
-            val scanner = BarcodeScanning.getClient(options)
-
-            imageAnalysis.setAnalyzer(executor) { imageProxy ->
-                processImageProxy(
-                    barcodeScanner = scanner,
-                    imageProxy = imageProxy,
-                    onSuccess = onBarcodeScanned
-                )
-            }
-
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
-            try {
-                cameraProvider.unbindAll()
-
-                camera = cameraProvider.bindToLifecycle(
-                    lifecycleOwner, cameraSelector, preview, imageCapture, imageAnalysis
-                )
-            } catch (exc: Exception) {
-                Log.e("CameraPreview", "Use case binding failed", exc)
-            }
-        },
+                    camera = cameraProvider.bindToLifecycle(
+                        lifecycleOwner, cameraSelector, preview, imageCapture, imageAnalysis
+                    )
+                } catch (exc: Exception) {
+                    Log.e("CameraPreview", "Use case binding failed", exc)
+                }
+            },
             ContextCompat.getMainExecutor(context)
         )
     }
@@ -160,6 +189,20 @@ class QRCamera {
                     imageProxy.image?.close()
                     imageProxy.close()
                 }
+        }
+    }
+
+    @androidx.compose.ui.tooling.preview.Preview
+    @Composable
+    private fun CameraPreviewView_Preview() {
+
+        CallSyncAppTheme {
+            CallSyncAppBackground {
+                CameraPreviewView(
+                    isPreviewing = true,
+                    onBarcodeScanned = {},
+                )
+            }
         }
     }
 }
