@@ -84,9 +84,8 @@ data class CallResource(
     companion object {
         private const val DELIMITER = "U+0009"
 
-        fun toObject(encryptedString: String, cryptoHandler: CryptoHandler): CallResource {
-            val decryptedString = cryptoHandler.decrypt(encryptedString)
-            val parts = decryptedString.split(DELIMITER)
+        fun toObject(data: String): CallResource {
+            val parts = data.split(DELIMITER)
             return CallResource(
                 id = parts[0].toLong(),
                 name = parts[1],

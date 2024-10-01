@@ -1,11 +1,13 @@
 package com.yangian.callsync.feature.onboard.ui.onBoardScreens
 
 import android.content.res.Configuration
+import androidx.compose.animation.core.rememberTransition
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.CardDefaults
@@ -24,6 +27,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -36,31 +41,32 @@ import com.yangian.callsync.core.designsystem.icon.ShareIcon
 import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
 import com.yangian.callsync.feature.onboard.R
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun InstallScreen(
     modifier: Modifier = Modifier
 ) {
     Column(
-        verticalArrangement = Arrangement.Top,
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
-
-        Spacer(modifier = Modifier.weight(1f))
 
         // Call Sync Card
         OutlinedCard(
             colors = CardDefaults.outlinedCardColors(
                 containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                contentColor = MaterialTheme.colorScheme.onSurface
+                contentColor = MaterialTheme.colorScheme.onSurface,
             ),
+            modifier = Modifier.fillMaxWidth()
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp).fillMaxWidth()
             ) {
                 Row(
                     horizontalArrangement = Arrangement.Center,
@@ -76,19 +82,18 @@ fun InstallScreen(
                         modifier = Modifier.width(16.dp)
                     )
 
-                    Box {
+                    Box(modifier = Modifier.clip(shape = MaterialTheme.shapes.extraSmall)) {
                         Image(
-                            painter = painterResource(R.mipmap.call_sync_launcher_background),
+                            painter = painterResource(R.mipmap.launcher_background),
                             contentDescription = stringResource(R.string.call_sync_app_logo),
-                            modifier = Modifier
-                                .size(48.dp)
+                            modifier = Modifier.size(dimensionResource(R.dimen.icon_size_large))
                         )
 
                         Image(
                             painter = painterResource(R.mipmap.call_sync_launcher_foreground),
                             contentDescription = stringResource(R.string.call_sync_app_logo),
                             modifier = Modifier
-                                .size(48.dp)
+                                .size(dimensionResource(R.dimen.icon_size_large))
                         )
                     }
                 }
@@ -102,21 +107,18 @@ fun InstallScreen(
             }
         }
 
-        Spacer(
-            modifier = Modifier.weight(0.8f)
-        )
-
         // Num Sum Card
         OutlinedCard(
             colors = CardDefaults.outlinedCardColors(
                 containerColor = MaterialTheme.colorScheme.surfaceContainer,
                 contentColor = MaterialTheme.colorScheme.onSurface
             ),
+            modifier = Modifier.fillMaxWidth()
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top,
-                modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
+                modifier = Modifier.padding(top = 16.dp, bottom = 16.dp).fillMaxWidth()
             ) {
                 Row(
                     horizontalArrangement = Arrangement.Center,
@@ -132,19 +134,17 @@ fun InstallScreen(
                         modifier = Modifier.width(16.dp)
                     )
 
-                    Box {
+                    Box(modifier = Modifier.clip(shape = MaterialTheme.shapes.extraSmall)) {
                         Image(
-                            painter = painterResource(R.mipmap.call_sync_launcher_background),
+                            painter = painterResource(R.mipmap.launcher_background),
                             contentDescription = stringResource(R.string.call_sync_app_logo),
-                            modifier = Modifier
-                                .fillMaxWidth(0.2f)
+                            modifier = Modifier.size(dimensionResource(R.dimen.icon_size_large))
                         )
 
                         Image(
                             painter = painterResource(R.mipmap.num_sum_launcher_foreground),
                             contentDescription = stringResource(R.string.call_sync_app_logo),
-                            modifier = Modifier
-                                .fillMaxWidth(0.2f)
+                            modifier = Modifier.size(dimensionResource(R.dimen.icon_size_large))
                         )
                     }
                 }
@@ -153,62 +153,64 @@ fun InstallScreen(
                     text = stringResource(R.string.install_num_sum_desc),
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Companion.Center,
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
                 )
 
 
-                AssistChip(
-                    onClick = { /*TODO*/ },
-                    label = {
-                        Text(
-                            text = stringResource(id = R.string.download_num_sum)
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_tiny)),
+                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_tiny))
+                ) {
+                    AssistChip(
+                        onClick = { /*TODO*/ },
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.download_num_sum)
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                CallMadeIcon,
+                                stringResource(id = R.string.download_num_sum)
+                            )
+                        },
+                        colors = AssistChipDefaults.assistChipColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            labelColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            leadingIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                         )
-                    },
-                    leadingIcon = {
-                        Icon(
-                            CallMadeIcon,
-                            stringResource(id = R.string.download_num_sum)
-                        )
-                    },
-                    colors = AssistChipDefaults.assistChipColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        labelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        leadingIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
-                )
 
-                AssistChip(
-                    onClick = { /*TODO*/ },
-                    label = {
-                        Text(
-                            text = stringResource(id = R.string.share_num_sum_app_link)
+                    AssistChip(
+                        onClick = { /*TODO*/ },
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.share_num_sum_app_link)
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                ShareIcon,
+                                stringResource(id = R.string.share_num_sum_app_link),
+                            )
+                        },
+                        colors = AssistChipDefaults.assistChipColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            labelColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            leadingIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                         )
-                    },
-                    leadingIcon = {
-                        Icon(
-                            ShareIcon,
-                            stringResource(id = R.string.share_num_sum_app_link),
-                        )
-                    },
-                    colors = AssistChipDefaults.assistChipColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        labelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        leadingIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
-                )
+                }
             }
         }
-
-
-        Spacer(modifier = Modifier.weight(1f))
-
     }
 }
 
 @Preview(
     apiLevel = 34,
     uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
-    wallpaper = Wallpapers.BLUE_DOMINATED_EXAMPLE
+    wallpaper = Wallpapers.BLUE_DOMINATED_EXAMPLE,
+    device = "spec:parent=pixel_5,orientation=landscape"
 )
 @Composable
 private fun InstallScreenPreview() {

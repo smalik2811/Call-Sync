@@ -38,6 +38,12 @@ class HomeViewModel @Inject constructor(
     private val _focussedCallResourceId = MutableStateFlow(0L)
     val focussedCallResourceId: StateFlow<Long> = _focussedCallResourceId.asStateFlow()
 
+    private val _isSignOutDialogVisible = MutableStateFlow(false)
+    val isSignOutDialogVisible: StateFlow<Boolean> = _isSignOutDialogVisible.asStateFlow()
+
+    private val _isMenuVisible = MutableStateFlow(false)
+    val isMenuExpanded: StateFlow<Boolean> = _isMenuVisible.asStateFlow()
+
     val feedState: StateFlow<CallFeedUiState> = callResourceRepository.getCalls()
         .map(CallFeedUiState::Success)
         .stateIn(
@@ -48,7 +54,7 @@ class HomeViewModel @Inject constructor(
 
     val snackBarHostState = SnackbarHostState()
 
-    fun updateFocussedStateFlow(newFocussedCallResourceId: Long) {
+    fun updateFocussedCallResource(newFocussedCallResourceId: Long) {
         if (newFocussedCallResourceId == _focussedCallResourceId.value) {
             _focussedCallResourceId.value = -1L
         } else {
@@ -98,5 +104,21 @@ class HomeViewModel @Inject constructor(
             // 5. Take to the Onboarding Screen
             navigateToOnboarding()
         }
+    }
+
+    fun showMenu() {
+        _isMenuVisible.value = true
+    }
+
+    fun hideMenu() {
+        _isMenuVisible.value = false
+    }
+
+    fun showSignOutDialog() {
+        _isSignOutDialogVisible.value = true
+    }
+
+    fun hideSignOutDialog() {
+        _isSignOutDialogVisible.value = false
     }
 }

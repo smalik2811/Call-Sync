@@ -12,8 +12,14 @@ interface FirestoreRepository {
     )
 
     suspend fun addData(
-        senderId: String,
         receiverId: String,
         callResourceRepository: CallResourceRepository,
     ): FirestoreResult
+
+    suspend fun handShake(
+        receiverId: String,
+        encryptedHandShakeKey: String,
+        onSuccessEvent: () -> Unit,
+        onFailureEvent: () -> Unit
+    )
 }

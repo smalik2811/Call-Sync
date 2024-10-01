@@ -43,7 +43,6 @@ class MainActivity : ComponentActivity() {
                 CallSyncAppBackground {
                     CallSyncApp(
                         startDestination = startDestination,
-                        activity = this,
                         firebaseAnalytics = firebaseAnalytics
                     )
                 }

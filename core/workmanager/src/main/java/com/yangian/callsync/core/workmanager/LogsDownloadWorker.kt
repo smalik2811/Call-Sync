@@ -1,7 +1,10 @@
 package com.yangian.callsync.core.workmanager
 
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
@@ -14,7 +17,6 @@ import com.yangian.callsync.core.firebase.repository.FirestoreRepository
 import com.yangian.callsync.core.firebase.repository.FirestoreResult
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.flow.first
 
 @HiltWorker
 class LogsDownloadWorker @AssistedInject constructor(
@@ -33,11 +35,7 @@ class LogsDownloadWorker @AssistedInject constructor(
         try {
             // Get current user
             val currentUserId: String = firebaseAuth.currentUser?.uid!!
-            val senderId: String = userPreferences.getSenderId().first()
-            Log.i(TAG, "SenderId: $senderId")
-            Log.i(TAG, "Worker Started.")
             val firestoreResult = firestoreRepository.addData(
-                senderId,
                 currentUserId,
                 callResourceRepository,
             )
@@ -55,12 +53,25 @@ class LogsDownloadWorker @AssistedInject constructor(
 
         if (result == Result.success()) {
             // Show Notification
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse("https://www.callsync.yangian.com/open-main-activity")
+                flags = Intent
+                    .FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_HISTORY
+            }
+
+            val pendingIntent = PendingIntent
+                .getActivity(
+                    context, 0, intent, PendingIntent.FLAG_IMMUTABLE
+                )
+
             val notificationId = 1
             val notificationBuilder =
                 NotificationCompat.Builder(context, "call_sync_notifications")
                     .setSmallIcon(R.drawable.call_sync_notification)
                     .setContentTitle("Sync Complete")
                     .setContentText("New data available")
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setContentIntent(pendingIntent)
                     .setAutoCancel(true)
 
             val notificationManager = context.getSystemService(NotificationManager::class.java)

@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.Wallpapers
 import com.yangian.callsync.core.designsystem.component.CallResourceFlatItem
 import com.yangian.callsync.core.designsystem.icon.CallIcon
@@ -194,7 +195,9 @@ fun CallResourceListItem(
     locale = "en-in"
 )
 @Composable
-private fun CallResourceListItemPreview() {
+private fun CallResourceListItemPreview(
+    @PreviewParameter(CallResourcePreviewParameterProvider::class) callResourceList: List<CallResource>
+) {
     CallSyncAppTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
@@ -205,16 +208,9 @@ private fun CallResourceListItemPreview() {
             Column(
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(com.yangian.callsync.core.designsystem.R.dimen.padding_tiny))
             ) {
-                for (i in 1..5) {
+                for (callResource in callResourceList) {
                     CallResourceListItem(
-                        callResource = CallResource(
-                            id = i.toLong(),
-                            name = "Richard Khijkjoslksjljlkjs",
-                            number = "+91${(1000000000..9999999999).random()}",
-                            timestamp = (1546300800000L..1717027200000L).random(),
-                            duration = (0L..86400L).random(),
-                            type = (1..7).random()
-                        ),
+                        callResource = callResource,
                         focussedCallResourceId = 2L,
                         {}
                     )

@@ -12,7 +12,6 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
@@ -54,6 +53,10 @@ class OnBoardViewModel @Inject constructor(
 ) : ViewModel() {
 
     // Ui
+    private val _currentScreen =
+        MutableStateFlow(OnBoardingScreens.TermsOfService)
+    val currentScreen: StateFlow<OnBoardingScreens> = _currentScreen
+
 
     fun navigateToNextScreen() {
         viewModelScope.launch {
@@ -88,7 +91,7 @@ class OnBoardViewModel @Inject constructor(
     }
 
     // Firebase
-    var firebaseUser: FirebaseUser? = firebaseAuth.currentUser
+    private var firebaseUser: FirebaseUser? = firebaseAuth.currentUser
 
     fun getFirebaseUser(): String {
         if (firebaseUser == null) {
@@ -104,9 +107,6 @@ class OnBoardViewModel @Inject constructor(
 
     // Dkma
     private val manufacturerName = Build.MANUFACTURER
-    private val _currentScreen =
-        MutableStateFlow(OnBoardingScreens.TermsOfService)
-    val currentScreen: StateFlow<OnBoardingScreens> = _currentScreen
     var isIssueVisible by mutableStateOf(false)
         private set
     var isSolutionVisible by mutableStateOf(false)
@@ -137,13 +137,6 @@ class OnBoardViewModel @Inject constructor(
     }
 
     // User Preferences
-    fun updateSenderIdPreference(
-        senderId: String
-    ) {
-        viewModelScope.launch {
-            userPreferences.updateSenderId(senderId)
-        }
-    }
 
     fun updateOnBoardingCompleted(
         newOnboardingState: Boolean,
@@ -169,10 +162,7 @@ class OnBoardViewModel @Inject constructor(
             val workRequest = PeriodicWorkRequestBuilder<LogsDownloadWorker>(
                 repeatInterval = 6,
                 repeatIntervalTimeUnit = TimeUnit.HOURS,
-//                flexTimeInterval = 5,
-//                flexTimeIntervalUnit = TimeUnit.MINUTES
             ).setConstraints(workerConstraints)
-                .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 10, TimeUnit.MINUTES)
                 .build()
 
             val workManager = WorkManager.getInstance(context)

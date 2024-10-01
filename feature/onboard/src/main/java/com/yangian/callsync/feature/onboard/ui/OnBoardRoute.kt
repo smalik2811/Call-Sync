@@ -154,7 +154,6 @@ fun OnBoardingScreen(
             onBoardViewModel.getFirebaseUser(),
             onBoardViewModel::navigateToNextScreen,
             onBoardViewModel::navigateToPreviousScreen,
-            onBoardViewModel::updateSenderIdPreference,
             modifier
         )
 

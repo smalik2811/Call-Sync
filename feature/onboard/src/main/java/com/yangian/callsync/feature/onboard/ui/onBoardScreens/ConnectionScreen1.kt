@@ -16,6 +16,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +45,7 @@ import com.yangian.callsync.core.designsystem.theme.extendedLight
 import com.yangian.callsync.core.firebase.repository.DummyFirestoreRepository
 import com.yangian.callsync.core.firebase.repository.FirestoreRepository
 import com.yangian.callsync.feature.onboard.R
+import kotlinx.coroutines.async
 
 @Composable
 fun ConnectionScreen1(
@@ -51,7 +53,6 @@ fun ConnectionScreen1(
     firebaseUser: String,
     navigateToNextScreen: () -> Unit,
     navigateToPreviousScreen: () -> Unit,
-    updateSenderIdPreference: (String) -> Unit,
     modifier: Modifier = Modifier,
     isPreviewing: Boolean = false
 ) {
@@ -136,18 +137,19 @@ fun ConnectionScreen1(
             CircularProgressIndicator()
 
             if (scannedValue != null) {
-                val senderId: String = scannedValue.toString()
+                val encryptedHandShakeString: String = scannedValue.toString()
                 // UID found in the QR code
-                firestoreRepository.createNewDocument(
-                    senderId,
-                    firebaseUser,
-                    {
-                        navigateToNextScreen()
-                        updateSenderIdPreference(senderId)
-                    },
-                    navigateToPreviousScreen
-                )
-
+                // decrypt the string, unpack, store key
+                LaunchedEffect(null) {
+                    val senderId = async {
+                        firestoreRepository.handShake(
+                            firebaseUser,
+                            encryptedHandShakeString,
+                            navigateToNextScreen,
+                            navigateToPreviousScreen,
+                            )
+                    }.await()
+                }
             }
         }
         Spacer(modifier = Modifier.weight(1f))
@@ -162,7 +164,6 @@ private fun ConnectionScreen1Preview() {
             ConnectionScreen1(
                 DummyFirestoreRepository(),
                 stringResource(R.string.test_user),
-                {},
                 {},
                 {},
                 Modifier,

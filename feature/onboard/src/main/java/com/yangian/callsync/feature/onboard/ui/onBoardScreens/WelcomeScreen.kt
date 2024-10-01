@@ -54,7 +54,7 @@ fun WelcomeScreen(
             )
         ) {
             Image(
-                painter = painterResource(R.mipmap.call_sync_launcher_background),
+                painter = painterResource(R.mipmap.launcher_background),
                 contentDescription = stringResource(R.string.call_sync_app_logo),
                 modifier = Modifier
                     .clip(

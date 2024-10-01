@@ -8,10 +8,16 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.SetOptions
 import com.yangian.callsync.core.constant.Constant.FIRESTORE_CALL_COLLECTION_NAME
 import com.yangian.callsync.core.data.repository.CallResourceRepository
+import com.yangian.callsync.core.datastore.UserPreferences
 import com.yangian.callsync.core.model.CallResource
-import com.yangian.callsync.core.model.CryptoHandler
+import com.yangian.callsync.core.model.cryptography.CryptoHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -24,7 +30,8 @@ sealed interface FirestoreResult {
 }
 
 class DefaultFirestoreRepository @Inject constructor(
-    private val firebaseFirestore: FirebaseFirestore
+    private val firebaseFirestore: FirebaseFirestore,
+    private val userPreferences: UserPreferences,
 ) : FirestoreRepository {
     private val TAG = "DOWNLOAD_WORKER"
 
@@ -72,6 +79,9 @@ class DefaultFirestoreRepository @Inject constructor(
                 transaction.set(documentRef, data)
             }
         }.addOnSuccessListener {
+            CoroutineScope(Dispatchers.IO).launch {
+                userPreferences.setSenderId(senderId)
+            }
             onSuccessEvent()
         }.addOnFailureListener { exception ->
             Log.i(
@@ -83,12 +93,17 @@ class DefaultFirestoreRepository @Inject constructor(
     }
 
     override suspend fun addData(
-        senderId: String,
         receiverId: String,
         callResourceRepository: CallResourceRepository,
     ): FirestoreResult = coroutineScope {
         var result: FirestoreResult = FirestoreResult.Success
+        val senderId = userPreferences.getSenderId().first()
         val data = hashMapOf<String, Any>()
+        val cryptoHandler = CryptoHandler()
+        val keyString: String = userPreferences.getHandShakeKey().first()
+            ?: return@coroutineScope FirestoreResult.Retry
+        val keyByteArray = cryptoHandler.hexStringToByteArray(keyString)
+        val decrypter = cryptoHandler.getDecrypter(keyByteArray)
         val documentRef =
             firebaseFirestore.collection(FIRESTORE_CALL_COLLECTION_NAME).document(receiverId)
 
@@ -127,7 +142,7 @@ class DefaultFirestoreRepository @Inject constructor(
                 Log.i(TAG, "Data found in cloud.")
 
                 val callResourceList = array.map {
-                    CallResource.toObject(it.toString(), CryptoHandler(senderId))
+                    CallResource.toObject(decrypter.getDecryptedString(it.toString()))
                 }
 
                 async { callResourceRepository.addCalls(callResourceList) }.join()
@@ -157,7 +172,70 @@ class DefaultFirestoreRepository @Inject constructor(
                 }
         }
 
-        result
+        return@coroutineScope result
+    }
+
+    override suspend fun handShake(
+        receiverId: String,
+        encryptedHandShakeKey: String,
+        onSuccessEvent: () -> Unit,
+        onFailureEvent: () -> Unit
+    ) {
+        val documentRef = firebaseFirestore.collection("key").document("handshake")
+
+        val document = try {
+            suspendCoroutine<DocumentSnapshot> { continuation ->
+                documentRef.get()
+                    .addOnSuccessListener { document -> continuation.resume(document) }
+                    .addOnFailureListener { e ->
+                        continuation.resumeWithException(e)
+                    }
+            }
+        } catch (e: Exception) {
+            onFailureEvent()
+            return
+        }
+
+        val keyList = document.get("keys") as List<*>
+        val handShakeKey = keyList[0] as String
+        val handShakeKeyByteArray = handShakeKey.chunked(2)
+            .map { it.toInt(16).toByte() }.toByteArray()
+        val cryptoHandler = CryptoHandler()
+        val decrypter = cryptoHandler.getDecrypter(handShakeKeyByteArray)
+        val handShakeString = decrypter.getDecryptedString(encryptedHandShakeKey)
+        val keyWord = handShakeString.substring(0, 7)
+        if (keyWord != "yangian") {
+            onFailureEvent()
+            return
+        }
+        val senderTimeStamp = handShakeString.substring(7, 26).toLong()
+        if (isTimestampMoreThanFiveMinutesOld(senderTimeStamp)) {
+            onFailureEvent()
+            return
+        }
+
+        val newHandShakeKey = handShakeString.substring(26, 90)
+        userPreferences.setHandShakeKey(newHandShakeKey)
+
+        val senderId = handShakeString.substring(90)
+
+        createNewDocument(
+            senderId,
+            receiverId,
+            onSuccessEvent,
+            onFailureEvent
+        )
+    }
+
+    companion object {
+        private fun isTimestampMoreThanFiveMinutesOld(storedTimestamp: Long): Boolean {
+            val currentTime = System.currentTimeMillis()
+            val difference = currentTime - storedTimestamp
+
+            val twoMinutesInMillis = TimeUnit.MINUTES.toMillis(2)
+            return difference > twoMinutesInMillis
+        }
+
     }
 }
 
@@ -172,11 +250,19 @@ class DummyFirestoreRepository : FirestoreRepository {
     }
 
     override suspend fun addData(
-        senderId: String,
         receiverId: String,
         callResourceRepository: CallResourceRepository,
     ): FirestoreResult {
         return FirestoreResult.Success
+    }
+
+    override suspend fun handShake(
+        receiverId: String,
+        encryptedHandShakeKey: String,
+        onSuccessEvent: () -> Unit,
+        onFailureEvent: () -> Unit
+    ) {
+
     }
 
 }

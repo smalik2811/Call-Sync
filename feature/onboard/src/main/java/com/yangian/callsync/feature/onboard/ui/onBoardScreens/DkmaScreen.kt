@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
@@ -15,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
@@ -44,8 +42,7 @@ fun DkmaScreen(
         verticalArrangement = Arrangement.Top,
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(dimensionResource(R.dimen.padding_medium)),
+            .verticalScroll(rememberScrollState()),
     ) {
 
         when (dkmaUiState) {
@@ -67,7 +64,6 @@ fun DkmaScreen(
             is DkmaUiState.Loading -> {
                 DkmaLoadingScreen(modifier = modifier)
             }
-
         }
     }
 }
@@ -131,7 +127,7 @@ private fun DkmaErrorScreenPreview() {
 @Composable
 private fun DkmaPreviewLoading() {
     CallSyncAppTheme {
-        CallSyncAppTheme {
+        CallSyncAppBackground {
             CallSyncAppBackground {
                 DkmaScreen(
                     dkmaUiState = DkmaUiState.Loading,
@@ -173,16 +169,16 @@ private fun DkmaPreviewSuccess() {
         user_solution = stringResource(R.string.dkma_dummy_user_solution),
     )
     CallSyncAppTheme {
-        CallSyncAppTheme {
+        CallSyncAppBackground {
             CallSyncAppBackground {
                 var issueVisibility by remember { mutableStateOf(false) }
-                var solutionVisibiliy by remember { mutableStateOf(false) }
+                var solutionVisibility by remember { mutableStateOf(false) }
                 DkmaScreen(
                     dkmaUiState = DkmaUiState.Success(dummyData),
                     isIssueVisible = issueVisibility,
-                    isSolutionVisible = solutionVisibiliy,
+                    isSolutionVisible = solutionVisibility,
                     alterIssueVisibility = { issueVisibility = !issueVisibility },
-                    alterSolutionVisibility = { solutionVisibiliy = !solutionVisibiliy },
+                    alterSolutionVisibility = { solutionVisibility = !solutionVisibility },
                     modifier = Modifier.fillMaxSize(),
                     retryDkmaLoading = {}
                 )

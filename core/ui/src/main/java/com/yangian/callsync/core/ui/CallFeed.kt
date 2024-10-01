@@ -2,6 +2,7 @@ package com.yangian.callsync.core.ui
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -28,34 +29,36 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
+import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
 import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
 import com.yangian.callsync.core.model.CallResource
 
-fun triggerSMSIntent(callResourceNumber: String, activity: Activity) {
+fun triggerSMSIntent(callResourceNumber: String, context: Context) {
     val uriSMS: Uri = Uri.parse("smsto:$callResourceNumber")
-    val smsIntent: Intent = Intent(Intent.ACTION_SENDTO, uriSMS)
-    startActivity(activity, smsIntent, null)
+    val smsIntent = Intent(Intent.ACTION_SENDTO, uriSMS)
+    startActivity(context, smsIntent, null)
 }
 
-fun triggerCallIntent(callResourceNumber: String, activity: Activity) {
+fun triggerCallIntent(callResourceNumber: String, context: Context) {
     val uriCall: Uri = Uri.parse("tel:$callResourceNumber")
-    val callIntent: Intent = Intent(Intent.ACTION_CALL, uriCall)
+    val callIntent = Intent(Intent.ACTION_CALL, uriCall)
 
     if (ContextCompat.checkSelfPermission(
-            activity,
+            context,
             Manifest.permission.CALL_PHONE
         ) != PackageManager.PERMISSION_GRANTED
     ) {
         ActivityCompat.requestPermissions(
-            activity,
+            context as Activity,
             arrayOf(Manifest.permission.CALL_PHONE),
             0
         )
     } else {
-        startActivity(activity, callIntent, null)
+        startActivity(context, callIntent, null)
     }
 }
 
@@ -63,8 +66,7 @@ fun LazyListScope.callFeed(
     feedState: CallFeedUiState,
     modifier: Modifier = Modifier,
     focussedCallResourceId: Long,
-    onCallResourceItemClick: (Long) -> Unit = {},
-    activity: Activity
+    onCallResourceItemClick: (Long) -> Unit = {}
 ) {
     when (feedState) {
         is CallFeedUiState.Loading -> {
@@ -121,15 +123,16 @@ fun LazyListScope.callFeed(
                         item.id
                     }
                 ) { callResource ->
+                    val context = LocalContext.current
                     CallResourceListItem(
                         callResource = callResource,
                         focussedCallResourceId = focussedCallResourceId,
                         onCallResourceItemClick = onCallResourceItemClick,
                         onSMSClick = {
-                            triggerSMSIntent(callResource.number, activity)
+                            triggerSMSIntent(callResource.number, context)
                         },
                         onCallClick = {
-                            triggerCallIntent(callResource.number, activity)
+                            triggerCallIntent(callResource.number, context)
                         },
                     )
                 }
@@ -149,19 +152,64 @@ sealed interface CallFeedUiState {
 @Preview
 @Composable
 private fun LoadingCallFeedPreview() {
-    val activity = LocalContext.current as Activity
     CallSyncAppTheme {
-        LazyColumn(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-
-            callFeed(
-                feedState = CallFeedUiState.Loading,
+        CallSyncAppBackground {
+            LazyColumn(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth(),
-                focussedCallResourceId = -1,
-                activity = activity
-            )
+            ) {
+
+                callFeed(
+                    feedState = CallFeedUiState.Loading,
+                    modifier = Modifier.fillMaxWidth(),
+                    focussedCallResourceId = -1,
+                )
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun SuccessEmptyCallFeedPreview() {
+    CallSyncAppTheme {
+        CallSyncAppBackground {
+            LazyColumn(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                callFeed(
+                    feedState = CallFeedUiState.Success(
+                        feed = listOf()
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
+                    focussedCallResourceId = 0
+                )
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun SuccessFilledCallFeedPreview(
+    @PreviewParameter(CallResourcePreviewParameterProvider::class) callResourceList: List<CallResource>
+) {
+    CallSyncAppTheme {
+        CallSyncAppBackground {
+            LazyColumn(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                callFeed(
+                    feedState = CallFeedUiState.Success(
+                        feed = callResourceList
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
+                    focussedCallResourceId = 0
+                )
+            }
         }
     }
 }

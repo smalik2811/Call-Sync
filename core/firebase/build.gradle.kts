@@ -45,6 +45,7 @@ dependencies {
     implementation(libs.dagger.hilt.android)
     implementation(project(":core:model"))
     implementation(project(":core:data"))
+    implementation(project(":core:datastore"))
     kapt(libs.dagger.hilt.compiler)
 
     // Firebase

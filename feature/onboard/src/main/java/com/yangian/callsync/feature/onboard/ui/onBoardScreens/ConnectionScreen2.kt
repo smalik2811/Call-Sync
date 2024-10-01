@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -46,13 +47,15 @@ fun ConnectionScreen2(
             .fillMaxSize()
             .padding(dimensionResource(R.dimen.padding_medium))
     ) {
+        
+        Spacer(modifier = Modifier.weight(0.5f))
 
         Text(
             text = stringResource(id = R.string.connection1_desc),
-            style = MaterialTheme.typography.headlineSmall
+            style = MaterialTheme.typography.titleMedium
         )
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
 
         // generate and display the qr code
 
@@ -68,7 +71,7 @@ fun ConnectionScreen2(
             )
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(0.5f))
 
         Button(
             onClick = {
@@ -83,7 +86,7 @@ fun ConnectionScreen2(
             Text(stringResource(R.string.finish))
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(0.5f))
     }
 }
 

@@ -85,6 +85,9 @@ dependencies {
     // Work Manager
     implementation(libs.androidx.work.runtime)
 
+    // Compose Markdown
+    implementation(libs.compose.markdown)
+
     // Test Dependencies
     testImplementation(libs.junit)
 

@@ -1,6 +1,6 @@
 package com.yangian.callsync.feature.home.ui
 
-import android.app.Activity
+import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
@@ -22,24 +22,22 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.yangian.callsync.core.designsystem.component.AdMobBanner
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
 import com.yangian.callsync.core.designsystem.component.CustomAlertDialog
@@ -50,27 +48,63 @@ import com.yangian.callsync.core.designsystem.icon.LogoutIcon
 import com.yangian.callsync.core.designsystem.icon.MoreVertIcon
 import com.yangian.callsync.core.designsystem.icon.RefreshIcon
 import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
+import com.yangian.callsync.core.model.CallResource
 import com.yangian.callsync.core.ui.CallFeedUiState
+import com.yangian.callsync.core.ui.CallResourcePreviewParameterProvider
 import com.yangian.callsync.core.ui.callFeed
 import com.yangian.callsync.feature.home.HomeViewModel
 import com.yangian.callsync.feature.home.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeRoute(
+fun HomeScreen(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel = hiltViewModel(),
-    activity: Activity,
-    firebaseAnalytics: FirebaseAnalytics?,
     navigateToOnboarding: () -> Unit
 ) {
 
     val feedState by homeViewModel.feedState.collectAsState()
     val focussedCallResourceId by homeViewModel.focussedCallResourceId.collectAsState()
-    var isSignoutDialogVisible by remember { mutableStateOf(false) }
-    var menuExpanded by remember { mutableStateOf(false) }
-    val context = LocalContext.current
+    val isSignOutDialogVisible by homeViewModel.isSignOutDialogVisible.collectAsState()
+    val isMenuVisible by homeViewModel.isMenuExpanded.collectAsState()
 
+    HomeScreen(
+        isMenuVisible,
+        isSignOutDialogVisible,
+        focussedCallResourceId,
+        feedState,
+        homeViewModel.snackBarHostState,
+        homeViewModel::showMenu,
+        homeViewModel::hideMenu,
+        homeViewModel::showSignOutDialog,
+        homeViewModel::hideSignOutDialog,
+        homeViewModel::updateFocussedCallResource,
+        homeViewModel::downloadLogs,
+        navigateToOnboarding,
+        homeViewModel::signout,
+        modifier = modifier
+    )
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HomeScreen(
+    isMenuVisible: Boolean,
+    isSignOutDialogVisible: Boolean,
+    focussedCallResourceId: Long,
+    feedState: CallFeedUiState,
+    snackBarHostState: SnackbarHostState,
+    showMenu: () -> Unit,
+    hideMenu: () -> Unit,
+    showSignOutDialog: () -> Unit,
+    hideSignOutDialog: () -> Unit,
+    updateFocussedCallResource: (id: Long) -> Unit,
+    downloadLogs: (context: Context) -> Unit,
+    navigateToOnboarding: () -> Unit,
+    signOut: (context: Context, navigateToOnboarding: () -> Unit) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
     Scaffold(
         topBar = {
             TopAppBar(
@@ -82,34 +116,31 @@ fun HomeRoute(
                 },
                 actions = {
                     IconButton(
-                        onClick = {
-                            menuExpanded = !menuExpanded
-                        }
+                        onClick = showMenu
                     ) {
                         Icon(imageVector = MoreVertIcon, stringResource(R.string.menu))
                     }
 
                     DropdownMenu(
-                        expanded = menuExpanded,
-                        onDismissRequest = { menuExpanded = false },
-                        offset = DpOffset((-12).dp, 0.dp),
+                        expanded = isMenuVisible,
+                        onDismissRequest = hideMenu,
                         modifier = Modifier
                     ) {
                         DropdownMenuItem(
                             text = { Text(stringResource(R.string.sign_out)) },
-                            onClick = { isSignoutDialogVisible = true },
+                            onClick = showSignOutDialog,
                         )
                     }
                 }
             )
         },
         snackbarHost = {
-            SnackbarHost(hostState = homeViewModel.snackBarHostState)
+            SnackbarHost(hostState = snackBarHostState)
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    homeViewModel.downloadLogs(context)
+                    downloadLogs(context)
                 }
             ) {
                 Icon(
@@ -140,14 +171,13 @@ fun HomeRoute(
                     feedState = feedState,
                     modifier = Modifier.fillMaxSize(),
                     focussedCallResourceId = focussedCallResourceId,
-                    onCallResourceItemClick = homeViewModel::updateFocussedStateFlow,
-                    activity = activity
+                    onCallResourceItemClick = updateFocussedCallResource,
                 )
             }
 
             val itemsAvailable = when (feedState) {
                 CallFeedUiState.Loading -> 0
-                is CallFeedUiState.Success -> (feedState as CallFeedUiState.Success).feed.size
+                is CallFeedUiState.Success -> feedState.feed.size
             }
 
             val scrollbarState = scrollableState.scrollbarState(
@@ -169,18 +199,14 @@ fun HomeRoute(
         }
     }
 
-    AnimatedVisibility(isSignoutDialogVisible) {
+    AnimatedVisibility(isSignOutDialogVisible) {
         CustomAlertDialog(
-            onDismissRequest = {
-                isSignoutDialogVisible = false
-            },
-            onNegativeButtonClick = {
-                isSignoutDialogVisible = false
-            },
+            onDismissRequest = hideSignOutDialog,
+            onNegativeButtonClick = hideSignOutDialog,
             onPositiveButtonClick = {
-                homeViewModel.signout(
-                    context = context,
-                    navigateToOnboarding = navigateToOnboarding
+                signOut(
+                    context,
+                    navigateToOnboarding
                 )
             },
             dialogTitle = stringResource(R.string.sign_out_dialog_title),
@@ -193,15 +219,30 @@ fun HomeRoute(
     }
 }
 
-@Preview
+@Preview(device = "id:pixel_tablet")
 @Composable
-private fun HomeRoutePreview() {
+private fun HomeRoutePreview(
+    @PreviewParameter(CallResourcePreviewParameterProvider::class) callResourceList: List<CallResource>
+) {
     CallSyncAppTheme {
         CallSyncAppBackground {
-            HomeRoute(
-                activity = LocalContext.current as Activity,
-                firebaseAnalytics = null,
-                navigateToOnboarding = {}
+            HomeScreen(
+                isMenuVisible = false,
+                isSignOutDialogVisible = false,
+                focussedCallResourceId = 0L,
+                feedState = CallFeedUiState.Success(
+                    feed = callResourceList
+                ),
+                snackBarHostState = SnackbarHostState(),
+                showMenu = {},
+                hideMenu = {},
+                showSignOutDialog = {},
+                hideSignOutDialog = {},
+                updateFocussedCallResource = { },
+                downloadLogs = {},
+                navigateToOnboarding = {},
+                signOut = { _, _ -> },
+                modifier = Modifier
             )
         }
     }

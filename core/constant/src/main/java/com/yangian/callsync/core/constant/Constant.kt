@@ -7,5 +7,5 @@ object Constant {
     const val ONBOARDING_DONE = "onboarding_done"
     const val SENDER_ID = "sender_id"
     const val FIRESTORE_CALL_COLLECTION_NAME = "logs"
-
+    const val HANDSHAKE_KEY = "handshake_key"
 }

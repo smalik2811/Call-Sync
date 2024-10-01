@@ -11,7 +11,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".CallSyncApplication"
@@ -31,10 +31,18 @@
             android:theme="@style/Theme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="open-main-activity"
+                    android:scheme="https://www.callsync.yangian.com" />
+            </intent-filter>
         </activity>
 
         <meta-data
@@ -42,9 +50,9 @@
             android:value="true" />
 
         <provider
-            android:name = "androidx.startup.InitializationProvider"
-            android:authorities = "${applicationId}.androidx-startup"
-            tools:node = "remove" />
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove" />
 
     </application>
 </manifest>

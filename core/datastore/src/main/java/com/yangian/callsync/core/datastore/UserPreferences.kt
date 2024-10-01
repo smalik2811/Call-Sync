@@ -3,8 +3,10 @@ package com.yangian.callsync.core.datastore
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.byteArrayPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.yangian.callsync.core.constant.Constant.HANDSHAKE_KEY
 import com.yangian.callsync.core.constant.Constant.ONBOARDING_DONE
 import com.yangian.callsync.core.constant.Constant.SENDER_ID
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +23,7 @@ class UserPreferences @Inject constructor(
     companion object {
         val SENDER_ID_KEY = stringPreferencesKey(SENDER_ID)
         val ONBOARDING_DONE_KEY = booleanPreferencesKey(ONBOARDING_DONE)
+        val HandShake_Key = stringPreferencesKey(HANDSHAKE_KEY)
     }
 
     suspend fun clear() {
@@ -35,7 +38,13 @@ class UserPreferences @Inject constructor(
         }
     }
 
-    suspend fun updateSenderId(
+    fun getHandShakeKey(): Flow<String?> {
+        return dataStore.data.map {
+            it[HandShake_Key]
+        }
+    }
+
+    suspend fun setSenderId(
         newSenderId: String
     ) {
         withContext(Dispatchers.IO) {
@@ -57,6 +66,16 @@ class UserPreferences @Inject constructor(
         withContext(Dispatchers.IO) {
             dataStore.edit {
                 it[ONBOARDING_DONE_KEY] = newOnboardingDone
+            }
+        }
+    }
+
+    suspend fun setHandShakeKey(
+        newHandShakeKey: String
+    ) {
+        withContext(Dispatchers.IO) {
+            dataStore.edit {
+                it[HandShake_Key] = newHandShakeKey
             }
         }
     }
