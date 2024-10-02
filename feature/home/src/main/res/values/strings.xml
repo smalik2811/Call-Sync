@@ -7,6 +7,6 @@
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
     <string name="logout">Logout</string>
-    <string name="call_sync">Call Sync</string>
+    <string name="call_sync">CallSync</string>
     <string name="menu">Menu</string>
 </resources>

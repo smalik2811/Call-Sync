@@ -22,9 +22,7 @@ class MainViewModel @Inject constructor(
 
     private val _startDestination: MutableState<String> =
         mutableStateOf(CallSyncDestination.OnBoard.route)
-
-    //    val startDestination: State<String> = _startDestination
-    val startDestination: State<String> = mutableStateOf(CallSyncDestination.Home.route)
+    val startDestination: State<String> = _startDestination
 
     init {
 
