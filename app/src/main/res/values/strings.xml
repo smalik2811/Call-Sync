@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Call Sync</string>
+    <string name="not_internet_connection">Not internet connection</string>
 </resources>

@@ -38,6 +38,20 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.13"
     }
+    flavorDimensions += listOf("paidMode")
+    productFlavors {
+        create("free") {
+            dimension = "paidMode"
+        }
+        create("paid") {
+            dimension = "paidMode"
+        }
+    }
+
+    sourceSets {
+        getByName("free").java.srcDirs("src/free/java")
+        getByName("paid").java.srcDir("src/paid/java")
+    }
 }
 
 dependencies {

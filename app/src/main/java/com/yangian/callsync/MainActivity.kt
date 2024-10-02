@@ -9,9 +9,11 @@ import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.logEvent
+import com.yangian.callsync.core.data.util.NetworkMonitor
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
 import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
 import com.yangian.callsync.ui.CallSyncApp
+import com.yangian.callsync.ui.rememberCallSyncAppState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -20,6 +22,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var firebaseAnalytics: FirebaseAnalytics
+
+    @Inject
+    lateinit var networkMonitor: NetworkMonitor
 
     @Inject
     lateinit var mainViewModel: MainViewModel
@@ -35,19 +40,22 @@ class MainActivity : ComponentActivity() {
             !mainViewModel.isSplashVisible.value
         }
 
-
         enableEdgeToEdge()
         setContent {
             val startDestination by mainViewModel.startDestination
+            val appState = rememberCallSyncAppState(
+                networkMonitor = networkMonitor
+            )
             CallSyncAppTheme {
                 CallSyncAppBackground {
                     CallSyncApp(
+                        appState = appState,
                         startDestination = startDestination,
                         firebaseAnalytics = firebaseAnalytics
                     )
                 }
             }
         }
-
     }
+
 }

@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.yangian.callsync.core.data"
+    namespace = "com.example.callsync.core.common"
     compileSdk = 34
 
     defaultConfig {
-        minSdk = 26
+        minSdk = 24
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -36,24 +36,14 @@ android {
 
 dependencies {
 
-    // androidx
+    // Dagger Hilt
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.dagger.hilt.compiler)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-
-    // Dagger-Hilt
-    implementation(libs.dagger.hilt.android)
-    implementation(project(":core:common"))
-    kapt(libs.dagger.hilt.compiler)
-
-    // test
     testImplementation(libs.junit)
-
-    // androidTest
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-    // Project Modules
-    implementation(project(":core:database"))
-    implementation(project(":core:model"))
 }

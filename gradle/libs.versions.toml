@@ -35,6 +35,7 @@ cameraCamera2 = "1.3.4"
 barcodeScanningVersion = "17.3.0"
 adapterRxjava2 = "2.9.0"
 retrofit = "2.9.0"
+kotlinxCoroutines = "1.8.1"
 
 [libraries]
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCamera2" }

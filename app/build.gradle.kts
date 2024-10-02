@@ -31,6 +31,10 @@ android {
                 "proguard-rules.pro"
             )
         }
+        getByName("debug") {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -49,6 +53,17 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+    flavorDimensions += listOf("paidMode")
+    productFlavors {
+        create("free") {
+            dimension = "paidMode"
+            applicationIdSuffix = ".free"
+        }
+        create("paid") {
+            dimension = "paidMode"
+            applicationIdSuffix = ".paid"
         }
     }
 }
