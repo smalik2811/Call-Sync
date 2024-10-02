@@ -1,7 +1,7 @@
-package com.example.callsync.core.common.network.di
+package com.yangian.callsync.core.common.network.di
 
-import com.example.callsync.core.common.network.CSDispatchers
-import com.example.callsync.core.common.network.Dispatcher
+import com.yangian.callsync.core.common.network.CSDispatchers
+import com.yangian.callsync.core.common.network.Dispatcher
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

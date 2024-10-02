@@ -9,7 +9,7 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.yangian.callsync.free.debug" />
+                  <option name="appId" value="com.yangian.callsync" />
                   <option name="mobileSdkAppId" value="1:322422928479:android:0ad8351b022af0399a97ea" />
                   <option name="projectId" value="call-log-1" />
                   <option name="projectNumber" value="322422928479" />

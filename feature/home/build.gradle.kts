@@ -47,11 +47,6 @@ android {
             dimension = "paidMode"
         }
     }
-
-    sourceSets {
-        getByName("free").java.srcDirs("src/free/java")
-        getByName("paid").java.srcDir("src/paid/java")
-    }
 }
 
 dependencies {

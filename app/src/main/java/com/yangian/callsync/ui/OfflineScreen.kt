@@ -35,7 +35,7 @@ fun OfflineScreen() {
     ) {
         Icon(
             CloudOffIcon,
-            stringResource(R.string.not_internet_connection),
+            stringResource(R.string.no_internet_connection),
             modifier = Modifier
                 .size(dimensionResource(com.yangian.callsync.core.ui.R.dimen.icon_size_large))
         )

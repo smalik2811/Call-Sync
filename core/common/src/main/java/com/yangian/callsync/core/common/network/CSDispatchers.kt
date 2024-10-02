@@ -1,4 +1,4 @@
-package com.example.callsync.core.common.network
+package com.yangian.callsync.core.common.network
 
 import javax.inject.Qualifier
 import kotlin.annotation.AnnotationRetention.RUNTIME

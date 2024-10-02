@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.callsync.core.common"
+    namespace = "com.yangian.callsync.core.common"
     compileSdk = 34
 
     defaultConfig {
-        minSdk = 24
+        minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")

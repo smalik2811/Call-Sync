@@ -6,8 +6,8 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import androidx.core.content.getSystemService
-import com.example.callsync.core.common.network.CSDispatchers
-import com.example.callsync.core.common.network.Dispatcher
+import com.yangian.callsync.core.common.network.CSDispatchers
+import com.yangian.callsync.core.common.network.Dispatcher
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.awaitClose
