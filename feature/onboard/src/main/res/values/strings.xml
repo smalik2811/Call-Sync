@@ -30,7 +30,7 @@
     <string name="number_5">5</string>
     <string name="number_6">6</string>
     <string name="camera_permission_explanation_part_1">We need your Camera Permission to establish a secure connection with </string>
-    <string name="camer_permisssion_explanation_part_2"> app.</string>
+    <string name="camera_permission_explanation_part_2"> app.</string>
     <string name="camera_permission_request_title">Camera Permission Required</string>
     <string name="cancel">Cancel</string>
     <string name="qr_code_scanner">QR Code Scanner</string>

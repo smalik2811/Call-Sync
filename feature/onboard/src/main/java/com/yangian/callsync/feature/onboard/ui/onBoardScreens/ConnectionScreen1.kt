@@ -117,7 +117,7 @@ fun ConnectionScreen1(
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                             append(stringResource(R.string.num_sum_name))
                         }
-                        append(stringResource(R.string.camer_permisssion_explanation_part_2))
+                        append(stringResource(R.string.camera_permission_explanation_part_2))
                     }
                     CustomAlertDialog(
                         onPositiveButtonClick = { context.openPermissionSetting() },
@@ -147,7 +147,7 @@ fun ConnectionScreen1(
                             encryptedHandShakeString,
                             navigateToNextScreen,
                             navigateToPreviousScreen,
-                            )
+                        )
                     }.await()
                 }
             }
