@@ -13,8 +13,11 @@
 .externalNativeBuild
 .cxx
 local.properties
-/.ui-debug.log
-/.firestore-debug.log
+ui-debug.log
+firestore-debug.log
+Firebase.json
+.firebaserc
+.aiexclude
 
 # Project exclude paths
 /gradle/
