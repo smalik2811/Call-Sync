@@ -43,6 +43,7 @@ import java.util.Locale
 @Composable
 fun CallResourceFlatItem(
     callResource: CallResource,
+    isFocused: Boolean,
     modifier: Modifier = Modifier,
     listItemColors: ListItemColors = ListItemDefaults.colors(),
     onCallResourceItemClick: (Long) -> Unit = {},
@@ -152,7 +153,7 @@ fun CallResourceFlatItem(
                 }
 
                 Text(
-                    text = callResource.getDateString(),
+                    text = callResource.getDateString(includeTime = isFocused),
                     style = MaterialTheme.typography.bodyMedium,
                     color = if (callResource.type in listOf(3, 5, 6)) {
                         MaterialTheme.colorScheme.error
@@ -205,6 +206,7 @@ private fun CallResourceFlatItemPreview() {
                     duration = (0L..864L).random(),
                     type = (1..7).random()
                 ),
+                isFocused = true,
                 onCallResourceItemClick = {},
             )
         }

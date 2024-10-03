@@ -14,18 +14,38 @@ data class CallResource(
         return "${id}U+0009${name}U+0009${number}U+0009${timestamp}U+0009${duration}U+0009${type}"
     }
 
-    fun getDateString(): String {
+    fun getDateString(includeTime: Boolean): String {
         val calendarInstance = Calendar.getInstance()
         val currentYear = calendarInstance.get(Calendar.YEAR)
         val currentMonth = calendarInstance.get(Calendar.MONTH)
         val currentDay = calendarInstance.get(Calendar.DAY_OF_MONTH)
 
         calendarInstance.timeInMillis = timestamp
-
         var result = ""
-        if (currentDay == calendarInstance.get(Calendar.DAY_OF_MONTH) && currentMonth == calendarInstance.get(
+        val monthName = when (calendarInstance.get(Calendar.MONTH)) {
+            0 -> "Jan"
+            1 -> "Feb"
+            2 -> "Mar"
+            3 -> "Apr"
+            4 -> "May"
+            5 -> "Jun"
+            6 -> "Jul"
+            7 -> "Aug"
+            8 -> "Sep"
+            9 -> "Oct"
+            10 -> "Nov"
+            11 -> "Dec"
+            else -> ""
+        }
+
+        result = "$monthName ${calendarInstance.get(Calendar.DAY_OF_MONTH)}"
+
+        if (calendarInstance.get(Calendar.YEAR) != currentYear) {
+            result += ", ${calendarInstance.get(Calendar.YEAR)}"
+        }
+        if (includeTime || (currentDay == calendarInstance.get(Calendar.DAY_OF_MONTH) && currentMonth == calendarInstance.get(
                 Calendar.MONTH
-            ) && currentYear == calendarInstance.get(Calendar.YEAR)
+            ) && currentYear == calendarInstance.get(Calendar.YEAR))
         ) {
 
             val meridian = when (calendarInstance.get(Calendar.AM_PM)) {
@@ -39,29 +59,7 @@ data class CallResource(
             }
             val minute = calendarInstance.get(Calendar.MINUTE).toString().padStart(2, '0')
 
-            result = "$hour:$minute $meridian"
-        } else {
-            val monthName = when (calendarInstance.get(Calendar.MONTH)) {
-                0 -> "Jan"
-                1 -> "Feb"
-                2 -> "Mar"
-                3 -> "Apr"
-                4 -> "May"
-                5 -> "Jun"
-                6 -> "Jul"
-                7 -> "Aug"
-                8 -> "Sep"
-                9 -> "Oct"
-                10 -> "Nov"
-                11 -> "Dec"
-                else -> ""
-            }
-
-            result = "$monthName ${calendarInstance.get(Calendar.DAY_OF_MONTH)}"
-
-            if (calendarInstance.get(Calendar.YEAR) != currentYear) {
-                result += ", ${calendarInstance.get(Calendar.YEAR)}"
-            }
+            result = "$result • $hour:$minute $meridian"
         }
 
         return result

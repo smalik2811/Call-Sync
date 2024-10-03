@@ -53,8 +53,9 @@ fun CallResourceListItem(
     onSMSClick: () -> Unit = {},
     onCallClick: () -> Unit = {},
 ) {
+    val isFocused: Boolean = focussedCallResourceId == callResource.id
     val cardElevation by animateDpAsState(
-        targetValue = if (focussedCallResourceId == callResource.id) {
+        targetValue = if (isFocused) {
             dimensionResource(R.dimen.elevation_level_1)
         } else {
             dimensionResource(R.dimen.elevation_level_0)
@@ -94,6 +95,7 @@ fun CallResourceListItem(
         Column {
             CallResourceFlatItem(
                 callResource = callResource,
+                isFocused = isFocused,
                 onCallResourceItemClick = onCallResourceItemClick,
             )
 
