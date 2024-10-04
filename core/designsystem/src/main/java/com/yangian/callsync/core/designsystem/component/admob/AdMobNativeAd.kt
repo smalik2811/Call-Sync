@@ -4,32 +4,33 @@ import android.content.Context
 import android.view.View
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.StarHalf
+import androidx.compose.material.icons.filled.StarRate
+import androidx.compose.material.icons.outlined.StarOutline
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.rememberAsyncImagePainter
@@ -39,9 +40,11 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
+import com.google.android.gms.ads.nativead.NativeAdOptions.ADCHOICES_TOP_RIGHT
 import com.google.android.gms.ads.nativead.NativeAdView
-import com.yangian.callsync.core.designsystem.BuildConfig
 import com.yangian.callsync.core.designsystem.R
+import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
+import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
 
 @Composable
 private fun LoadAdContent(nativeAd: NativeAd?, composeView: View) {
@@ -53,27 +56,39 @@ private fun LoadAdContent(nativeAd: NativeAd?, composeView: View) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Sponsored",
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.labelMedium
-                    )
-                    Text(
-                        text = " • ${ad.headline}",
+                        text = "${ad.headline}",
                         color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.titleMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
                     )
                 }
             },
             headlineContent = {
-                Text(
-                    text = "${ad.body}",
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.bodySmall,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small)),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.ad_badge),
+                        contentDescription = "Ad badge",
+                        modifier = Modifier
+                            .size(24.dp)
+                    )
+
+                    if (ad.starRating != null) {
+                        StarRating(
+                            rating = ad.starRating!!,
+                            modifier = Modifier.wrapContentSize()
+                        )
+                    } else {
+                        Text(
+                            text = ad.store ?: ad.advertiser ?: "",
+                            color = MaterialTheme.colorScheme.onSurface,
+                            style = MaterialTheme.typography.bodySmall,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
             },
             supportingContent = {
 
@@ -107,19 +122,6 @@ private fun LoadAdContent(nativeAd: NativeAd?, composeView: View) {
                     modifier = Modifier
                         .size(dimensionResource(R.dimen.icon_size_large))
                 )
-            },
-            trailingContent = {
-                Column(
-                    verticalArrangement = Arrangement.Bottom
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.ad_badge),
-                        contentDescription = "Ad badge",
-                        modifier = Modifier
-                            .size(dimensionResource(R.dimen.icon_size_small))
-                            .align(Alignment.End)
-                    )
-                }
             },
             modifier = Modifier.fillMaxWidth()
         )
@@ -164,7 +166,7 @@ fun CallNativeAd(nativeAd: NativeAd) {
     }
 }
 
-private fun loadNativeAd(context: Context, adUnitId: String, callback: (NativeAd?) -> Unit) {
+fun loadNativeAd(context: Context, adUnitId: String, callback: (NativeAd?) -> Unit) {
     val builder = AdLoader.Builder(context, adUnitId)
         .forNativeAd { nativeAd ->
             callback(nativeAd)
@@ -176,24 +178,48 @@ private fun loadNativeAd(context: Context, adUnitId: String, callback: (NativeAd
                 callback(null)
             }
         })
-        .withNativeAdOptions(NativeAdOptions.Builder().build())
+        .withNativeAdOptions(
+            NativeAdOptions
+                .Builder()
+                .setRequestCustomMuteThisAd(false)
+                .setAdChoicesPlacement(ADCHOICES_TOP_RIGHT)
+                .build()
+        )
         .build()
 
     adLoader.loadAd(AdRequest.Builder().build())
 }
 
 @Composable
-fun AdMobNative() {
-    var nativeAd by rememberSaveable { mutableStateOf<NativeAd?>(null) }
-    val context = LocalContext.current
-
-    LaunchedEffect(null) {
-        loadNativeAd(context, BuildConfig.NativeAdUnitId) {
-            nativeAd = it
+fun StarRating(
+    rating: Double,
+    maxRating: Int = 5,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        horizontalArrangement = Arrangement.Start,
+        modifier = modifier
+    ) {
+        for (i in 1..maxRating) {
+            Icon(
+                imageVector = when {
+                    i < rating.toInt() -> Icons.Filled.StarRate
+                    rating.toInt() == i && i < rating -> Icons.AutoMirrored.Filled.StarHalf
+                    else -> Icons.Outlined.StarOutline
+                },
+                contentDescription = "Star $i",
+                tint = if (i <= rating) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+            )
         }
     }
+}
 
-    nativeAd?.let {
-        CallNativeAd(nativeAd = it)
+@Preview(device = "id:Nexus S")
+@Composable
+private fun StarRatingPreview() {
+    CallSyncAppTheme {
+        CallSyncAppBackground {
+            StarRating(3.2, 5)
+        }
     }
 }

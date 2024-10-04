@@ -38,7 +38,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.Wallpapers
+import com.google.android.gms.ads.nativead.NativeAd
 import com.yangian.callsync.core.designsystem.component.CallResourceFlatItem
+import com.yangian.callsync.core.designsystem.component.admob.CallNativeAd
 import com.yangian.callsync.core.designsystem.icon.CallIcon
 import com.yangian.callsync.core.designsystem.icon.ChatIcon
 import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
@@ -52,6 +54,7 @@ fun CallResourceListItem(
     modifier: Modifier = Modifier,
     onSMSClick: () -> Unit = {},
     onCallClick: () -> Unit = {},
+    nativeAd: NativeAd?
 ) {
     val isFocused: Boolean = focussedCallResourceId == callResource.id
     val cardElevation by animateDpAsState(
@@ -119,69 +122,80 @@ fun CallResourceListItem(
                     )
                 )
             ) {
-                HorizontalDivider()
+                Column {
+                    HorizontalDivider()
 
-                Row(
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceEvenly,
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceAround,
                         modifier = Modifier
-//                            .fillMaxHeight()
-                            .padding(
-                                top = dimensionResource(R.dimen.padding_medium),
-                                bottom = dimensionResource(R.dimen.padding_medium)
-                            )
-                            .clickable(onClickLabel = stringResource(R.string.make_call)) {
-                                onCallClick()
-                            }
+                            .fillMaxWidth(),
                     ) {
-
-                        Icon(
-                            imageVector = CallIcon,
-                            contentDescription = stringResource(R.string.call),
-                        )
-                        Spacer(
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.SpaceEvenly,
                             modifier = Modifier
-                                .height(dimensionResource(R.dimen.padding_tiny))
-                                .width(dimensionResource(R.dimen.padding_extra_large))
-                        )
-                        Text(
-                            text = stringResource(R.string.call),
-                            style = MaterialTheme.typography.bodySmall,
-                        )
+                                //                            .fillMaxHeight()
+                                .padding(
+                                    top = dimensionResource(R.dimen.padding_medium),
+                                    bottom = dimensionResource(R.dimen.padding_medium)
+                                )
+                                .clickable(onClickLabel = stringResource(R.string.make_call)) {
+                                    onCallClick()
+                                }
+                        ) {
+
+                            Icon(
+                                imageVector = CallIcon,
+                                contentDescription = stringResource(R.string.call),
+                            )
+                            Spacer(
+                                modifier = Modifier
+                                    .height(dimensionResource(R.dimen.padding_tiny))
+                                    .width(dimensionResource(R.dimen.padding_extra_large))
+                            )
+                            Text(
+                                text = stringResource(R.string.call),
+                                style = MaterialTheme.typography.bodySmall,
+                            )
+                        }
+
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.SpaceEvenly,
+                            modifier = Modifier
+                                //                            .fillMaxHeight()
+                                .padding(
+                                    top = dimensionResource(R.dimen.padding_medium),
+                                    bottom = dimensionResource(R.dimen.padding_medium)
+                                )
+                                .clickable {
+                                    onSMSClick()
+                                }
+                        ) {
+
+                            Icon(
+                                imageVector = ChatIcon,
+                                contentDescription = stringResource(R.string.message),
+                            )
+                            Spacer(
+                                modifier = Modifier
+                                    .height(dimensionResource(R.dimen.padding_tiny))
+                                    .width(dimensionResource(R.dimen.padding_extra_large))
+                            )
+                            Text(
+                                text = stringResource(R.string.message),
+                                style = MaterialTheme.typography.bodySmall,
+                            )
+                        }
                     }
 
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceEvenly,
+                    HorizontalDivider(
                         modifier = Modifier
-//                            .fillMaxHeight()
-                            .padding(
-                                top = dimensionResource(R.dimen.padding_medium),
-                                bottom = dimensionResource(R.dimen.padding_medium)
-                            )
-                            .clickable {
-                                onSMSClick()
-                            }
-                    ) {
+                            .fillMaxWidth()
+                    )
 
-                        Icon(
-                            imageVector = ChatIcon,
-                            contentDescription = stringResource(R.string.message),
-                        )
-                        Spacer(
-                            modifier = Modifier
-                                .height(dimensionResource(R.dimen.padding_tiny))
-                                .width(dimensionResource(R.dimen.padding_extra_large))
-                        )
-                        Text(
-                            text = stringResource(R.string.message),
-                            style = MaterialTheme.typography.bodySmall,
-                        )
+                    nativeAd?.let {
+                        CallNativeAd(nativeAd)
                     }
                 }
             }
@@ -214,7 +228,8 @@ private fun CallResourceListItemPreview(
                     CallResourceListItem(
                         callResource = callResource,
                         focussedCallResourceId = 2L,
-                        {}
+                        {},
+                        nativeAd = null
                     )
                 }
             }

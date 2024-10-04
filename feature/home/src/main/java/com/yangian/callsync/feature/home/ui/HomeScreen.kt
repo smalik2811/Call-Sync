@@ -21,7 +21,6 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel(),
     navigateToOnboarding: () -> Unit
 ) {
-
     val feedState by homeViewModel.feedState.collectAsState()
     val focussedCallResourceId by homeViewModel.focussedCallResourceId.collectAsState()
     val isSignOutDialogVisible by homeViewModel.isSignOutDialogVisible.collectAsState()

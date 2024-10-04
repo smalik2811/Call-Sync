@@ -20,6 +20,11 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -33,8 +38,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
+import com.google.android.gms.ads.nativead.NativeAd
+import com.yangian.callsync.core.designsystem.BuildConfig
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
-import com.yangian.callsync.core.designsystem.component.admob.AdMobNative
+import com.yangian.callsync.core.designsystem.component.admob.loadNativeAd
 import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
 import com.yangian.callsync.core.model.CallResource
 
@@ -125,6 +132,13 @@ fun LazyListScope.callFeed(
                     }
                 ) { callResource ->
                     val context = LocalContext.current
+                    var nativeAd by remember { mutableStateOf<NativeAd?>(null) }
+                    LaunchedEffect(null) {
+                        loadNativeAd(context, BuildConfig.NativeAdUnitId) {
+                            nativeAd = it
+                        }
+                    }
+
                     CallResourceListItem(
                         callResource = callResource,
                         focussedCallResourceId = focussedCallResourceId,
@@ -135,11 +149,8 @@ fun LazyListScope.callFeed(
                         onCallClick = {
                             triggerCallIntent(callResource.number, context)
                         },
+                        nativeAd = nativeAd
                     )
-
-                    if ((callResource.id % 6).toInt() == 0) {
-                        AdMobNative()
-                    }
                 }
             }
         }

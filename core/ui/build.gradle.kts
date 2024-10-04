@@ -54,7 +54,7 @@ dependencies {
     implementation(libs.androidx.material3.window.size)
 
     // Play Services
-//    implementation(libs.play.services.ads)
+    implementation(libs.play.services.ads)
 
     // Test
     testImplementation(libs.junit)
