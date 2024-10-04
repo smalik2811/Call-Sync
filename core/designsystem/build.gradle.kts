@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.secrets.gradle.plugin)
 }
 
 android {
@@ -36,7 +37,12 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.13"
+        kotlinCompilerExtensionVersion = "1.5.14"
+    }
+
+    secrets {
+        // This production secrets file and going to contains real secrets
+        propertiesFileName = "local.properties"
     }
 }
 
@@ -66,7 +72,7 @@ dependencies {
     implementation(libs.androidx.camera.view)
 
     // Play Services
-//    implementation(libs.play.services.ads)
+    implementation(libs.play.services.ads)
 
     // Coil library
     implementation(libs.coil.compose)

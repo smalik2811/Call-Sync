@@ -34,6 +34,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
+import com.yangian.callsync.core.designsystem.component.admob.AdMobNative
 import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
 import com.yangian.callsync.core.model.CallResource
 
@@ -135,6 +136,10 @@ fun LazyListScope.callFeed(
                             triggerCallIntent(callResource.number, context)
                         },
                     )
+
+                    if ((callResource.id % 6).toInt() == 0) {
+                        AdMobNative()
+                    }
                 }
             }
         }

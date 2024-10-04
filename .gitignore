@@ -19,8 +19,5 @@ firebase.json
 .firebaserc
 .aiexclude
 
-# Project exclude paths
-/gradle/
-
 # Exclude Firebase Config File
 /app/google-services.json

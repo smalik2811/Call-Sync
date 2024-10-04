@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.googleServices)
     kotlin("kapt")
     alias(libs.plugins.daggerHilt)
+    alias(libs.plugins.secrets.gradle.plugin)
 }
 
 android {
@@ -21,7 +22,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
     }
+
 
     buildTypes {
         release {
@@ -42,9 +45,10 @@ android {
     buildFeatures {
         compose = true
         viewBinding = true
+        buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.13"
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
     packaging {
         resources {
@@ -102,7 +106,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     // Play Services
-//    implementation(libs.play.services.ads)
+    implementation(libs.play.services.ads)
 
     // Work Manager
     implementation(libs.androidx.work.runtime)
