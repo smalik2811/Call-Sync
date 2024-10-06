@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     kotlin("kapt")
     alias(libs.plugins.daggerHilt)
+    alias(libs.plugins.secrets.gradle.plugin)
 }
 
 android {
@@ -34,9 +35,14 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.14"
+    }
+    secrets {
+        // This production secrets file and going to contains real secrets
+        propertiesFileName = "local.properties"
     }
 }
 
@@ -75,6 +81,9 @@ dependencies {
     implementation(libs.firebase.cloud.firestore)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.analytics)
+
+    // Play Services
+    implementation(libs.play.services.ads)
 
     // QRGenerator
     implementation(libs.qrcode.kotlin)
