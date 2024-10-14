@@ -20,22 +20,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.android.gms.ads.nativead.NativeAd
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.yangian.callsync.core.designsystem.BuildConfig
-import com.yangian.callsync.core.designsystem.component.admob.loadNativeAd
 import com.yangian.callsync.core.designsystem.icon.ArrowBackIcon
 import com.yangian.callsync.feature.onboard.OnBoardViewModel
 import com.yangian.callsync.feature.onboard.R
@@ -54,7 +45,6 @@ fun OnBoardRoute(
     modifier: Modifier = Modifier,
     onBoardViewModel: OnBoardViewModel = hiltViewModel(),
     navigateToHome: () -> Unit = {},
-    firebaseAnalytics: FirebaseAnalytics?
 ) {
     val currentScreen by onBoardViewModel.currentScreen.collectAsState()
 
@@ -103,7 +93,6 @@ fun OnBoardRoute(
             OnBoardingScreen(
                 onBoardViewModel = onBoardViewModel,
                 navigateToHome = navigateToHome,
-                firebaseAnalytics = firebaseAnalytics,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
@@ -143,7 +132,6 @@ fun OnBoardRoute(
 fun OnBoardingScreen(
     onBoardViewModel: OnBoardViewModel,
     navigateToHome: () -> Unit,
-    firebaseAnalytics: FirebaseAnalytics?,
     modifier: Modifier = Modifier
 ) {
     val currentScreen by onBoardViewModel.currentScreen.collectAsState()
@@ -170,7 +158,6 @@ fun OnBoardingScreen(
             onBoardViewModel::updateOnBoardingCompleted,
             navigateToHome,
             onBoardViewModel::registerLogsDownloadWorkRequest,
-            firebaseAnalytics,
             modifier,
         )
 

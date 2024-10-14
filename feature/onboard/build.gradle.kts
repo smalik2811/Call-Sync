@@ -1,9 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
-    kotlin("kapt")
+    alias(libs.plugins.ksp)
     alias(libs.plugins.daggerHilt)
     alias(libs.plugins.secrets.gradle.plugin)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -12,33 +13,23 @@ android {
 
     defaultConfig {
         minSdk = 26
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
+    }
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
     }
     buildFeatures {
         compose = true
         buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
     }
     secrets {
         // This production secrets file and going to contains real secrets
@@ -68,7 +59,7 @@ dependencies {
 
     // Dagger-Hilt
     implementation(libs.dagger.hilt.android)
-    kapt(libs.dagger.hilt.compiler)
+    ksp(libs.dagger.hilt.compiler)
 
     // Lifecycle
     implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -80,7 +71,6 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.cloud.firestore)
     implementation(libs.firebase.auth)
-    implementation(libs.firebase.analytics)
 
     // Play Services
     implementation(libs.play.services.ads)
@@ -111,4 +101,5 @@ dependencies {
     implementation(project(":core:workmanager"))
     implementation(project(":core:network"))
     implementation(project(":core:firebase"))
+    implementation(project(":core:constant"))
 }

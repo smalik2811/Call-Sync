@@ -1,7 +1,8 @@
 package com.yangian.callsync.feature.onboard.ui.onBoardScreens
 
+import android.content.Intent
 import android.content.res.Configuration
-import androidx.compose.animation.core.rememberTransition
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,6 +37,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.Wallpapers
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
+import com.yangian.callsync.core.constant.Constant.NUM_SUM_DOWNLOAD_URL
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
 import com.yangian.callsync.core.designsystem.icon.CallMadeIcon
 import com.yangian.callsync.core.designsystem.icon.ShareIcon
@@ -46,6 +50,9 @@ import com.yangian.callsync.feature.onboard.R
 fun InstallScreen(
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val message = stringResource(R.string.num_sum_download_message, NUM_SUM_DOWNLOAD_URL)
+
     Column(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -66,7 +73,9 @@ fun InstallScreen(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top,
-                modifier = Modifier.padding(16.dp).fillMaxWidth()
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
             ) {
                 Row(
                     horizontalArrangement = Arrangement.Center,
@@ -118,7 +127,9 @@ fun InstallScreen(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top,
-                modifier = Modifier.padding(top = 16.dp, bottom = 16.dp).fillMaxWidth()
+                modifier = Modifier
+                    .padding(top = 16.dp, bottom = 16.dp)
+                    .fillMaxWidth()
             ) {
                 Row(
                     horizontalArrangement = Arrangement.Center,
@@ -162,7 +173,13 @@ fun InstallScreen(
                     modifier = Modifier.padding(dimensionResource(R.dimen.padding_tiny))
                 ) {
                     AssistChip(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            val intent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse(NUM_SUM_DOWNLOAD_URL)
+                            )
+                            startActivity(context, intent, null)
+                        },
                         label = {
                             Text(
                                 text = stringResource(id = R.string.download_num_sum)
@@ -182,7 +199,13 @@ fun InstallScreen(
                     )
 
                     AssistChip(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            val intent = Intent(Intent.ACTION_SEND)
+                            intent.type = "text/plain"
+                            intent.putExtra(Intent.EXTRA_TEXT, message)
+                            startActivity(context, Intent.createChooser(intent,
+                                context.getString(R.string.share_via)), null)
+                        },
                         label = {
                             Text(
                                 text = stringResource(id = R.string.share_num_sum_app_link)
@@ -210,7 +233,7 @@ fun InstallScreen(
     apiLevel = 34,
     uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
     wallpaper = Wallpapers.BLUE_DOMINATED_EXAMPLE,
-    device = "spec:parent=pixel_5,orientation=landscape"
+    device = "spec:parent=pixel_5"
 )
 @Composable
 private fun InstallScreenPreview() {

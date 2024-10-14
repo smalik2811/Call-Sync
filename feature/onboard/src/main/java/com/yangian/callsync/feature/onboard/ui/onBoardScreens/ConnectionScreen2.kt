@@ -23,7 +23,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
 import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
 import com.yangian.callsync.feature.onboard.R
@@ -32,10 +31,9 @@ import qrcode.QRCode
 @Composable
 fun ConnectionScreen2(
     getQRCode: (Int, Int) -> ImageBitmap,
-    updateOnBoardingCompleted: (boolean: Boolean, firebaseAnalytics: FirebaseAnalytics?) -> Unit,
+    updateOnBoardingCompleted: (boolean: Boolean) -> Unit,
     navigateToHome: () -> Unit,
-    registerLogsDownloadWorkRequest: (context: Context, firebaseAnalytics: FirebaseAnalytics) -> Unit,
-    firebaseAnalytics: FirebaseAnalytics?,
+    registerLogsDownloadWorkRequest: (context: Context) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -47,7 +45,7 @@ fun ConnectionScreen2(
             .fillMaxSize()
             .padding(dimensionResource(R.dimen.padding_medium))
     ) {
-        
+
         Spacer(modifier = Modifier.weight(0.5f))
 
         Text(
@@ -75,11 +73,10 @@ fun ConnectionScreen2(
 
         Button(
             onClick = {
-                updateOnBoardingCompleted(true, firebaseAnalytics)
+                updateOnBoardingCompleted(true)
                 navigateToHome()
-                if (firebaseAnalytics != null) {
-                    registerLogsDownloadWorkRequest(context, firebaseAnalytics)
-                }
+                registerLogsDownloadWorkRequest(context)
+
             },
             modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
         ) {
@@ -110,10 +107,9 @@ private fun ConnectionScreen2Preview() {
                 getQRCode = { _, _ ->
                     imageBitMap
                 },
-                updateOnBoardingCompleted = { _, _ -> },
+                updateOnBoardingCompleted = { _-> },
                 navigateToHome = {},
-                registerLogsDownloadWorkRequest = { _, _ -> },
-                firebaseAnalytics = null
+                registerLogsDownloadWorkRequest = { _-> },
             )
         }
     }

@@ -46,6 +46,7 @@ import com.yangian.callsync.core.designsystem.R
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
 import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
 
+
 @Composable
 private fun LoadAdContent(nativeAd: NativeAd?, composeView: View) {
 

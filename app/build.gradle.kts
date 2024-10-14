@@ -2,9 +2,10 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.googleServices)
-    kotlin("kapt")
     alias(libs.plugins.daggerHilt)
     alias(libs.plugins.secrets.gradle.plugin)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -22,33 +23,37 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
     }
-
-
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt")
             )
+        }
+        debug {
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
+    }
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
     }
     buildFeatures {
         compose = true
         viewBinding = true
         buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
     }
     packaging {
         resources {
@@ -90,8 +95,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.appcompat)
     implementation(libs.firebase.crashlytics.buildtools)
-    implementation(project(":core:firebase"))
-    kapt(libs.dagger.hilt.compiler)
+    ksp(libs.dagger.hilt.compiler)
 
     // Hilt
     implementation(libs.androidx.hilt.navigation)
@@ -100,7 +104,6 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.cloud.firestore)
     implementation(libs.firebase.auth)
-    implementation(libs.firebase.analytics)
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
@@ -132,4 +135,5 @@ dependencies {
     implementation(project(":core:workmanager"))
     implementation(project(":core:data"))
     implementation(project(":core:analytics"))
+    implementation(project(":core:firebase"))
 }

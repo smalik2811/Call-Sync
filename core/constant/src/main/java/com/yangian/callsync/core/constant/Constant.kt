@@ -8,4 +8,5 @@ object Constant {
     const val SENDER_ID = "sender_id"
     const val FIRESTORE_CALL_COLLECTION_NAME = "logs"
     const val HANDSHAKE_KEY = "handshake_key"
+    const val NUM_SUM_DOWNLOAD_URL = "https://www.amazon.in/dp/B0DJKDPS1V"
 }

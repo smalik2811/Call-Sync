@@ -3,7 +3,6 @@ package com.yangian.callsync.feature.onboard
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Build
-import android.os.Bundle
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,7 +16,6 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.yangian.callsync.core.datastore.UserPreferences
@@ -140,19 +138,14 @@ class OnBoardViewModel @Inject constructor(
 
     fun updateOnBoardingCompleted(
         newOnboardingState: Boolean,
-        firebaseAnalytics: FirebaseAnalytics?
     ) {
         viewModelScope.launch {
             userPreferences.setOnboardingDone(newOnboardingState)
-            firebaseAnalytics?.logEvent("Onboarding_Completed", Bundle().apply {
-                putString("user_id", firebaseAuth.currentUser?.uid)
-            })
         }
     }
 
     fun registerLogsDownloadWorkRequest(
         context: Context,
-        firebaseAnalytics: FirebaseAnalytics?
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val workerConstraints = Constraints.Builder()
@@ -171,10 +164,6 @@ class OnBoardViewModel @Inject constructor(
                 ExistingPeriodicWorkPolicy.UPDATE,
                 workRequest
             )
-
-            firebaseAnalytics?.logEvent("download_call_logs_scheduler_registered", Bundle().apply {
-                putString("user_id", firebaseAuth.currentUser?.uid)
-            })
         }
     }
 

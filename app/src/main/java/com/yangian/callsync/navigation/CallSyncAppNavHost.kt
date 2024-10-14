@@ -3,7 +3,6 @@ package com.yangian.callsync.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.yangian.callsync.feature.home.navigation.homeScreen
 import com.yangian.callsync.feature.onboard.navigation.onBoardScreen
 import com.yangian.callsync.ui.CallSyncAppState
@@ -13,7 +12,6 @@ fun CallSyncAppNavHost(
     appState: CallSyncAppState,
     modifier: Modifier = Modifier,
     startDestination: String,
-    firebaseAnalytics: FirebaseAnalytics
 ) {
     val navController = appState.navController
 
@@ -33,7 +31,6 @@ fun CallSyncAppNavHost(
             navigateToHome = {
                 appState.navigateToDestination(CallSyncDestination.Home)
             },
-            firebaseAnalytics = firebaseAnalytics
         )
     }
 }

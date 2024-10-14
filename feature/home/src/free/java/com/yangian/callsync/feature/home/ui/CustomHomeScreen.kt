@@ -30,7 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import com.yangian.callsync.core.designsystem.component.AdMobBanner
+import com.yangian.callsync.core.designsystem.component.admob.AdMobBanner
 import com.yangian.callsync.core.designsystem.component.CustomAlertDialog
 import com.yangian.callsync.core.designsystem.component.scrollbar.DraggableScrollbar
 import com.yangian.callsync.core.designsystem.component.scrollbar.rememberDraggableScroller
