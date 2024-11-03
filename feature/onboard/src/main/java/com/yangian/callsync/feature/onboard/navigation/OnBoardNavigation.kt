@@ -1,6 +1,5 @@
 package com.yangian.callsync.feature.onboard.navigation
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -10,11 +9,12 @@ const val ONBOARD_ROUTE = "onboard"
 
 fun NavGraphBuilder.onBoardScreen(
     navigateToHome: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     composable(route = ONBOARD_ROUTE) {
         OnBoardRoute(
             navigateToHome = navigateToHome,
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier,
         )
     }
 }

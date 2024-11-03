@@ -5,7 +5,7 @@
     <string name="install_title">Time to install Num Sum</string>
     <string name="call_sync_name">Call Sync</string>
     <string name="num_sum_name">Num Sum</string>
-    <string name="install_call_sync_desc">Keep Call Sync on this Phone to receive the call history data.</string>
+    <string name="install_call_sync_desc">Keep Call Sync on this Phone to receive the call history.</string>
     <string name="install_num_sum_desc">Install Num Sum on other Phone to send the call history data.</string>
     <string name="call_sync_app_logo">Call Sync App Logo</string>
     <string name="welcome_description">lets you receive Call History from your other Phone</string>
@@ -29,8 +29,8 @@
     <string name="number_8">8</string>
     <string name="number_5">5</string>
     <string name="number_6">6</string>
-    <string name="camera_permission_explanation_part_1">We need your Camera Permission to establish a secure connection with </string>
-    <string name="camera_permission_explanation_part_2"> app.</string>
+    <string name="camera_permission_explanation_part_1">We need your Camera Permission to establish a secure connection with\b</string>
+    <string name="camera_permission_explanation_part_2">\bapp.</string>
     <string name="camera_permission_request_title">Camera Permission Required</string>
     <string name="cancel">Cancel</string>
     <string name="qr_code_scanner">QR Code Scanner</string>

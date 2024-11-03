@@ -48,7 +48,7 @@ import com.yangian.callsync.core.model.CallResource
 fun triggerSMSIntent(callResourceNumber: String, context: Context) {
     val uriSMS: Uri = Uri.parse("smsto:$callResourceNumber")
     val smsIntent = Intent(Intent.ACTION_SENDTO, uriSMS)
-    startActivity(context, smsIntent, null)
+    context.startActivity(smsIntent, null)
 }
 
 fun triggerCallIntent(callResourceNumber: String, context: Context) {
@@ -66,7 +66,7 @@ fun triggerCallIntent(callResourceNumber: String, context: Context) {
             0
         )
     } else {
-        startActivity(context, callIntent, null)
+        context.startActivity(callIntent, null)
     }
 }
 

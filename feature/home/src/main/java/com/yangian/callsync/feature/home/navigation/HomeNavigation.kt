@@ -9,10 +9,11 @@ import com.yangian.callsync.feature.home.ui.HomeScreen
 const val HOME_ROUTE = "home"
 fun NavGraphBuilder.homeScreen(
     navigateToOnboarding: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     composable(route = HOME_ROUTE) {
         HomeScreen(
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
             navigateToOnboarding = navigateToOnboarding
         )
     }

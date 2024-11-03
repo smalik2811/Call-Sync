@@ -134,17 +134,17 @@ fun CallSyncAppTheme(
         else -> TintTheme()
     }
 
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            val insetsController = WindowCompat.getInsetsController(window, view)
-            window.statusBarColor = colorScheme.background.toArgb()
-            window.navigationBarColor = colorScheme.background.toArgb()
-            insetsController.isAppearanceLightStatusBars = !useDarkTheme
-            insetsController.isAppearanceLightNavigationBars = !useDarkTheme
-        }
-    }
+//    val view = LocalView.current
+//    if (!view.isInEditMode) {
+//        SideEffect {
+//            val window = (view.context as Activity).window
+//            val insetsController = WindowCompat.getInsetsController(window, view)
+//            window.statusBarColor = colorScheme.background.toArgb()
+//            window.navigationBarColor = colorScheme.background.toArgb()
+//            insetsController.isAppearanceLightStatusBars = !useDarkTheme
+//            insetsController.isAppearanceLightNavigationBars = !useDarkTheme
+//        }
+//    }
 
     CompositionLocalProvider(
         LocalBackgroundTheme provides backgroundTheme,

@@ -25,12 +25,14 @@ fun CallSyncAppNavHost(
             navigateToOnboarding = {
                 appState.navigateToDestination(CallSyncDestination.OnBoard)
             },
+            modifier
         )
 
         onBoardScreen(
             navigateToHome = {
                 appState.navigateToDestination(CallSyncDestination.Home)
             },
+            modifier
         )
     }
 }

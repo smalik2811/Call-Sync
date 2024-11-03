@@ -10,12 +10,12 @@ plugins {
 
 android {
     namespace = "com.yangian.callsync"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.yangian.callsync"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "0.1.0"
 
@@ -104,6 +104,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.cloud.firestore)
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.analytics)
 
     // Navigation
     implementation(libs.androidx.navigation.compose)

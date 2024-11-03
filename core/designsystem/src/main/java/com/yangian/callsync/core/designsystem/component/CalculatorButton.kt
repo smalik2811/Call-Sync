@@ -63,6 +63,14 @@ private fun CalculatorButtonPreview() {
                     .fillMaxWidth()
             ) {
                 CalculatorButton(
+                    text = "=",
+                    modifier = Modifier
+                        .weight(1f)
+                        .aspectRatio(ratio = 1f, true),
+                    backgroundColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                )
+                CalculatorButton(
                     text = "1",
                     modifier = Modifier
                         .weight(1f)
@@ -71,7 +79,7 @@ private fun CalculatorButtonPreview() {
                     contentColor = MaterialTheme.colorScheme.onSurface,
                 )
                 CalculatorButton(
-                    text = "2",
+                    text = "8",
                     modifier = Modifier
                         .weight(1f)
                         .aspectRatio(ratio = 1f, true),
@@ -79,7 +87,7 @@ private fun CalculatorButtonPreview() {
                     contentColor = MaterialTheme.colorScheme.onSurface,
                 )
                 CalculatorButton(
-                    text = "3",
+                    text = "5",
                     modifier = Modifier
                         .weight(1f)
                         .aspectRatio(ratio = 1f, true),
@@ -87,7 +95,23 @@ private fun CalculatorButtonPreview() {
                     contentColor = MaterialTheme.colorScheme.onSurface,
                 )
                 CalculatorButton(
-                    text = "+",
+                    text = "6",
+                    modifier = Modifier
+                        .weight(1f)
+                        .aspectRatio(ratio = 1f, true),
+                    backgroundColor = MaterialTheme.colorScheme.surfaceContainer,
+                    contentColor = MaterialTheme.colorScheme.onSurface,
+                )
+                CalculatorButton(
+                    text = "8",
+                    modifier = Modifier
+                        .weight(1f)
+                        .aspectRatio(ratio = 1f, true),
+                    backgroundColor = MaterialTheme.colorScheme.surfaceContainer,
+                    contentColor = MaterialTheme.colorScheme.onSurface,
+                )
+                CalculatorButton(
+                    text = "=",
                     modifier = Modifier
                         .weight(1f)
                         .aspectRatio(ratio = 1f, true),

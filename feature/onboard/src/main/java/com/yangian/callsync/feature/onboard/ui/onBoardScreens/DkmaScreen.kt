@@ -1,11 +1,9 @@
 package com.yangian.callsync.feature.onboard.ui.onBoardScreens
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,33 +35,24 @@ fun DkmaScreen(
     modifier: Modifier = Modifier
 ) {
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top,
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-    ) {
+    when (dkmaUiState) {
+        is DkmaUiState.Success -> {
+            DkmaView(
+                dkmaManufacturer = dkmaUiState.dkmaManufacturer,
+                isIssueVisible,
+                isSolutionVisible,
+                alterIssueVisibility,
+                alterSolutionVisibility,
+                modifier
+            )
+        }
 
-        when (dkmaUiState) {
-            is DkmaUiState.Success -> {
-                DkmaView(
-                    dkmaManufacturer = dkmaUiState.dkmaManufacturer,
-                    isIssueVisible,
-                    isSolutionVisible,
-                    alterIssueVisibility,
-                    alterSolutionVisibility,
-                    modifier.weight(1f)
-                )
-            }
+        is DkmaUiState.Error -> {
+            DkmaErrorScreen(retryDkmaLoading)
+        }
 
-            is DkmaUiState.Error -> {
-                DkmaErrorScreen(retryDkmaLoading)
-            }
-
-            is DkmaUiState.Loading -> {
-                DkmaLoadingScreen(modifier = modifier)
-            }
+        is DkmaUiState.Loading -> {
+            DkmaLoadingScreen(modifier = modifier)
         }
     }
 }
@@ -129,14 +118,16 @@ private fun DkmaPreviewLoading() {
     CallSyncAppTheme {
         CallSyncAppBackground {
             CallSyncAppBackground {
-                DkmaScreen(
-                    dkmaUiState = DkmaUiState.Loading,
-                    isIssueVisible = false,
-                    isSolutionVisible = false,
-                    alterIssueVisibility = {},
-                    alterSolutionVisibility = {},
-                    retryDkmaLoading = {}
-                )
+                Column {
+                    DkmaScreen(
+                        dkmaUiState = DkmaUiState.Loading,
+                        isIssueVisible = false,
+                        isSolutionVisible = false,
+                        alterIssueVisibility = {},
+                        alterSolutionVisibility = {},
+                        retryDkmaLoading = {}
+                    )
+                }
             }
         }
     }
@@ -148,20 +139,22 @@ private fun DkmaPreviewError() {
     CallSyncAppTheme {
         CallSyncAppTheme {
             CallSyncAppBackground {
-                DkmaScreen(
-                    dkmaUiState = DkmaUiState.Error,
-                    isIssueVisible = false,
-                    isSolutionVisible = false,
-                    alterIssueVisibility = {},
-                    alterSolutionVisibility = {},
-                    retryDkmaLoading = {}
-                )
+                Column {
+                    DkmaScreen(
+                        dkmaUiState = DkmaUiState.Error,
+                        isIssueVisible = false,
+                        isSolutionVisible = false,
+                        alterIssueVisibility = {},
+                        alterSolutionVisibility = {},
+                        retryDkmaLoading = {}
+                    )
+                }
             }
         }
     }
 }
 
-@Preview
+@Preview(device = "spec:width=1280dp,height=800dp,dpi=240")
 @Composable
 private fun DkmaPreviewSuccess() {
     val dummyData = DkmaManufacturer(
@@ -173,15 +166,17 @@ private fun DkmaPreviewSuccess() {
             CallSyncAppBackground {
                 var issueVisibility by remember { mutableStateOf(false) }
                 var solutionVisibility by remember { mutableStateOf(false) }
-                DkmaScreen(
-                    dkmaUiState = DkmaUiState.Success(dummyData),
-                    isIssueVisible = issueVisibility,
-                    isSolutionVisible = solutionVisibility,
-                    alterIssueVisibility = { issueVisibility = !issueVisibility },
-                    alterSolutionVisibility = { solutionVisibility = !solutionVisibility },
-                    modifier = Modifier.fillMaxSize(),
-                    retryDkmaLoading = {}
-                )
+                Column {
+                    DkmaScreen(
+                        dkmaUiState = DkmaUiState.Success(dummyData),
+                        isIssueVisible = issueVisibility,
+                        isSolutionVisible = solutionVisibility,
+                        alterIssueVisibility = { issueVisibility = !issueVisibility },
+                        alterSolutionVisibility = { solutionVisibility = !solutionVisibility },
+                        modifier = Modifier.fillMaxSize(),
+                        retryDkmaLoading = {}
+                    )
+                }
             }
         }
     }

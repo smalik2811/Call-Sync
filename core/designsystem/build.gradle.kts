@@ -53,6 +53,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material.icons)
+    implementation(libs.androidx.window)
+    implementation(libs.androidx.adaptive.android)
 
     // Google Play Services
     implementation(libs.mlkit.barcode.scanning)
@@ -68,6 +70,7 @@ dependencies {
     // Coil library
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
+    implementation(libs.androidx.window.core.android)
 
     // Test
     testImplementation(libs.junit)
