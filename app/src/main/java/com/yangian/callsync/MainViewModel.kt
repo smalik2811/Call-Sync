@@ -27,13 +27,13 @@ class MainViewModel @Inject constructor(
     init {
 
         viewModelScope.launch {
-            userPreferences.getOnboardingDone().collect { completed ->
-                if (completed) {
-                    _startDestination.value = CallSyncDestination.Home.route
-                } else {
-                    _startDestination.value = CallSyncDestination.OnBoard.route
-                }
+            val isOnBoardingCompleted = userPreferences.getOnboardingDone()
+            if (isOnBoardingCompleted) {
+                _startDestination.value = CallSyncDestination.Home.route
+            } else {
+                _startDestination.value = CallSyncDestination.OnBoard.route
             }
+
             _isSplashVisible.value = false
         }
     }

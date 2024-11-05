@@ -1,6 +1,9 @@
 package com.yangian.callsync.feature.onboard.ui.onBoardScreens
 
 import android.Manifest
+import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -9,12 +12,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -46,12 +46,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
 import com.yangian.callsync.core.designsystem.component.CustomAlertDialog
 import com.yangian.callsync.core.designsystem.component.QRCamera
 import com.yangian.callsync.core.designsystem.icon.QrCodeScannerIcon
+import com.yangian.callsync.core.designsystem.isPermissionDeniedPermanently
 import com.yangian.callsync.core.designsystem.isPermissionGranted
 import com.yangian.callsync.core.designsystem.openPermissionSetting
 import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
@@ -61,6 +63,7 @@ import com.yangian.callsync.core.firebase.repository.DummyFirestoreRepository
 import com.yangian.callsync.core.firebase.repository.FirestoreRepository
 import com.yangian.callsync.feature.onboard.R
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 
 @Composable
 fun ColumnScope.CompactConnectionScreen1(
@@ -72,6 +75,17 @@ fun ColumnScope.CompactConnectionScreen1(
 ) {
     val context = LocalContext.current
     var scannedValue by remember { mutableStateOf<String?>(null) }
+    var isCameraPermissionGranted by remember {
+        mutableStateOf(context.isPermissionGranted(Manifest.permission.CAMERA))
+    }
+    var showRationale by remember { mutableStateOf(false) }
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            isCameraPermissionGranted = isGranted
+            showRationale = !isGranted || context.isPermissionDeniedPermanently(Manifest.permission.CAMERA)
+        }
+    )
     var hasScanned by remember { mutableStateOf(false) }
     val onBarCodeScanned: (Barcode?) -> Unit = { barcode ->
         barcode?.rawValue?.let { value ->
@@ -86,6 +100,13 @@ fun ColumnScope.CompactConnectionScreen1(
         extendedDark.success.color
     } else {
         extendedLight.success.color
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        while (true) {
+            delay(1500) // Check every second
+            isCameraPermissionGranted = context.isPermissionGranted(Manifest.permission.CAMERA)
+        }
     }
 
     if (!hasScanned) {
@@ -104,41 +125,53 @@ fun ColumnScope.CompactConnectionScreen1(
                 .aspectRatio(1f),
             contentAlignment = Alignment.Center
         ) {
-            if (context.isPermissionGranted(Manifest.permission.CAMERA)) {
-                QRCamera().CameraPreviewView(
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .border(
-                            dimensionResource(R.dimen.padding_tiny),
-                            rectangleBoundaryColor,
-                            RoundedCornerShape(
-                                dimensionResource(R.dimen.corner_radius_medium)
+            when {
+                isCameraPermissionGranted -> {
+                    QRCamera().CameraPreviewView(
+                        modifier = Modifier
+                            .aspectRatio(1f)
+                            .border(
+                                dimensionResource(R.dimen.padding_tiny),
+                                rectangleBoundaryColor,
+                                RoundedCornerShape(
+                                    dimensionResource(R.dimen.corner_radius_medium)
+                                )
                             )
-                        )
-                        .clip(RoundedCornerShape(dimensionResource(R.dimen.corner_radius_medium))),
-                    onBarcodeScanned = onBarCodeScanned,
-                    isPreviewing = isPreviewing
-                )
-            } else {
-                val annotatedDialogMessage = buildAnnotatedString {
-                    append(stringResource(R.string.camera_permission_explanation_part_1))
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(stringResource(R.string.num_sum_name))
-                    }
-                    append(stringResource(R.string.camera_permission_explanation_part_2))
+                            .clip(RoundedCornerShape(dimensionResource(R.dimen.corner_radius_medium))),
+                        onBarcodeScanned = onBarCodeScanned,
+                        isPreviewing = isPreviewing
+                    )
                 }
-                CustomAlertDialog(
-                    onPositiveButtonClick = { context.openPermissionSetting() },
-                    onNegativeButtonClick = { navigateToPreviousScreen() },
-                    onDismissRequest = { navigateToPreviousScreen() },
-                    dialogTitle = stringResource(R.string.camera_permission_request_title),
-                    dialogText = annotatedDialogMessage,
-                    positiveButtonText = stringResource(R.string.allow_camera),
-                    negativeButtonText = stringResource(R.string.cancel),
-                    iconContentDescriptionText = stringResource(R.string.qr_code_scanner),
-                    modifier = Modifier,
-                    icon = QrCodeScannerIcon
-                )
+
+                showRationale -> {
+                    val annotatedDialogMessage = buildAnnotatedString {
+                        append(stringResource(R.string.camera_permission_explanation_part_1))
+                        append(stringResource(R.string.space_string))
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append(stringResource(R.string.num_sum_name))
+                        }
+                        append(stringResource(R.string.space_string))
+                        append(stringResource(R.string.camera_permission_explanation_part_2))
+                    }
+                    CustomAlertDialog(
+                        onPositiveButtonClick = { context.openPermissionSetting() },
+                        onNegativeButtonClick = { navigateToPreviousScreen() },
+                        onDismissRequest = { navigateToPreviousScreen() },
+                        dialogTitle = stringResource(R.string.camera_permission_request_title),
+                        dialogText = annotatedDialogMessage,
+                        positiveButtonText = stringResource(R.string.allow_camera),
+                        negativeButtonText = stringResource(R.string.cancel),
+                        iconContentDescriptionText = stringResource(R.string.qr_code_scanner),
+                        modifier = Modifier,
+                        icon = QrCodeScannerIcon
+                    )
+                }
+
+                else -> {
+                    LaunchedEffect(Unit) {
+                        cameraLauncher.launch(Manifest.permission.CAMERA)
+                    }
+                }
             }
         }
     } else {
@@ -172,7 +205,18 @@ fun ExpandedConnectionScreen1(
 ) {
     val context = LocalContext.current
     var scannedValue by remember { mutableStateOf<String?>(null) }
+    var isCameraPermissionGranted by remember {
+        mutableStateOf(context.isPermissionGranted(Manifest.permission.CAMERA))
+    }
+    var showRationale by remember { mutableStateOf(false) }
     var hasScanned by remember { mutableStateOf(false) }
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            isCameraPermissionGranted = isGranted
+            showRationale = !isGranted || context.isPermissionDeniedPermanently(Manifest.permission.CAMERA)
+        }
+    )
     val onBarCodeScanned: (Barcode?) -> Unit = { barcode ->
         barcode?.rawValue?.let { value ->
             if (!hasScanned) {
@@ -188,6 +232,13 @@ fun ExpandedConnectionScreen1(
         extendedLight.success.color
     }
 
+    LaunchedEffect(key1 = Unit) {
+        while (true) {
+            delay(1500) // Check every second
+            isCameraPermissionGranted = context.isPermissionGranted(Manifest.permission.CAMERA)
+        }
+    }
+
     if (!hasScanned) {
 
         Box(
@@ -195,41 +246,53 @@ fun ExpandedConnectionScreen1(
                 .aspectRatio(1f, true),
             contentAlignment = Alignment.Center
         ) {
-            if (context.isPermissionGranted(Manifest.permission.CAMERA)) {
-                QRCamera().CameraPreviewView(
-                    modifier = Modifier
-                        .sizeIn(maxWidth = 400.dp, maxHeight = 400.dp)
-                        .border(
-                            dimensionResource(R.dimen.padding_tiny),
-                            rectangleBoundaryColor,
-                            RoundedCornerShape(
-                                dimensionResource(R.dimen.corner_radius_medium)
+            when {
+                isCameraPermissionGranted -> {
+                    QRCamera().CameraPreviewView(
+                        modifier = Modifier
+                            .sizeIn(maxWidth = 400.dp, maxHeight = 400.dp)
+                            .border(
+                                dimensionResource(R.dimen.padding_tiny),
+                                rectangleBoundaryColor,
+                                RoundedCornerShape(
+                                    dimensionResource(R.dimen.corner_radius_medium)
+                                )
                             )
-                        )
-                        .clip(RoundedCornerShape(dimensionResource(R.dimen.corner_radius_medium))),
-                    onBarcodeScanned = onBarCodeScanned,
-                    isPreviewing = isPreviewing
-                )
-            } else {
-                val annotatedDialogMessage = buildAnnotatedString {
-                    append(stringResource(R.string.camera_permission_explanation_part_1))
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(stringResource(R.string.num_sum_name))
-                    }
-                    append(stringResource(R.string.camera_permission_explanation_part_2))
+                            .clip(RoundedCornerShape(dimensionResource(R.dimen.corner_radius_medium))),
+                        onBarcodeScanned = onBarCodeScanned,
+                        isPreviewing = isPreviewing
+                    )
                 }
-                CustomAlertDialog(
-                    onPositiveButtonClick = { context.openPermissionSetting() },
-                    onNegativeButtonClick = { navigateToPreviousScreen() },
-                    onDismissRequest = { navigateToPreviousScreen() },
-                    dialogTitle = stringResource(R.string.camera_permission_request_title),
-                    dialogText = annotatedDialogMessage,
-                    positiveButtonText = stringResource(R.string.allow_camera),
-                    negativeButtonText = stringResource(R.string.cancel),
-                    iconContentDescriptionText = stringResource(R.string.qr_code_scanner),
-                    modifier = Modifier,
-                    icon = QrCodeScannerIcon
-                )
+
+                showRationale -> {
+                    val annotatedDialogMessage = buildAnnotatedString {
+                        append(stringResource(R.string.camera_permission_explanation_part_1))
+                        append(stringResource(R.string.space_string))
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append(stringResource(R.string.num_sum_name))
+                        }
+                        append(stringResource(R.string.space_string))
+                        append(stringResource(R.string.camera_permission_explanation_part_2))
+                    }
+                    CustomAlertDialog(
+                        onPositiveButtonClick = { context.openPermissionSetting() },
+                        onNegativeButtonClick = { navigateToPreviousScreen() },
+                        onDismissRequest = { navigateToPreviousScreen() },
+                        dialogTitle = stringResource(R.string.camera_permission_request_title),
+                        dialogText = annotatedDialogMessage,
+                        positiveButtonText = stringResource(R.string.allow_camera),
+                        negativeButtonText = stringResource(R.string.cancel),
+                        iconContentDescriptionText = stringResource(R.string.qr_code_scanner),
+                        modifier = Modifier,
+                        icon = QrCodeScannerIcon
+                    )
+                }
+
+                else -> {
+                    LaunchedEffect(Unit) {
+                        cameraLauncher.launch(Manifest.permission.CAMERA)
+                    }
+                }
             }
         }
 
@@ -275,7 +338,7 @@ fun ConnectionScreen1(
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
 
     when (windowSizeClass.windowWidthSizeClass) {
-        WindowWidthSizeClass.EXPANDED-> {
+        WindowWidthSizeClass.EXPANDED -> {
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
@@ -292,6 +355,7 @@ fun ConnectionScreen1(
                 )
             }
         }
+
         else -> {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,

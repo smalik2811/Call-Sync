@@ -139,21 +139,20 @@ class OnBoardViewModel @Inject constructor(
     fun updateOnBoardingCompleted(
         newOnboardingState: Boolean,
     ) {
-        viewModelScope.launch {
-            userPreferences.setOnboardingDone(newOnboardingState)
-        }
+        userPreferences.setOnboardingDone(newOnboardingState)
     }
 
     fun registerLogsDownloadWorkRequest(
         context: Context,
     ) {
         viewModelScope.launch(Dispatchers.IO) {
+            val existingWorkPolicy = userPreferences.getWorkerRetryPolicy()
             val workerConstraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
 
             val workRequest = PeriodicWorkRequestBuilder<LogsDownloadWorker>(
-                repeatInterval = 6,
+                repeatInterval = existingWorkPolicy,
                 repeatIntervalTimeUnit = TimeUnit.HOURS,
             ).setConstraints(workerConstraints)
                 .build()

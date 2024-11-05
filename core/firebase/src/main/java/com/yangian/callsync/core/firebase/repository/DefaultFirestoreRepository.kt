@@ -97,10 +97,10 @@ class DefaultFirestoreRepository @Inject constructor(
         callResourceRepository: CallResourceRepository,
     ): FirestoreResult = coroutineScope {
         var result: FirestoreResult = FirestoreResult.Success
-        val senderId = userPreferences.getSenderId().first()
+        val senderId = userPreferences.getSenderId()
         val data = hashMapOf<String, Any>()
         val cryptoHandler = CryptoHandler()
-        val keyString: String = userPreferences.getHandShakeKey().first()
+        val keyString: String = userPreferences.getHandShakeKey()
             ?: return@coroutineScope FirestoreResult.Retry
         val keyByteArray = cryptoHandler.hexStringToByteArray(keyString)
         val decrypter = cryptoHandler.getDecrypter(keyByteArray)
