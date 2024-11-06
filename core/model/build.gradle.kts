@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.yangian.callsync.core.model"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 26
