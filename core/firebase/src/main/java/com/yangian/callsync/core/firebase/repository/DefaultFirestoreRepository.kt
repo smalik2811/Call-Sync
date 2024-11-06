@@ -97,10 +97,10 @@ class DefaultFirestoreRepository @Inject constructor(
         callResourceRepository: CallResourceRepository,
     ): FirestoreResult = coroutineScope {
         var result: FirestoreResult = FirestoreResult.Success
-        val senderId = userPreferences.getSenderId()
+        val senderId = userPreferences.getSenderId().first()
         val data = hashMapOf<String, Any>()
         val cryptoHandler = CryptoHandler()
-        val keyString: String = userPreferences.getHandShakeKey()
+        val keyString: String = userPreferences.getHandShakeKey().first()
             ?: return@coroutineScope FirestoreResult.Retry
         val keyByteArray = cryptoHandler.hexStringToByteArray(keyString)
         val decrypter = cryptoHandler.getDecrypter(keyByteArray)
@@ -245,24 +245,18 @@ class DummyFirestoreRepository : FirestoreRepository {
         receiverId: String,
         onSuccessEvent: () -> Unit,
         onFailureEvent: () -> Unit
-    ) {
-
-    }
+    ) = Unit
 
     override suspend fun addData(
         receiverId: String,
         callResourceRepository: CallResourceRepository,
-    ): FirestoreResult {
-        return FirestoreResult.Success
-    }
+    ): FirestoreResult =FirestoreResult.Success
 
     override suspend fun handShake(
         receiverId: String,
         encryptedHandShakeKey: String,
         onSuccessEvent: () -> Unit,
         onFailureEvent: () -> Unit
-    ) {
-
-    }
+    ) = Unit
 
 }

@@ -3,13 +3,13 @@ package com.yangian.callsync.core.datastore
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.byteArrayPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.yangian.callsync.core.constant.Constant.HANDSHAKE_KEY
-import com.yangian.callsync.core.constant.Constant.ONBOARDING_DONE
+import com.yangian.callsync.core.constant.Constant.ONBOARDING_DONE_KEY
 import com.yangian.callsync.core.constant.Constant.SENDER_ID
+import com.yangian.callsync.core.constant.Constant.WORKER_RETRY_POLICY_KEY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -22,10 +22,10 @@ class UserPreferences @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) {
     companion object {
-        val SENDER_ID_KEY = stringPreferencesKey(SENDER_ID)
-        val ONBOARDING_DONE_KEY = booleanPreferencesKey(ONBOARDING_DONE)
+        val Sender_Id_Key = stringPreferencesKey(SENDER_ID)
+        val Onboarding_Done_Key = booleanPreferencesKey(ONBOARDING_DONE_KEY)
         val HandShake_Key = stringPreferencesKey(HANDSHAKE_KEY)
-        val WorkerRetryPolicy_Key = longPreferencesKey("WORKER_RETRY_POLICY")
+        val WorkerRetry_Policy_Key = longPreferencesKey(WORKER_RETRY_POLICY_KEY)
     }
 
     suspend fun clear() {
@@ -36,7 +36,7 @@ class UserPreferences @Inject constructor(
 
     fun getSenderId(): Flow<String> {
         return dataStore.data.map {
-            it[SENDER_ID_KEY] ?: ""
+            it[Sender_Id_Key] ?: ""
         }
     }
 
@@ -45,7 +45,7 @@ class UserPreferences @Inject constructor(
     ) {
         withContext(Dispatchers.IO) {
             dataStore.edit {
-                it[SENDER_ID_KEY] = newSenderId
+                it[Sender_Id_Key] = newSenderId
             }
         }
     }
@@ -68,7 +68,7 @@ class UserPreferences @Inject constructor(
 
     fun getOnboardingDone(): Flow<Boolean> {
         return dataStore.data.map {
-            it[ONBOARDING_DONE_KEY] ?: false
+            it[Onboarding_Done_Key] ?: false
         }
     }
 
@@ -77,14 +77,14 @@ class UserPreferences @Inject constructor(
     ) {
         withContext(Dispatchers.IO) {
             dataStore.edit {
-                it[ONBOARDING_DONE_KEY] = newOnboardingDone
+                it[Onboarding_Done_Key] = newOnboardingDone
             }
         }
     }
 
     fun getWorkerRetryPolicy(): Flow<Long> {
         return dataStore.data.map {
-            it[WorkerRetryPolicy_Key] ?: 6 // Default value of 6 hours
+            it[WorkerRetry_Policy_Key] ?: 6 // Default value of 6 hours
         }
     }
 
@@ -93,7 +93,7 @@ class UserPreferences @Inject constructor(
     ) {
         withContext(Dispatchers.IO) {
             dataStore.edit {
-                it[WorkerRetryPolicy_Key] = newWorkerRetryPolicy
+                it[WorkerRetry_Policy_Key] = newWorkerRetryPolicy
             }
         }
     }

@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.yangian.callsync.core.datastore.UserPreferences
 import com.yangian.callsync.navigation.CallSyncDestination
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,13 +29,13 @@ class MainViewModel @Inject constructor(
     init {
 
         viewModelScope.launch {
-            val isOnBoardingCompleted = userPreferences.getOnboardingDone()
-            if (isOnBoardingCompleted) {
-                _startDestination.value = CallSyncDestination.Home.route
-            } else {
-                _startDestination.value = CallSyncDestination.OnBoard.route
+            userPreferences.getOnboardingDone().collect { completed ->
+                if (completed) {
+                    _startDestination.value = CallSyncDestination.Home.route
+                } else {
+                    _startDestination.value = CallSyncDestination.OnBoard.route
+                }
             }
-
             _isSplashVisible.value = false
         }
     }

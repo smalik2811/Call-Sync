@@ -41,7 +41,6 @@ dependencies {
 
     // Datastore
     implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.security.crypto)
 
     // Test
     testImplementation(libs.junit)

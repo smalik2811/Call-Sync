@@ -41,7 +41,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.yangian.callsync.core.constant.Constant.NUM_SUM_DOWNLOAD_URL
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
@@ -223,7 +222,7 @@ fun CompactInstallScreen(
                             Intent.ACTION_VIEW,
                             Uri.parse(NUM_SUM_DOWNLOAD_URL)
                         )
-                        startActivity(context, intent, null)
+                        context.startActivity(intent, null)
                     },
                     label = {
                         Text(
@@ -243,8 +242,8 @@ fun CompactInstallScreen(
                         val intent = Intent(Intent.ACTION_SEND)
                         intent.type = "text/plain"
                         intent.putExtra(Intent.EXTRA_TEXT, message)
-                        startActivity(
-                            context, Intent.createChooser(
+                        context.startActivity(
+                            Intent.createChooser(
                                 intent,
                                 context.getString(R.string.share_via)
                             ), null
@@ -444,7 +443,7 @@ fun RowScope.ExpandedInstallScreen(
                             Intent.ACTION_VIEW,
                             Uri.parse(NUM_SUM_DOWNLOAD_URL)
                         )
-                        startActivity(context, intent, null)
+                        context.startActivity(intent, null)
                     },
                     label = {
                         Text(
@@ -464,8 +463,8 @@ fun RowScope.ExpandedInstallScreen(
                         val intent = Intent(Intent.ACTION_SEND)
                         intent.type = "text/plain"
                         intent.putExtra(Intent.EXTRA_TEXT, message)
-                        startActivity(
-                            context, Intent.createChooser(
+                        context.startActivity(
+                            Intent.createChooser(
                                 intent,
                                 context.getString(R.string.share_via)
                             ), null
@@ -512,6 +511,7 @@ fun InstallScreen(
                 )
             }
         }
+
         else -> {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
