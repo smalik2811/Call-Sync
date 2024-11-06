@@ -90,8 +90,8 @@ fun DkmaScreenWebViewCard(
                 IconButton(
                     onClick = alterVisibility,
                     colors = IconButtonDefaults.iconButtonColors().copy(
-                        containerColor = MaterialTheme.colorScheme.secondary,
-                        contentColor = MaterialTheme.colorScheme.onSecondary
+                        containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        contentColor = MaterialTheme.colorScheme.primary
                     )
                 ) {
                     Icon(
