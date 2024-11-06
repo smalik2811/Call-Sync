@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.byteArrayPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.yangian.callsync.core.constant.Constant.HANDSHAKE_KEY
 import com.yangian.callsync.core.constant.Constant.ONBOARDING_DONE
@@ -24,6 +25,7 @@ class UserPreferences @Inject constructor(
         val SENDER_ID_KEY = stringPreferencesKey(SENDER_ID)
         val ONBOARDING_DONE_KEY = booleanPreferencesKey(ONBOARDING_DONE)
         val HandShake_Key = stringPreferencesKey(HANDSHAKE_KEY)
+        val WorkerRetryPolicy_Key = longPreferencesKey("WORKER_RETRY_POLICY")
     }
 
     suspend fun clear() {
@@ -38,18 +40,28 @@ class UserPreferences @Inject constructor(
         }
     }
 
-    fun getHandShakeKey(): Flow<String?> {
-        return dataStore.data.map {
-            it[HandShake_Key]
-        }
-    }
-
     suspend fun setSenderId(
         newSenderId: String
     ) {
         withContext(Dispatchers.IO) {
             dataStore.edit {
                 it[SENDER_ID_KEY] = newSenderId
+            }
+        }
+    }
+
+    fun getHandShakeKey(): Flow<String?> {
+        return dataStore.data.map {
+            it[HandShake_Key]
+        }
+    }
+
+    suspend fun setHandShakeKey(
+        newHandShakeKey: String
+    ) {
+        withContext(Dispatchers.IO) {
+            dataStore.edit {
+                it[HandShake_Key] = newHandShakeKey
             }
         }
     }
@@ -70,12 +82,18 @@ class UserPreferences @Inject constructor(
         }
     }
 
-    suspend fun setHandShakeKey(
-        newHandShakeKey: String
+    fun getWorkerRetryPolicy(): Flow<Long> {
+        return dataStore.data.map {
+            it[WorkerRetryPolicy_Key] ?: 6 // Default value of 6 hours
+        }
+    }
+
+    suspend fun setWorkerRetryPolicy(
+        newWorkerRetryPolicy: Long
     ) {
         withContext(Dispatchers.IO) {
             dataStore.edit {
-                it[HandShake_Key] = newHandShakeKey
+                it[WorkerRetryPolicy_Key] = newWorkerRetryPolicy
             }
         }
     }

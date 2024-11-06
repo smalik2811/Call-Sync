@@ -105,6 +105,7 @@ dependencies {
     implementation(libs.firebase.cloud.firestore)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.config)
 
     // Navigation
     implementation(libs.androidx.navigation.compose)

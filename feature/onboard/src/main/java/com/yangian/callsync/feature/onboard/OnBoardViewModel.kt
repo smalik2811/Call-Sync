@@ -28,6 +28,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import qrcode.QRCode
 import java.util.concurrent.TimeUnit
@@ -148,12 +149,14 @@ class OnBoardViewModel @Inject constructor(
         context: Context,
     ) {
         viewModelScope.launch(Dispatchers.IO) {
+            val existingWorkPolicy = userPreferences.getWorkerRetryPolicy().first()
+
             val workerConstraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
 
             val workRequest = PeriodicWorkRequestBuilder<LogsDownloadWorker>(
-                repeatInterval = 6,
+                repeatInterval = existingWorkPolicy,
                 repeatIntervalTimeUnit = TimeUnit.HOURS,
             ).setConstraints(workerConstraints)
                 .build()

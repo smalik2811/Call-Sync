@@ -21,13 +21,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.google.android.gms.ads.MobileAds
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.yangian.callsync.core.data.util.NetworkMonitor
+import com.yangian.callsync.core.datastore.UserPreferences
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
 import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
+import com.yangian.callsync.core.workmanager.LogsDownloadWorker
 import com.yangian.callsync.ui.CallSyncApp
 import com.yangian.callsync.ui.rememberCallSyncAppState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -38,6 +52,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var mainViewModel: MainViewModel
+
+    @Inject
+    lateinit var userPreferences: UserPreferences
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,6 +92,40 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        val remoteConfig = Firebase.remoteConfig
+        val configSettings = remoteConfigSettings {
+            minimumFetchIntervalInSeconds = 60 * 60 * 24 // 1 Day
+        }
+        remoteConfig.setConfigSettingsAsync(configSettings)
+        remoteConfig.fetchAndActivate()
+            .addOnSuccessListener {
+                val workerRetryPolicy = remoteConfig.getLong("WorkerRetryPolicy")
+                lifecycleScope.launch {
+                    val existingUserPreferences = userPreferences.getWorkerRetryPolicy().first()
+                    if (existingUserPreferences != workerRetryPolicy) {
+                        userPreferences.setWorkerRetryPolicy(workerRetryPolicy)
+                        scheduleWorker(workerRetryPolicy)
+                    }
+                }
+            }
+    }
+
+    private fun scheduleWorker(retryPolicy: Long) {
+        val workerConstraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+        val workRequest = PeriodicWorkRequestBuilder<LogsDownloadWorker>(
+            repeatInterval = retryPolicy,
+            repeatIntervalTimeUnit = TimeUnit.HOURS,
+        ).setConstraints(workerConstraints)
+            .build()
+        val workManager = WorkManager.getInstance(this)
+        workManager.enqueueUniquePeriodicWork(
+            "LOGS_DOWNLOAD_WORKER",
+            ExistingPeriodicWorkPolicy.UPDATE,
+            workRequest
+        )
     }
 
 }
