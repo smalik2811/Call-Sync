@@ -1,7 +1,5 @@
 package com.yangian.callsync.feature.onboard.ui.onBoardScreens
 
-import android.Manifest
-import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -30,12 +28,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.yangian.callsync.core.designsystem.component.CalculatorButton
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
 import com.yangian.callsync.core.designsystem.component.GifImage
-import com.yangian.callsync.core.designsystem.isPermissionGranted
 import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
 import com.yangian.callsync.feature.onboard.R
 
@@ -245,14 +241,6 @@ fun UnlockScreen(
                 CompactUnlockScreen()
             }
         }
-    }
-
-    if (!context.isPermissionGranted(Manifest.permission.CAMERA)) {
-        ActivityCompat.requestPermissions(
-            context as Activity,
-            arrayOf(Manifest.permission.CAMERA),
-            1
-        )
     }
 }
 
