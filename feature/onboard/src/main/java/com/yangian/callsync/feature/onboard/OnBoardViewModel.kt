@@ -28,6 +28,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import qrcode.QRCode
 import java.util.concurrent.TimeUnit
@@ -139,14 +140,17 @@ class OnBoardViewModel @Inject constructor(
     fun updateOnBoardingCompleted(
         newOnboardingState: Boolean,
     ) {
-        userPreferences.setOnboardingDone(newOnboardingState)
+        viewModelScope.launch {
+            userPreferences.setOnboardingDone(newOnboardingState)
+        }
     }
 
     fun registerLogsDownloadWorkRequest(
         context: Context,
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            val existingWorkPolicy = userPreferences.getWorkerRetryPolicy()
+            val existingWorkPolicy = userPreferences.getWorkerRetryPolicy().first()
+
             val workerConstraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
