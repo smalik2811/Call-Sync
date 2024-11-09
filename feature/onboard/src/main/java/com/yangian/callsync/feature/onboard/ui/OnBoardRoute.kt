@@ -51,7 +51,7 @@ import com.yangian.callsync.feature.onboard.ui.onBoardScreens.ConnectionScreen1
 import com.yangian.callsync.feature.onboard.ui.onBoardScreens.ConnectionScreen2
 import com.yangian.callsync.feature.onboard.ui.onBoardScreens.DkmaScreen
 import com.yangian.callsync.feature.onboard.ui.onBoardScreens.InstallScreen
-import com.yangian.callsync.feature.onboard.ui.onBoardScreens.TermsOfServiceScreen
+import com.yangian.callsync.feature.onboard.ui.onBoardScreens.AppUsageAgreement
 import com.yangian.callsync.feature.onboard.ui.onBoardScreens.UnlockScreen
 import com.yangian.callsync.feature.onboard.ui.onBoardScreens.WelcomeScreen
 import qrcode.QRCode
@@ -129,7 +129,7 @@ fun OnBoardRoute(
                 navigationIcon = {
                     AnimatedVisibility(
                         visibleState = MutableTransitionState(
-                            currentScreen != OnBoardingScreens.TermsOfService
+                            currentScreen != OnBoardingScreens.AppUsageAgreement
                         ),
                         enter = slideInHorizontally(),
                         exit = slideOutHorizontally()
@@ -159,7 +159,7 @@ fun OnBoardRoute(
                 ) {
                     Text(
                         text =
-                        if (currentScreen == OnBoardingScreens.TermsOfService) {
+                        if (currentScreen == OnBoardingScreens.AppUsageAgreement) {
                             stringResource(R.string.agree_and_proceed)
                         } else {
                             stringResource(id = R.string.proceed)
@@ -172,12 +172,11 @@ fun OnBoardRoute(
             .nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
         when (currentScreen) {
-            OnBoardingScreens.TermsOfService -> TermsOfServiceScreen(
+            OnBoardingScreens.AppUsageAgreement -> AppUsageAgreement(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(it)
                     .windowInsetsPadding(WindowInsets.safeContent)
-                    .verticalScroll(scrollState)
             )
 
             OnBoardingScreens.Welcome -> WelcomeScreen(
@@ -215,7 +214,6 @@ fun OnBoardRoute(
                     .fillMaxSize()
                     .padding(it)
                     .windowInsetsPadding(WindowInsets.safeContent)
-                    .verticalScroll(scrollState)
             )
 
             OnBoardingScreens.Connection1 -> ConnectionScreen1(
@@ -228,7 +226,6 @@ fun OnBoardRoute(
                     .fillMaxSize()
                     .padding(it)
                     .windowInsetsPadding(WindowInsets.safeContent)
-                    .verticalScroll(scrollState)
             )
 
             OnBoardingScreens.Connection2 -> ConnectionScreen2(
@@ -241,7 +238,6 @@ fun OnBoardRoute(
                     .fillMaxSize()
                     .padding(it)
                     .windowInsetsPadding(WindowInsets.safeContent)
-                    .verticalScroll(scrollState)
             )
         }
     }

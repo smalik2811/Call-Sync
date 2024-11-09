@@ -7,7 +7,7 @@ enum class OnBoardingScreens(
     @StringRes
     val title: Int
 ) {
-    TermsOfService(R.string.tos_title),
+    AppUsageAgreement(R.string.app_usage_agreement),
     Welcome(R.string.welcome_title),
     Install(R.string.install_title),
     Unlock(R.string.unlock_title),

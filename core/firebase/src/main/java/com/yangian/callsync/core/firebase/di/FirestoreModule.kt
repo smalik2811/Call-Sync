@@ -18,6 +18,7 @@ internal object FirestoreModule {
         firebase: Firebase
     ): FirebaseFirestore {
         val firestore = firebase.firestore
+//        firestore.useEmulator(" 192.168.1.36", 8080)
         return firestore
     }
 }
