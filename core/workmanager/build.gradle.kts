@@ -42,6 +42,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.cloud.firestore)
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.config)
 
     // Work Manager
     implementation(libs.androidx.work.runtime)

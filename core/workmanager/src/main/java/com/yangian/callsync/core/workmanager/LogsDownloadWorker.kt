@@ -8,15 +8,24 @@ import android.net.Uri
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
+import androidx.work.Constraints
 import androidx.work.CoroutineWorker
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.yangian.callsync.core.data.repository.CallResourceRepository
 import com.yangian.callsync.core.datastore.UserPreferences
 import com.yangian.callsync.core.firebase.repository.FirestoreRepository
 import com.yangian.callsync.core.firebase.repository.FirestoreResult
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.first
+import java.util.concurrent.TimeUnit
 
 @HiltWorker
 class LogsDownloadWorker @AssistedInject constructor(
@@ -24,14 +33,58 @@ class LogsDownloadWorker @AssistedInject constructor(
     @Assisted workerParams: WorkerParameters,
     private val firestoreRepository: FirestoreRepository,
     private val firebaseAuth: FirebaseAuth,
+    private val firebaseRemoteConfig: FirebaseRemoteConfig,
     private val userPreferences: UserPreferences,
     private val callResourceRepository: CallResourceRepository,
 ) : CoroutineWorker(context, workerParams) {
 
     private val TAG = "DOWNLOAD_WORKER"
 
+    private fun scheduleWorker(retryPolicy: Long) {
+        val workerConstraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val workRequest = PeriodicWorkRequestBuilder<LogsDownloadWorker>(
+            repeatInterval = retryPolicy,
+            repeatIntervalTimeUnit = TimeUnit.HOURS,
+        ).setConstraints(workerConstraints)
+            .build()
+
+        val workManager = WorkManager.getInstance(context)
+        workManager.enqueueUniquePeriodicWork(
+            "LOGS_DOWNLOAD_WORKER",
+            ExistingPeriodicWorkPolicy.UPDATE,
+            workRequest
+        )
+    }
+
     override suspend fun doWork(): Result {
         lateinit var result: Result
+
+        val configSettings = remoteConfigSettings {
+            minimumFetchIntervalInSeconds = 60 * 60 * 24 * 3 // 3 Days
+        }
+        var existingUserPreferences = userPreferences.getWorkerRetryPolicy().first()
+
+        var updateWorkerPolicy = false
+
+        firebaseRemoteConfig.setConfigSettingsAsync(configSettings)
+        firebaseRemoteConfig.fetchAndActivate()
+            .addOnSuccessListener {
+                val workerRetryPolicy = firebaseRemoteConfig.getLong("WorkerRetryPolicy")
+                if (existingUserPreferences != workerRetryPolicy) {
+                    existingUserPreferences = workerRetryPolicy
+                    updateWorkerPolicy = true
+                }
+            }
+
+        if (updateWorkerPolicy) {
+            userPreferences.setWorkerRetryPolicy(existingUserPreferences)
+            scheduleWorker(existingUserPreferences)
+            return Result.success()
+        }
+
         try {
             // Get current user
             val currentUserId: String = firebaseAuth.currentUser?.uid!!

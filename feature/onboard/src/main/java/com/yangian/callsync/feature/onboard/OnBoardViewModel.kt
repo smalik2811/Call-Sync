@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
@@ -60,7 +61,9 @@ class OnBoardViewModel @Inject constructor(
     fun navigateToNextScreen() {
         viewModelScope.launch {
             when (_currentScreen.value) {
-                OnBoardingScreens.AppUsageAgreement -> _currentScreen.value = OnBoardingScreens.Welcome
+                OnBoardingScreens.AppUsageAgreement -> _currentScreen.value =
+                    OnBoardingScreens.Welcome
+
                 OnBoardingScreens.Welcome -> _currentScreen.value = OnBoardingScreens.DkmaScreen
                 OnBoardingScreens.DkmaScreen -> _currentScreen.value = OnBoardingScreens.Install
                 OnBoardingScreens.Install -> _currentScreen.value = OnBoardingScreens.Unlock
@@ -83,7 +86,9 @@ class OnBoardViewModel @Inject constructor(
                 OnBoardingScreens.Unlock -> _currentScreen.value = OnBoardingScreens.Install
                 OnBoardingScreens.Install -> _currentScreen.value = OnBoardingScreens.DkmaScreen
                 OnBoardingScreens.DkmaScreen -> _currentScreen.value = OnBoardingScreens.Welcome
-                OnBoardingScreens.Welcome -> _currentScreen.value = OnBoardingScreens.AppUsageAgreement
+                OnBoardingScreens.Welcome -> _currentScreen.value =
+                    OnBoardingScreens.AppUsageAgreement
+
                 OnBoardingScreens.AppUsageAgreement -> {}
             }
         }
@@ -158,7 +163,13 @@ class OnBoardViewModel @Inject constructor(
             val workRequest = PeriodicWorkRequestBuilder<LogsDownloadWorker>(
                 repeatInterval = existingWorkPolicy,
                 repeatIntervalTimeUnit = TimeUnit.HOURS,
-            ).setConstraints(workerConstraints)
+            )
+                .setBackoffCriteria(
+                    BackoffPolicy.EXPONENTIAL,
+                    60,
+                    TimeUnit.MINUTES,
+                    )
+                .setConstraints(workerConstraints)
                 .build()
 
             val workManager = WorkManager.getInstance(context)

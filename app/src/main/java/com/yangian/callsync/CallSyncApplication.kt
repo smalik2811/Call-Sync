@@ -13,6 +13,7 @@ import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.yangian.callsync.core.data.repository.CallResourceRepository
 import com.yangian.callsync.core.datastore.UserPreferences
 import com.yangian.callsync.core.firebase.repository.FirestoreRepository
@@ -57,6 +58,7 @@ class CallSyncApplication : Application(), Configuration.Provider {
 class MyWorkerFactory @Inject constructor(
     private val firestoreRepository: FirestoreRepository,
     private val firebaseAuth: FirebaseAuth,
+    private val firebaseRemoteConfig: FirebaseRemoteConfig,
     private val userPreferences: UserPreferences,
     private val callResourceRepository: CallResourceRepository,
 ) : WorkerFactory() {
@@ -70,6 +72,7 @@ class MyWorkerFactory @Inject constructor(
         workerParameters,
         firestoreRepository,
         firebaseAuth,
+        firebaseRemoteConfig,
         userPreferences,
         callResourceRepository,
     )
