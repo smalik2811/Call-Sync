@@ -27,8 +27,10 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.yangian.callsync.core.designsystem.MultiDevicePreview
 import com.yangian.callsync.core.designsystem.component.CalculatorButton
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
 import com.yangian.callsync.core.designsystem.component.GifImage
@@ -232,6 +234,18 @@ fun UnlockScreen(
             }
         }
 
+        WindowWidthSizeClass.MEDIUM -> {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(scaffoldPadding)
+                    .windowInsetsPadding(WindowInsets.safeContent)
+            ) {
+                ExpandedUnlockScreen()
+            }
+        }
+
         else -> {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -244,22 +258,8 @@ fun UnlockScreen(
     }
 }
 
-@Preview
-@Composable
-private fun CompactUnlockScreenPreview() {
-    CallSyncAppTheme {
-        CallSyncAppBackground {
-            Column {
-                UnlockScreen(
-                    PaddingValues(0.dp),
-                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
-                )
-            }
-        }
-    }
-}
 
-@Preview(device = "spec:width=1280dp,height=800dp,dpi=240")
+@Preview(device = "spec:width=411dp,height=891dp,orientation=landscape")
 @Composable
 private fun ExpandedUnlockScreenPreview() {
     CallSyncAppTheme {

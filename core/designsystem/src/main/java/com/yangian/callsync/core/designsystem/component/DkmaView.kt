@@ -69,19 +69,14 @@ fun DkmaScreenWebViewCard(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .background(MaterialTheme.colorScheme.primaryContainer)
-                    .padding(
-                        top = dimensionResource(R.dimen.padding_tiny),
-                        bottom = dimensionResource(R.dimen.padding_tiny),
-                        start = dimensionResource(R.dimen.padding_medium),
-                        end = dimensionResource(R.dimen.padding_medium)
-                    )
+                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                     .clickable { alterVisibility() },
             ) {
                 Text(
                     text = headingText,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(start = dimensionResource(R.dimen.padding_tiny))
                 )
 
                 Spacer(
@@ -91,8 +86,8 @@ fun DkmaScreenWebViewCard(
                 IconButton(
                     onClick = alterVisibility,
                     colors = IconButtonDefaults.iconButtonColors().copy(
-                        containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        contentColor = MaterialTheme.colorScheme.primary
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
                     Icon(

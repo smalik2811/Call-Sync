@@ -4,10 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,8 +25,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.yangian.callsync.core.designsystem.MultiDevicePreview
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
 import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
 import com.yangian.callsync.feature.onboard.R
@@ -156,6 +154,16 @@ fun WelcomeScreen(
             }
         }
 
+        WindowWidthSizeClass.MEDIUM -> {
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = modifier
+            ) {
+                ExpandedWelcomeScreen()
+            }
+        }
+
         else -> {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -168,23 +176,9 @@ fun WelcomeScreen(
     }
 }
 
-@Preview
+@MultiDevicePreview
 @Composable
 private fun WelcomeScreenColumnPreview() {
-    CallSyncAppTheme {
-        CallSyncAppBackground {
-            Column {
-                WelcomeScreen(
-                    {}
-                )
-            }
-        }
-    }
-}
-
-@Preview(device = "spec:width=1280dp,height=800dp,dpi=240")
-@Composable
-private fun WelcomeScreenRowPreview() {
     CallSyncAppTheme {
         CallSyncAppBackground {
             Column {

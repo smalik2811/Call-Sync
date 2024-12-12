@@ -163,14 +163,13 @@ class OnBoardViewModel @Inject constructor(
             val workRequest = PeriodicWorkRequestBuilder<LogsDownloadWorker>(
                 repeatInterval = existingWorkPolicy,
                 repeatIntervalTimeUnit = TimeUnit.HOURS,
-            )
-                .setBackoffCriteria(
-                    BackoffPolicy.EXPONENTIAL,
-                    60,
-                    TimeUnit.MINUTES,
-                    )
-                .setConstraints(workerConstraints)
-                .build()
+            ).setBackoffCriteria(
+                BackoffPolicy.EXPONENTIAL,
+                60,
+                TimeUnit.MINUTES,
+            ).setConstraints(
+                workerConstraints
+            ).build()
 
             val workManager = WorkManager.getInstance(context)
             workManager.enqueueUniquePeriodicWork(

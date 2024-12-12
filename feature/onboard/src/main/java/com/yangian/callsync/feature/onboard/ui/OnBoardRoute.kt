@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.yangian.callsync.core.designsystem.MultiDevicePreview
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
 import com.yangian.callsync.core.designsystem.icon.ArrowBackIcon
 import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
@@ -47,11 +48,11 @@ import com.yangian.callsync.feature.onboard.DkmaUiState
 import com.yangian.callsync.feature.onboard.OnBoardViewModel
 import com.yangian.callsync.feature.onboard.R
 import com.yangian.callsync.feature.onboard.model.OnBoardingScreens
+import com.yangian.callsync.feature.onboard.ui.onBoardScreens.AppUsageAgreement
 import com.yangian.callsync.feature.onboard.ui.onBoardScreens.ConnectionScreen1
 import com.yangian.callsync.feature.onboard.ui.onBoardScreens.ConnectionScreen2
 import com.yangian.callsync.feature.onboard.ui.onBoardScreens.DkmaScreen
 import com.yangian.callsync.feature.onboard.ui.onBoardScreens.InstallScreen
-import com.yangian.callsync.feature.onboard.ui.onBoardScreens.AppUsageAgreement
 import com.yangian.callsync.feature.onboard.ui.onBoardScreens.UnlockScreen
 import com.yangian.callsync.feature.onboard.ui.onBoardScreens.WelcomeScreen
 import qrcode.QRCode
@@ -120,7 +121,8 @@ fun OnBoardRoute(
                         ),
                         style = if (
                             windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.COMPACT
-                            || windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
+                            || windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
+                        ) {
                             MaterialTheme.typography.titleLarge
                         } else MaterialTheme.typography.displayLarge,
                         color = MaterialTheme.colorScheme.primary
@@ -243,8 +245,7 @@ fun OnBoardRoute(
     }
 }
 
-@Preview(device = "spec:width=411dp,height=891dp")
-@Preview(device = "spec:width=1280dp,height=800dp,dpi=240")
+@Preview
 @Composable
 private fun OnBoardRoutePreview() {
 

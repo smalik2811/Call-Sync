@@ -1,7 +1,6 @@
 package com.yangian.callsync.feature.onboard.ui.onBoardScreens
 
 import android.Manifest
-import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
@@ -49,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.google.mlkit.vision.barcode.common.Barcode
+import com.yangian.callsync.core.designsystem.MultiDevicePreview
 import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
 import com.yangian.callsync.core.designsystem.component.CustomAlertDialog
 import com.yangian.callsync.core.designsystem.component.QRCamera
@@ -374,27 +374,7 @@ fun ConnectionScreen1(
     }
 }
 
-@Preview(device = "spec:width=411dp,height=891dp")
-@Composable
-private fun CompactConnectionScreen1Preview() {
-    CallSyncAppTheme {
-        CallSyncAppBackground {
-            Column {
-                ConnectionScreen1(
-                    PaddingValues(),
-                    DummyFirestoreRepository(),
-                    stringResource(R.string.test_user),
-                    {},
-                    {},
-                    Modifier,
-                    true
-                )
-            }
-        }
-    }
-}
-
-@Preview(device = "spec:width=1280dp,height=800dp,dpi=240")
+@MultiDevicePreview
 @Composable
 private fun ExpandedConnectionScreen1Preview() {
     CallSyncAppTheme {

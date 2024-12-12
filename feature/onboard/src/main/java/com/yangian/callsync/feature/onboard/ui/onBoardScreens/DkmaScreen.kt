@@ -2,7 +2,6 @@ package com.yangian.callsync.feature.onboard.ui.onBoardScreens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -163,20 +162,18 @@ private fun DkmaPreviewSuccess() {
     )
     CallSyncAppTheme {
         CallSyncAppBackground {
-            CallSyncAppBackground {
-                var issueVisibility by remember { mutableStateOf(false) }
-                var solutionVisibility by remember { mutableStateOf(false) }
-                Column {
-                    DkmaScreen(
-                        dkmaUiState = DkmaUiState.Success(dummyData),
-                        isIssueVisible = issueVisibility,
-                        isSolutionVisible = solutionVisibility,
-                        alterIssueVisibility = { issueVisibility = !issueVisibility },
-                        alterSolutionVisibility = { solutionVisibility = !solutionVisibility },
-                        modifier = Modifier.fillMaxSize(),
-                        retryDkmaLoading = {}
-                    )
-                }
+            var issueVisibility by remember { mutableStateOf(false) }
+            var solutionVisibility by remember { mutableStateOf(false) }
+            Column {
+                DkmaScreen(
+                    dkmaUiState = DkmaUiState.Success(dummyData),
+                    isIssueVisible = issueVisibility,
+                    isSolutionVisible = solutionVisibility,
+                    alterIssueVisibility = { issueVisibility = !issueVisibility },
+                    alterSolutionVisibility = { solutionVisibility = !solutionVisibility },
+                    modifier = Modifier.fillMaxSize(),
+                    retryDkmaLoading = {}
+                )
             }
         }
     }

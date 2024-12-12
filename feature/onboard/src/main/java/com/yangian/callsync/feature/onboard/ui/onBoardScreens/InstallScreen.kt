@@ -306,8 +306,8 @@ fun RowScope.ExpandedInstallScreen(
                 Box(
                     modifier = Modifier
                         .sizeIn(
-                            maxHeight = 200.dp,
-                            maxWidth = 200.dp
+                            maxHeight = 100.dp,
+                            maxWidth = 100.dp
                         )
                         .shadow(
                             elevation = dimensionResource(R.dimen.elevation_level_2),
@@ -389,8 +389,8 @@ fun RowScope.ExpandedInstallScreen(
                 Box(
                     modifier = Modifier
                         .sizeIn(
-                            maxHeight = 200.dp,
-                            maxWidth = 200.dp
+                            maxHeight = 100.dp,
+                            maxWidth = 100.dp
                         )
                         .shadow(
                             elevation = dimensionResource(R.dimen.elevation_level_2),
@@ -498,6 +498,21 @@ fun InstallScreen(
 
     when (windowSizeClass.windowWidthSizeClass) {
         WindowWidthSizeClass.EXPANDED -> {
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = modifier
+                    .padding(scaffoldPadding)
+                    .windowInsetsPadding(WindowInsets.safeContent)
+            ) {
+                ExpandedInstallScreen(
+                    context = context,
+                    message = message,
+                )
+            }
+        }
+
+        WindowWidthSizeClass.MEDIUM -> {
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
