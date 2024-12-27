@@ -11,7 +11,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import com.yangian.callsync.core.designsystem.icon.ErrorIcon
 import com.yangian.callsync.core.designsystem.icon.LogoutIcon
-import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
+import com.yangian.callsync.core.designsystem.theme.AppTheme
 
 @Composable
 fun CustomAlertDialog(
@@ -100,8 +100,8 @@ fun CustomAlertDialog(
 @Preview
 @Composable
 private fun CustomAlertDialogPreview() {
-    CallSyncAppTheme {
-        CallSyncAppBackground {
+    AppTheme {
+        AppBackground {
             CustomAlertDialog(
                 onDismissRequest = { },
                 onPositiveButtonClick = { },

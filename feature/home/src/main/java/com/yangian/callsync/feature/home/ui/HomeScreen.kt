@@ -8,8 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
-import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
+import com.yangian.callsync.core.designsystem.component.AppBackground
+import com.yangian.callsync.core.designsystem.theme.AppTheme
 import com.yangian.callsync.core.model.CallResource
 import com.yangian.callsync.core.ui.CallFeedUiState
 import com.yangian.callsync.core.ui.CallResourcePreviewParameterProvider
@@ -50,8 +50,8 @@ fun HomeScreen(
 private fun HomeRoutePreview(
     @PreviewParameter(CallResourcePreviewParameterProvider::class) callResourceList: List<CallResource>
 ) {
-    CallSyncAppTheme {
-        CallSyncAppBackground {
+    AppTheme {
+        AppBackground {
             HomeScreen(
                 isMenuVisible = false,
                 isSignOutDialogVisible = false,

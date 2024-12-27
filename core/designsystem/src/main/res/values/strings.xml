@@ -2,6 +2,14 @@
 <resources>
     <string name="contact_avatar">Contact Avatar</string>
     <string name="app_name">Call Sync</string>
+    <string name="foreign_app_name">Num Sum</string>
+    <string name="app_logo">Call Sync App Logo</string>
+    <string name="install_desc_app">Keep Call Sync on this Device to receive the call history.</string>
+    <string name="install_desc_foreign_app">Install Num Sum on other Device to send the call history data.</string>
+    <string name="download_page">Download</string>
+    <string name="download_message">😄😄😄 Welcome Onboard 🎉🎉🎉.\nDownload the Num Sum 📱 here ⤵️\n\n%s</string>
+    <string name="share_via">Share via</string>
+    <string name="share_app_link">Share Link</string>
     <string name="call_received">Call received</string>
     <string name="call_made">Call made</string>
     <string name="call_missed">Call missed</string>

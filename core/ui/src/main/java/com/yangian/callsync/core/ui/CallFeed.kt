@@ -37,12 +37,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import com.google.android.gms.ads.nativead.NativeAd
 import com.yangian.callsync.core.designsystem.BuildConfig
-import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
+import com.yangian.callsync.core.designsystem.component.AppBackground
 import com.yangian.callsync.core.designsystem.component.admob.loadNativeAd
-import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
+import com.yangian.callsync.core.designsystem.theme.AppTheme
 import com.yangian.callsync.core.model.CallResource
 
 fun triggerSMSIntent(callResourceNumber: String, context: Context) {
@@ -168,8 +167,8 @@ sealed interface CallFeedUiState {
 @Preview
 @Composable
 private fun LoadingCallFeedPreview() {
-    CallSyncAppTheme {
-        CallSyncAppBackground {
+    AppTheme {
+        AppBackground {
             LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -189,8 +188,8 @@ private fun LoadingCallFeedPreview() {
 @Preview
 @Composable
 private fun SuccessEmptyCallFeedPreview() {
-    CallSyncAppTheme {
-        CallSyncAppBackground {
+    AppTheme {
+        AppBackground {
             LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
@@ -212,8 +211,8 @@ private fun SuccessEmptyCallFeedPreview() {
 private fun SuccessFilledCallFeedPreview(
     @PreviewParameter(CallResourcePreviewParameterProvider::class) callResourceList: List<CallResource>
 ) {
-    CallSyncAppTheme {
-        CallSyncAppBackground {
+    AppTheme {
+        AppBackground {
             LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()

@@ -43,8 +43,8 @@ import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.google.android.gms.ads.nativead.NativeAdOptions.ADCHOICES_TOP_RIGHT
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.yangian.callsync.core.designsystem.R
-import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
-import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
+import com.yangian.callsync.core.designsystem.component.AppBackground
+import com.yangian.callsync.core.designsystem.theme.AppTheme
 
 
 @Composable
@@ -218,8 +218,8 @@ fun StarRating(
 @Preview(device = "id:Nexus S")
 @Composable
 private fun StarRatingPreview() {
-    CallSyncAppTheme {
-        CallSyncAppBackground {
+    AppTheme {
+        AppBackground {
             StarRating(3.2, 5)
         }
     }

@@ -21,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.Wallpapers
 import androidx.compose.ui.unit.dp
-import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
+import com.yangian.callsync.core.designsystem.theme.AppTheme
 
 @Composable
 fun CalculatorButton(
@@ -53,7 +53,7 @@ fun CalculatorButton(
 )
 @Composable
 private fun CalculatorButtonPreview() {
-    CallSyncAppTheme {
+    AppTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {

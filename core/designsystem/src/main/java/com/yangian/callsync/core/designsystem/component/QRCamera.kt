@@ -31,7 +31,7 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import com.yangian.callsync.core.designsystem.R
-import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
+import com.yangian.callsync.core.designsystem.theme.AppTheme
 import java.util.concurrent.Executors
 
 class QRCamera {
@@ -183,8 +183,8 @@ class QRCamera {
     @Composable
     private fun CameraPreviewView_Preview() {
 
-        CallSyncAppTheme {
-            CallSyncAppBackground {
+        AppTheme {
+            AppBackground {
                 CameraPreviewView(
                     isPreviewing = true,
                     onBarcodeScanned = {},

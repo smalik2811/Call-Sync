@@ -54,16 +54,13 @@ class OnBoardViewModel @Inject constructor(
 
     // Ui
     private val _currentScreen =
-        MutableStateFlow(OnBoardingScreens.AppUsageAgreement)
+        MutableStateFlow(OnBoardingScreens.Welcome)
     val currentScreen: StateFlow<OnBoardingScreens> = _currentScreen
 
 
     fun navigateToNextScreen() {
         viewModelScope.launch {
             when (_currentScreen.value) {
-                OnBoardingScreens.AppUsageAgreement -> _currentScreen.value =
-                    OnBoardingScreens.Welcome
-
                 OnBoardingScreens.Welcome -> _currentScreen.value = OnBoardingScreens.DkmaScreen
                 OnBoardingScreens.DkmaScreen -> _currentScreen.value = OnBoardingScreens.Install
                 OnBoardingScreens.Install -> _currentScreen.value = OnBoardingScreens.Unlock
@@ -86,10 +83,7 @@ class OnBoardViewModel @Inject constructor(
                 OnBoardingScreens.Unlock -> _currentScreen.value = OnBoardingScreens.Install
                 OnBoardingScreens.Install -> _currentScreen.value = OnBoardingScreens.DkmaScreen
                 OnBoardingScreens.DkmaScreen -> _currentScreen.value = OnBoardingScreens.Welcome
-                OnBoardingScreens.Welcome -> _currentScreen.value =
-                    OnBoardingScreens.AppUsageAgreement
-
-                OnBoardingScreens.AppUsageAgreement -> {}
+                OnBoardingScreens.Welcome ->  {}
             }
         }
     }

@@ -7,7 +7,10 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.safeDrawing
@@ -37,10 +40,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
-import com.yangian.callsync.core.designsystem.MultiDevicePreview
-import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
+import com.yangian.callsync.core.designsystem.component.AppBackground
 import com.yangian.callsync.core.designsystem.icon.ArrowBackIcon
-import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
+import com.yangian.callsync.core.designsystem.theme.AppTheme
 import com.yangian.callsync.core.firebase.repository.DummyFirestoreRepository
 import com.yangian.callsync.core.firebase.repository.FirestoreRepository
 import com.yangian.callsync.core.network.model.DkmaManufacturer
@@ -48,9 +50,8 @@ import com.yangian.callsync.feature.onboard.DkmaUiState
 import com.yangian.callsync.feature.onboard.OnBoardViewModel
 import com.yangian.callsync.feature.onboard.R
 import com.yangian.callsync.feature.onboard.model.OnBoardingScreens
-import com.yangian.callsync.feature.onboard.ui.onBoardScreens.AppUsageAgreement
-import com.yangian.callsync.feature.onboard.ui.onBoardScreens.ConnectionScreen1
-import com.yangian.callsync.feature.onboard.ui.onBoardScreens.ConnectionScreen2
+import com.yangian.callsync.feature.onboard.ui.onBoardScreens.Connection1Screen
+import com.yangian.callsync.feature.onboard.ui.onBoardScreens.Connection2Screen
 import com.yangian.callsync.feature.onboard.ui.onBoardScreens.DkmaScreen
 import com.yangian.callsync.feature.onboard.ui.onBoardScreens.InstallScreen
 import com.yangian.callsync.feature.onboard.ui.onBoardScreens.UnlockScreen
@@ -131,7 +132,7 @@ fun OnBoardRoute(
                 navigationIcon = {
                     AnimatedVisibility(
                         visibleState = MutableTransitionState(
-                            currentScreen != OnBoardingScreens.AppUsageAgreement
+                            currentScreen != OnBoardingScreens.Welcome
                         ),
                         enter = slideInHorizontally(),
                         exit = slideOutHorizontally()
@@ -161,8 +162,8 @@ fun OnBoardRoute(
                 ) {
                     Text(
                         text =
-                        if (currentScreen == OnBoardingScreens.AppUsageAgreement) {
-                            stringResource(R.string.agree_and_proceed)
+                        if (currentScreen == OnBoardingScreens.Welcome) {
+                            stringResource(R.string.agree)
                         } else {
                             stringResource(id = R.string.proceed)
                         },
@@ -172,21 +173,20 @@ fun OnBoardRoute(
         },
         modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection)
-    ) {
+    ) { padding ->
         when (currentScreen) {
-            OnBoardingScreens.AppUsageAgreement -> AppUsageAgreement(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it)
-                    .windowInsetsPadding(WindowInsets.safeContent)
-            )
 
             OnBoardingScreens.Welcome -> WelcomeScreen(
-                createFirebaseAccount,
                 Modifier
                     .fillMaxSize()
-                    .padding(it)
+                    .padding(padding)
+                    .consumeWindowInsets(padding)
                     .windowInsetsPadding(WindowInsets.safeContent)
+                    .windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(
+                            WindowInsetsSides.Horizontal,
+                        ),
+                    ),
             )
 
             OnBoardingScreens.DkmaScreen -> DkmaScreen(
@@ -198,48 +198,71 @@ fun OnBoardRoute(
                 loadDkmaManufacturer,
                 Modifier
                     .fillMaxSize()
-                    .padding(it)
-                    .windowInsetsPadding(WindowInsets.safeContent)
+                    .padding(padding)
+                    .consumeWindowInsets(padding)
+                    .windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(
+                            WindowInsetsSides.Horizontal,
+                        ),
+                    )
                     .verticalScroll(scrollState)
             )
 
             OnBoardingScreens.Install -> InstallScreen(
-                scaffoldPadding = it,
+                createFirebaseAccount,
                 Modifier
                     .fillMaxSize()
-                    .windowInsetsPadding(WindowInsets.safeContent)
+                    .padding(padding)
+                    .consumeWindowInsets(padding)
+                    .windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(
+                            WindowInsetsSides.Horizontal,
+                        ),
+                    ),
             )
 
             OnBoardingScreens.Unlock -> UnlockScreen(
-                scaffoldPadding = it,
                 Modifier
                     .fillMaxSize()
-                    .padding(it)
-                    .windowInsetsPadding(WindowInsets.safeContent)
+                    .padding(padding)
+                    .consumeWindowInsets(padding)
+                    .windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(
+                            WindowInsetsSides.Horizontal,
+                        ),
+                    ),
             )
 
-            OnBoardingScreens.Connection1 -> ConnectionScreen1(
-                scaffoldPadding = it,
+            OnBoardingScreens.Connection1 -> Connection1Screen(
                 firestoreRepository,
                 getFirebaseUser(),
                 navigateToNextScreen,
                 navigateToPreviousScreen,
                 Modifier
                     .fillMaxSize()
-                    .padding(it)
-                    .windowInsetsPadding(WindowInsets.safeContent)
+                    .padding(padding)
+                    .consumeWindowInsets(padding)
+                    .windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(
+                            WindowInsetsSides.Horizontal,
+                        ),
+                    ),
             )
 
-            OnBoardingScreens.Connection2 -> ConnectionScreen2(
-                scaffoldingPadding = it,
+            OnBoardingScreens.Connection2 -> Connection2Screen(
                 getQrCode,
                 updateOnBoardingCompleted,
                 navigateToHome,
                 registerLogsDownloadWorkRequest,
                 Modifier
                     .fillMaxSize()
-                    .padding(it)
-                    .windowInsetsPadding(WindowInsets.safeContent)
+                    .padding(padding)
+                    .consumeWindowInsets(padding)
+                    .windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(
+                            WindowInsetsSides.Horizontal,
+                        ),
+                    ),
             )
         }
     }
@@ -266,10 +289,10 @@ private fun OnBoardRoutePreview() {
         user_solution = stringResource(R.string.dkma_dummy_user_solution),
     )
 
-    CallSyncAppTheme {
-        CallSyncAppBackground {
+    AppTheme {
+        AppBackground {
             OnBoardRoute(
-                currentScreen = OnBoardingScreens.Connection2,
+                currentScreen = OnBoardingScreens.Welcome,
                 dkmaUiState = DkmaUiState.Success(dkmaManufacturer),
                 isIssueVisible = false,
                 isSolutionVisible = false,
@@ -286,7 +309,8 @@ private fun OnBoardRoutePreview() {
                 registerLogsDownloadWorkRequest = {},
                 navigateToHome = {},
                 navigateToPreviousScreen = {},
-                navigateToNextScreen = {}
+                navigateToNextScreen = {},
+                modifier = Modifier
             )
         }
     }

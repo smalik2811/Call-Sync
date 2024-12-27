@@ -43,7 +43,7 @@ import com.yangian.callsync.core.designsystem.component.CallResourceFlatItem
 import com.yangian.callsync.core.designsystem.component.admob.CallNativeAd
 import com.yangian.callsync.core.designsystem.icon.CallIcon
 import com.yangian.callsync.core.designsystem.icon.ChatIcon
-import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
+import com.yangian.callsync.core.designsystem.theme.AppTheme
 import com.yangian.callsync.core.model.CallResource
 
 @Composable
@@ -214,7 +214,7 @@ fun CallResourceListItem(
 private fun CallResourceListItemPreview(
     @PreviewParameter(CallResourcePreviewParameterProvider::class) callResourceList: List<CallResource>
 ) {
-    CallSyncAppTheme {
+    AppTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
             modifier = Modifier

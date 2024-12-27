@@ -1,6 +1,5 @@
 package com.yangian.callsync.core.designsystem.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -11,13 +10,9 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
 
 
 private val LightColorScheme = lightColorScheme(
@@ -103,7 +98,7 @@ val LightBackgroundTheme = BackgroundTheme(color = md_theme_light_surfaceContain
 val DarkBackgroundTheme = BackgroundTheme(color = md_theme_dark_surfaceContainerHigh)
 
 @Composable
-fun CallSyncAppTheme(
+fun AppTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     useDynamicColors: Boolean = true,
     content: @Composable () -> Unit

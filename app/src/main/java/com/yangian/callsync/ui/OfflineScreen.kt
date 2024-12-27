@@ -3,10 +3,8 @@ package com.yangian.callsync.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -21,9 +19,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yangian.callsync.R
-import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
+import com.yangian.callsync.core.designsystem.component.AppBackground
 import com.yangian.callsync.core.designsystem.icon.CloudOffIcon
-import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
+import com.yangian.callsync.core.designsystem.theme.AppTheme
 
 @Composable
 fun CompactOfflineScreen(modifier: Modifier = Modifier) {
@@ -88,8 +86,8 @@ fun OfflineScreen(
 @Preview
 @Composable
 private fun CompactOfflineScreenPreview() {
-    CallSyncAppTheme {
-        CallSyncAppBackground {
+    AppTheme {
+        AppBackground {
             CompactOfflineScreen(modifier = Modifier)
         }
     }
@@ -98,8 +96,8 @@ private fun CompactOfflineScreenPreview() {
 @Preview(device = "spec:parent=pixel_5,orientation=landscape")
 @Composable
 private fun ExpandedOfflineScreenPreview() {
-    CallSyncAppTheme {
-        CallSyncAppBackground {
+    AppTheme {
+        AppBackground {
             ExpandedOfflineScreen(modifier = Modifier)
         }
     }

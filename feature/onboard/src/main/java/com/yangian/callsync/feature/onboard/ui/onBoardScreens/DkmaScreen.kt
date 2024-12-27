@@ -13,11 +13,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.yangian.callsync.core.designsystem.component.CallSyncAppBackground
+import com.yangian.callsync.core.designsystem.component.AppBackground
 import com.yangian.callsync.core.designsystem.component.CustomAlertDialog
 import com.yangian.callsync.core.designsystem.component.DkmaView
 import com.yangian.callsync.core.designsystem.icon.ErrorIcon
-import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
+import com.yangian.callsync.core.designsystem.theme.AppTheme
 import com.yangian.callsync.core.network.model.DkmaManufacturer
 import com.yangian.callsync.feature.onboard.DkmaUiState
 import com.yangian.callsync.feature.onboard.R
@@ -69,8 +69,8 @@ private fun DkmaLoadingScreen(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun DkmaLoadingScreenPreview() {
-    CallSyncAppTheme {
-        CallSyncAppBackground {
+    AppTheme {
+        AppBackground {
             DkmaLoadingScreen(
                 Modifier.fillMaxSize()
             )
@@ -102,8 +102,8 @@ private fun DkmaErrorScreen(
 @Preview
 @Composable
 private fun DkmaErrorScreenPreview() {
-    CallSyncAppTheme {
-        CallSyncAppBackground {
+    AppTheme {
+        AppBackground {
             DkmaErrorScreen(
                 retryDkmaLoading = {}
             )
@@ -114,9 +114,9 @@ private fun DkmaErrorScreenPreview() {
 @Preview
 @Composable
 private fun DkmaPreviewLoading() {
-    CallSyncAppTheme {
-        CallSyncAppBackground {
-            CallSyncAppBackground {
+    AppTheme {
+        AppBackground {
+            AppBackground {
                 Column {
                     DkmaScreen(
                         dkmaUiState = DkmaUiState.Loading,
@@ -135,9 +135,9 @@ private fun DkmaPreviewLoading() {
 @Preview
 @Composable
 private fun DkmaPreviewError() {
-    CallSyncAppTheme {
-        CallSyncAppTheme {
-            CallSyncAppBackground {
+    AppTheme {
+        AppTheme {
+            AppBackground {
                 Column {
                     DkmaScreen(
                         dkmaUiState = DkmaUiState.Error,
@@ -160,8 +160,8 @@ private fun DkmaPreviewSuccess() {
         explanation = stringResource(R.string.dkma_dummy_explanation),
         user_solution = stringResource(R.string.dkma_dummy_user_solution),
     )
-    CallSyncAppTheme {
-        CallSyncAppBackground {
+    AppTheme {
+        AppBackground {
             var issueVisibility by remember { mutableStateOf(false) }
             var solutionVisibility by remember { mutableStateOf(false) }
             Column {

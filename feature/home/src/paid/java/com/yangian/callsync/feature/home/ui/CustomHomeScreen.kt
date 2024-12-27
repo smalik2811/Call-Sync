@@ -116,7 +116,13 @@ fun HomeScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                    .padding(paddingValues)
+                    .consumeWindowInsets(paddingValues)
+                    .windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(
+                            WindowInsetsSides.Horizontal,
+                        ),
+                    ),
         ) {
 
             val scrollableState = rememberLazyListState()

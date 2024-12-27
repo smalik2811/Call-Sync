@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.yangian.callsync.core.designsystem.R
-import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
+import com.yangian.callsync.core.designsystem.theme.AppTheme
 import com.yangian.callsync.core.network.model.DkmaManufacturer
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -354,7 +354,7 @@ private fun CompactDkmaViewPreview() {
     var isIssueVisible by remember { mutableStateOf(true) }
     var isSolutionVisible by remember { mutableStateOf(true) }
 
-    CallSyncAppTheme {
+    AppTheme {
         Surface(
             modifier = Modifier
                 .fillMaxSize()
@@ -387,7 +387,7 @@ private fun ExpandedDkmaViewPreview() {
     var isIssueVisible by remember { mutableStateOf(true) }
     var isSolutionVisible by remember { mutableStateOf(true) }
 
-    CallSyncAppTheme {
+    AppTheme {
         Surface(
             modifier = Modifier
                 .fillMaxSize()

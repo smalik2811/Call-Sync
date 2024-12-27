@@ -2,6 +2,7 @@ package com.yangian.callsync
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
@@ -17,28 +18,16 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.lifecycleScope
-import androidx.work.Constraints
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
 import com.google.android.gms.ads.MobileAds
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.ktx.remoteConfig
-import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.yangian.callsync.core.data.util.NetworkMonitor
 import com.yangian.callsync.core.datastore.UserPreferences
-import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
-import com.yangian.callsync.core.workmanager.LogsDownloadWorker
+import com.yangian.callsync.core.designsystem.theme.AppTheme
 import com.yangian.callsync.ui.CallSyncApp
 import com.yangian.callsync.ui.rememberCallSyncAppState
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -62,7 +51,12 @@ class MainActivity : ComponentActivity() {
         installSplashScreen().setKeepOnScreenCondition {
             !mainViewModel.isSplashVisible.value
         }
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.auto(
+                lightScrim = android.graphics.Color.TRANSPARENT,
+                darkScrim = android.graphics.Color.TRANSPARENT,
+            ),
+        )
 
         setContent {
             val startDestination by mainViewModel.startDestination
@@ -70,22 +64,13 @@ class MainActivity : ComponentActivity() {
                 networkMonitor = networkMonitor
             )
             val windowSizeClass = calculateWindowSizeClass(this)
-            CallSyncAppTheme {
-                Surface(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.background)
-                        .windowInsetsPadding(WindowInsets.statusBars)
-                        .windowInsetsPadding(WindowInsets.navigationBars)
-                        .safeDrawingPadding(),
-                ) {
-
+            AppTheme {
+                Surface {
                     CallSyncApp(
                         appState = appState,
                         startDestination = startDestination,
                         windowSizeClass = windowSizeClass,
                         modifier = Modifier
-                            .fillMaxSize()
                     )
                 }
             }

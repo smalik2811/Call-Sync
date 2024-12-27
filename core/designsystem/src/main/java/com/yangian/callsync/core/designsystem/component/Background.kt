@@ -12,11 +12,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
+import com.yangian.callsync.core.designsystem.theme.AppTheme
 import com.yangian.callsync.core.designsystem.theme.LocalBackgroundTheme
 
 @Composable
-fun CallSyncAppBackground(
+fun AppBackground(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
@@ -40,15 +40,15 @@ annotation class ThemePreviews
 @ThemePreviews
 @Composable
 fun BackgroundDefault() {
-    CallSyncAppTheme(useDynamicColors = true) {
-        CallSyncAppBackground(Modifier.size(100.dp), content = {})
+    AppTheme(useDynamicColors = true) {
+        AppBackground(Modifier.size(100.dp), content = {})
     }
 }
 
 @ThemePreviews
 @Composable
 fun BackgroundDynamic() {
-    CallSyncAppTheme(useDynamicColors = false) {
-        CallSyncAppBackground(Modifier.size(100.dp), content = {})
+    AppTheme(useDynamicColors = false) {
+        AppBackground(Modifier.size(100.dp), content = {})
     }
 }

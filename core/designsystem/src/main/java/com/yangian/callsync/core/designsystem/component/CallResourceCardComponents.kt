@@ -32,7 +32,7 @@ import com.yangian.callsync.core.designsystem.icon.PhoneDisabledIcon
 import com.yangian.callsync.core.designsystem.icon.PhoneMissedIcon
 import com.yangian.callsync.core.designsystem.icon.VoicemailIcon
 import com.yangian.callsync.core.designsystem.icon.WifiCallingIcon
-import com.yangian.callsync.core.designsystem.theme.CallSyncAppTheme
+import com.yangian.callsync.core.designsystem.theme.AppTheme
 import com.yangian.callsync.core.designsystem.theme.ContactAvatarColorSchemeDark
 import com.yangian.callsync.core.designsystem.theme.ContactAvatarColorThemeLight
 import com.yangian.callsync.core.designsystem.theme.extendedDark
@@ -195,8 +195,8 @@ fun CallResourceFlatItem(
 @Composable
 private fun CallResourceFlatItemPreview() {
     val context = LocalContext.current
-    CallSyncAppTheme {
-        CallSyncAppBackground {
+    AppTheme {
+        AppBackground {
             CallResourceFlatItem(
                 callResource = CallResource(
                     id = 5,
