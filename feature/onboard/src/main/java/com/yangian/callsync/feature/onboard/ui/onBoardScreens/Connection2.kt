@@ -55,7 +55,7 @@ fun CompactPortraitConnection2Screen(
 
         Text(
             text = stringResource(id = R.string.connection1_desc),
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Start,
             modifier = Modifier.fillMaxWidth(0.8f)
         )
@@ -64,7 +64,7 @@ fun CompactPortraitConnection2Screen(
 
         Text(
             text = stringResource(id = R.string.finish_warning),
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Start,
             modifier = Modifier.fillMaxWidth(0.8f)
         )

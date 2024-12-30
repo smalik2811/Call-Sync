@@ -39,16 +39,16 @@ annotation class ThemePreviews
 
 @ThemePreviews
 @Composable
-fun BackgroundDefault() {
-    AppTheme(useDynamicColors = true) {
+private fun BackgroundDefault() {
+    AppTheme(useDynamicColors = false) {
         AppBackground(Modifier.size(100.dp), content = {})
     }
 }
 
 @ThemePreviews
 @Composable
-fun BackgroundDynamic() {
-    AppTheme(useDynamicColors = false) {
+private fun BackgroundDynamic() {
+    AppTheme(useDynamicColors = true) {
         AppBackground(Modifier.size(100.dp), content = {})
     }
 }

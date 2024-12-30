@@ -8,6 +8,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
+import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -47,7 +48,11 @@ class LogsDownloadWorker @AssistedInject constructor(
 
         val workRequest = PeriodicWorkRequestBuilder<LogsDownloadWorker>(
             repeatInterval = retryPolicy,
-            repeatIntervalTimeUnit = TimeUnit.HOURS,
+            repeatIntervalTimeUnit = TimeUnit.MINUTES,
+        ).setBackoffCriteria(
+            BackoffPolicy.EXPONENTIAL,
+            2,
+            TimeUnit.MINUTES,
         ).setConstraints(workerConstraints)
             .build()
 
@@ -96,7 +101,6 @@ class LogsDownloadWorker @AssistedInject constructor(
             result = when (firestoreResult) {
                 is FirestoreResult.Success -> Result.success()
                 is FirestoreResult.Retry -> Result.retry()
-                is FirestoreResult.Failure -> Result.failure()
             }
         } catch (e: Exception) {
             Log.i(TAG, "Kotlin Exception occurred: ${e.message}")
@@ -104,32 +108,32 @@ class LogsDownloadWorker @AssistedInject constructor(
         }
         Log.i(TAG, "Worker Successfully finished.")
 
-        if (result == Result.success()) {
-            // Show Notification
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse("https://www.callsync.yangian.com/open-main-activity")
-                flags = Intent
-                    .FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_HISTORY
-            }
-
-            val pendingIntent = PendingIntent
-                .getActivity(
-                    context, 0, intent, PendingIntent.FLAG_IMMUTABLE
-                )
-
-            val notificationId = 1
-            val notificationBuilder =
-                NotificationCompat.Builder(context, "call_sync_notifications")
-                    .setSmallIcon(R.drawable.call_sync_notification)
-                    .setContentTitle("Sync Complete")
-                    .setContentText("New data available")
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setContentIntent(pendingIntent)
-                    .setAutoCancel(true)
-
-            val notificationManager = context.getSystemService(NotificationManager::class.java)
-            notificationManager.notify(notificationId, notificationBuilder.build())
-        }
+//        if (result == Result.success()) {
+//            // Show Notification
+//            val intent = Intent(Intent.ACTION_VIEW).apply {
+//                data = Uri.parse("https://www.callsync.yangian.com/open-main-activity")
+//                flags = Intent
+//                    .FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_HISTORY
+//            }
+//
+//            val pendingIntent = PendingIntent
+//                .getActivity(
+//                    context, 0, intent, PendingIntent.FLAG_IMMUTABLE
+//                )
+//
+//            val notificationId = 1
+//            val notificationBuilder =
+//                NotificationCompat.Builder(context, "call_sync_notifications")
+//                    .setSmallIcon(R.drawable.call_sync_notification)
+//                    .setContentTitle("Sync Complete")
+//                    .setContentText("New data available")
+//                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+//                    .setContentIntent(pendingIntent)
+//                    .setAutoCancel(true)
+//
+//            val notificationManager = context.getSystemService(NotificationManager::class.java)
+//            notificationManager.notify(notificationId, notificationBuilder.build())
+//        }
         return result
     }
 }

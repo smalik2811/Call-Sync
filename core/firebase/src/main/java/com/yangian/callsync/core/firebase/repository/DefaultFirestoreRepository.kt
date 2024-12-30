@@ -24,7 +24,6 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 sealed interface FirestoreResult {
-    data object Failure : FirestoreResult
     data object Success : FirestoreResult
     data object Retry : FirestoreResult
 }
@@ -128,7 +127,7 @@ class DefaultFirestoreRepository @Inject constructor(
             // Handle the case where cloudSenderId might be null
             if (cloudSenderId == null) {
                 Log.e(TAG, "Error: 'sender' field is null in Firestore document")
-                return@coroutineScope FirestoreResult.Failure // Example: Return a failure result
+                return@coroutineScope FirestoreResult.Retry // Example: Return a failure result
             } else if (senderId != cloudSenderId) {
                 throw FirebaseFirestoreException(
                     "Sender ID mismatch",
@@ -168,7 +167,7 @@ class DefaultFirestoreRepository @Inject constructor(
                 if (e is FirebaseFirestoreException && e.code == FirebaseFirestoreException.Code.NOT_FOUND) {
                     FirestoreResult.Retry
                 } else {
-                    FirestoreResult.Failure
+                    FirestoreResult.Retry
                 }
         }
 

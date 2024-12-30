@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -34,7 +36,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.key.Key.Companion.W
+import androidx.compose.ui.input.key.Key.Companion.Window
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -172,21 +177,20 @@ fun OnBoardRoute(
             }
         },
         modifier = modifier
+            .windowInsetsPadding(WindowInsets.statusBars)
+            .windowInsetsPadding(WindowInsets.safeContent)
             .nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { padding ->
+
+        val commonModifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
+            .padding(dimensionResource(R.dimen.padding_medium))
+
         when (currentScreen) {
 
             OnBoardingScreens.Welcome -> WelcomeScreen(
-                Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .consumeWindowInsets(padding)
-                    .windowInsetsPadding(WindowInsets.safeContent)
-                    .windowInsetsPadding(
-                        WindowInsets.safeDrawing.only(
-                            WindowInsetsSides.Horizontal,
-                        ),
-                    ),
+                commonModifier
             )
 
             OnBoardingScreens.DkmaScreen -> DkmaScreen(
@@ -196,29 +200,12 @@ fun OnBoardRoute(
                 alterIssueVisibility,
                 alterSolutionVisibility,
                 loadDkmaManufacturer,
-                Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .consumeWindowInsets(padding)
-                    .windowInsetsPadding(
-                        WindowInsets.safeDrawing.only(
-                            WindowInsetsSides.Horizontal,
-                        ),
-                    )
-                    .verticalScroll(scrollState)
+                commonModifier.verticalScroll(scrollState)
             )
 
             OnBoardingScreens.Install -> InstallScreen(
                 createFirebaseAccount,
-                Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .consumeWindowInsets(padding)
-                    .windowInsetsPadding(
-                        WindowInsets.safeDrawing.only(
-                            WindowInsetsSides.Horizontal,
-                        ),
-                    ),
+                commonModifier
             )
 
             OnBoardingScreens.Unlock -> UnlockScreen(
@@ -238,15 +225,7 @@ fun OnBoardRoute(
                 getFirebaseUser(),
                 navigateToNextScreen,
                 navigateToPreviousScreen,
-                Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .consumeWindowInsets(padding)
-                    .windowInsetsPadding(
-                        WindowInsets.safeDrawing.only(
-                            WindowInsetsSides.Horizontal,
-                        ),
-                    ),
+                commonModifier
             )
 
             OnBoardingScreens.Connection2 -> Connection2Screen(
@@ -254,15 +233,7 @@ fun OnBoardRoute(
                 updateOnBoardingCompleted,
                 navigateToHome,
                 registerLogsDownloadWorkRequest,
-                Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .consumeWindowInsets(padding)
-                    .windowInsetsPadding(
-                        WindowInsets.safeDrawing.only(
-                            WindowInsetsSides.Horizontal,
-                        ),
-                    ),
+                commonModifier
             )
         }
     }

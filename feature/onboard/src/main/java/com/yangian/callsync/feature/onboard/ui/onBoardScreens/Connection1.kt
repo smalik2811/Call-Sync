@@ -116,7 +116,7 @@ fun CompactPortraitConnection1Screen(
 
             Text(
                 text = stringResource(R.string.num_sum_qr_code_scan_instruction),
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )

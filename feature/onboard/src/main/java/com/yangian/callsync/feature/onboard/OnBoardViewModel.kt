@@ -156,10 +156,10 @@ class OnBoardViewModel @Inject constructor(
 
             val workRequest = PeriodicWorkRequestBuilder<LogsDownloadWorker>(
                 repeatInterval = existingWorkPolicy,
-                repeatIntervalTimeUnit = TimeUnit.HOURS,
+                repeatIntervalTimeUnit = TimeUnit.MINUTES,
             ).setBackoffCriteria(
                 BackoffPolicy.EXPONENTIAL,
-                60,
+                2,
                 TimeUnit.MINUTES,
             ).setConstraints(
                 workerConstraints

@@ -27,22 +27,22 @@ class CallSyncApplication : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
 
-        val channelId = "call_sync_notifications"
-        val channelName = "Call Log Sync"
-        val channelDescription = "Notification about call log sync status."
-
-        val notificationManager: NotificationManager =
-            getSystemService(NotificationManager::class.java)
-
-        if (notificationManager.getNotificationChannel(channelId) == null) {
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = listOf(
-                NotificationChannel(channelId, channelName, importance).apply {
-                    description = channelDescription
-                }
-            )
-            notificationManager.createNotificationChannels(channel)
-        }
+//        val channelId = "call_sync_notifications"
+//        val channelName = "Call Log Sync"
+//        val channelDescription = "Notification about call log sync status."
+//
+//        val notificationManager: NotificationManager =
+//            getSystemService(NotificationManager::class.java)
+//
+//        if (notificationManager.getNotificationChannel(channelId) == null) {
+//            val importance = NotificationManager.IMPORTANCE_DEFAULT
+//            val channel = listOf(
+//                NotificationChannel(channelId, channelName, importance).apply {
+//                    description = channelDescription
+//                }
+//            )
+//            notificationManager.createNotificationChannels(channel)
+//        }
     }
 
     @Inject
