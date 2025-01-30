@@ -59,11 +59,13 @@ Switching devices? Sharing call details with a loved one? Managing business call
   - [Dagger-Hilt](https://dagger.dev/hilt/)
   - [Google ML Kit](https://developers.google.com/ml-kit)
   - [Firebase](https://firebase.google.com/)
+- **Third-Party Web Service**
+  - [Don't kill my app!](https://dontkillmyapp.com/apidoc)  
 
 ### App download link:
 
 [Download Call Sync](https://www.amazon.in/dp/B0DRTVVLMZ)
 
-### Warning
+### Usage
 
-This repository is just to showcase my personal project. The repository will not accept any pull requests. Anybody is free to read the code for learning purposes but is not allowed to modify and use it for commercial purposes.
+This repository is just to showcase my personal project. The repository will not accept any pull requests. Anybody is free to use the code for learning purpose only.
