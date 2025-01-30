@@ -51,11 +51,11 @@ Switching devices? Sharing call details with a loved one? Managing business call
 ### External Libraries Used:
 
 - **Third-Party Libraries**
-  - [MarkdownText - Jetpack Compose](com.github.jeziellago:compose-markdown)
-  - [Coil](io.coil-kt:coil-compose)
-  - [OkHttp](com.squareup.okhttp3:okhttp)
-  - [QRCode-Kotlin](io.github.g0dkar:qrcode-kotlin)
-  - [Retrofit](com.squareup.retrofit2:retrofit)
+  - [MarkdownText - Jetpack Compose](https://github.com/jeziellago/compose-markdown)
+  - [Coil](https://coil-kt.github.io/coil/compose/)
+  - [OkHttp](https://square.github.io/okhttp/)
+  - [QRCode-Kotlin](https://github.com/g0dkar/qrcode-kotlin)
+  - [Retrofit](https://github.com/square/retrofit)
   - [Dagger-Hilt](https://dagger.dev/hilt/)
   - [Google ML Kit](https://developers.google.com/ml-kit)
   - [Firebase](https://firebase.google.com/)
