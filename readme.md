@@ -1,6 +1,6 @@
-# Call Sync
-
 <img src="https://m.media-amazon.com/images/I/51RFoj3DBxL.png" width = 20%></img>
+
+# Call Sync
 
 ## Sync your call history across devices securely and effortlessly
 
